@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>ComfHutt - Fractional Real Estate. Intelligent Ownership.</title>
+    
+    <meta name="description" content="ComfHutt is building the world's first self-evolving property network. Fractional ownership meets autonomous intelligence.">
+    <meta name="keywords" content="ComfHutt, real estate, India, tokenization, fractional ownership, proptech, investing, blockchain, AI, Smart Validator">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom styles for the premium feel */
+        html, body {
+            background-color: #050505;
+            color: #f0f0f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Aurora Effect Background (Layer 1) */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -11;
+            opacity: 0.15;
+            background: radial-gradient(circle at top left, rgba(29, 78, 216, 0.5) 0%, rgba(29, 78, 216, 0) 40%),
+                        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.4) 0%, rgba(168, 85, 247, 0) 50%);
+            animation: aurora-pan 40s alternate infinite ease-in-out;
+        }
+
+        @keyframes aurora-pan {
+            0% { transform: translate(0%, 0%) scale(1.5); }
+            100% { transform: translate(20%, -20%) scale(1.5); }
+        }
+        
+        /* Animated Grid Background (Layer 2) */
+        .animated-grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+            opacity: 0.1;
+            animation: bg-scroll 60s linear infinite;
+        }
+        
+        .animated-grid-bg svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes bg-scroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1.25rem;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 40%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .reveal.is-visible .glass-card::before {
+            opacity: 1;
+        }
+        
+        /* Header glass effect on scroll */
+        .header-scrolled {
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #ffffff 0%, #D0E2FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        .gradient-text-dynamic {
+            position: relative;
+            background: linear-gradient(90deg, #A5B4FC 0%, #C7D2FE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* Typing Caret */
+        .caret {
+            display: inline-block;
+            width: 3px;
+            height: 1.1em;
+            background-color: #C7D2FE;
+            margin-left: 8px;
+            animation: blink-caret 1s infinite;
+        }
+        @keyframes blink-caret {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s cubic-bezier(0.215, 0.610, 0.355, 1),
+                        transform 1s cubic-bezier(0.215, 0.610, 0.355, 1);
+            transition-delay: 0.1s;
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-seq.is-visible .reveal-child {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-child {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal-child:nth-child(1) { transition-delay: 0.2s; }
+        .reveal-child:nth-child(2) { transition-delay: 0.4s; }
+        .reveal-child:nth-child(3) { transition-delay: 0.6s; }
+        .reveal-child:nth-child(4) { transition-delay: 0.8s; }
+
+        /* Button Styles */
+        .btn {
+            @apply px-6 py-3 rounded-full transition-all duration-300 ease-in-out;
+            transform: translateZ(0);
+        }
+        .btn-primary {
+            @apply bg-white text-black font-medium shadow-lg shadow-white/10;
+            transition-duration: 0.3s;
+        }
+        .btn-primary:hover {
+            @apply bg-gray-200;
+            box-shadow: 0 8px 25px rgba(190, 200, 255, 0.5);
+            transform: translateY(-2px) scale(1.02);
+        }
+        .btn-secondary {
+            @apply bg-white/10 text-white backdrop-blur-sm border border-white/10;
+            transition-duration: 0.3s;
+        }
+        .btn-secondary:hover {
+            @apply bg-white/20;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(190, 200, 255, 0.3);
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        /* Modal Styles */
+        .modal-backdrop {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 40; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            display: none; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 50; opacity: 0; transition: all 0.3s ease;
+            border-radius: 1.25rem;
+        }
+        .modal-backdrop.is-visible,
+        .modal-content.is-visible {
+            display: block; opacity: 1;
+        }
+        .modal-content.is-visible {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .modal-content .glass-card {
+             border-radius: 1.25rem;
+        }
+
+        /* Icon Wrapper */
+        .premium-icon-bg {
+            width: 4rem; height: 4rem; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            margin-bottom: 1.5rem;
+        }
+        .premium-icon-bg svg {
+            width: 2.5rem; height: 2.5rem; color: #A5B4FC;
+        }
+
+        /* Roadmap Dots */
+        .roadmap-dot {
+            background-color: rgba(255, 255, 255, 0.25);
+            transition: background-color 0.5s ease;
+        }
+        .roadmap-dot-active {
+            background-color: #ffffff;
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.7); }
+            50% { box-shadow: 0 0 12px 4px rgba(255, 255, 0.4); }
+        }
+
+        /* Form Styles */
+        .ai-form-input {
+            @apply block w-full p-3 rounded-full bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent;
+            padding-left: 1.25rem;
+        }
+        .ai-form-label {
+            @apply block text-sm font-medium text-gray-300 mb-1 ml-4;
+        }
+        .ai-form-file-btn {
+             @apply text-left text-gray-400 cursor-pointer;
+        }
+        .pulse-svg {
+            animation: pulse-opacity 2s ease-in-out infinite;
+        }
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        select.ai-form-input {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 3rem;
+        }
+        
+        /* Mobile Menu */
+        #mobile-menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 35; background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            opacity: 0; transform: translateY(-100%);
+            transition: all 0.4s cubic-bezier(0.215, 0.610, 0.355, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+        }
+        #mobile-menu-overlay.is-open {
+            opacity: 1; transform: translateY(0);
+        }
+        #mobile-menu-overlay a {
+            @apply text-3xl font-semibold text-gray-200;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <div class="aurora-bg"></div>
+
+    <div class="animated-grid-bg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+            <defs>
+                <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                    <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+    </div>
+
+    <header id="main-header" class="fixed top-0 left-0 w-full p-4 z-40 transition-all duration-300 ease-in-out">
+        <nav class="container mx-auto max-w-7xl flex justify-between items-center px-4">
+            <div class="text-2xl font-bold tracking-tighter uppercase">ComfHutt</div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#problem" class="text-gray-300 hover:text-white transition-colors">The Problem</a>
+                <a href="#solution" class="text-gray-300 hover:text-white transition-colors">Our Solution</a>
+                <a href="#validator" class="text-gray-300 hover:text-white transition-colors">Smart Validator</a>
+                <a href="#roadmap" class="text-gray-300 hover:text-white transition-colors">Roadmap</a>
+                <a href="#cta" class="btn btn-secondary text-sm">Launch App</a>
+            </div>
+            <div class="hidden md:block">
+                <button id="connect-wallet-header" class="btn btn-primary text-sm">Connect Wallet</button>
+            </div>
+            
+            <div class="md:hidden z-50">
+                <button id="mobile-menu-btn" class="text-white p-2">
+                    <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 hidden">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+    
+    <div id="mobile-menu-overlay">
+        <a id="mobile-link-problem" href="#problem">The Problem</a>
+        <a id="mobile-link-solution" href="#solution">Solution</a>
+        <a id="mobile-link-validator" href="#validator">Smart Validator</a>
+        <a id="mobile-link-roadmap" href="#roadmap">Roadmap</a>
+        <a id="mobile-link-dashboard" href="#cta" class="btn btn-secondary text-lg">Launch App</a>
+        <button id="connect-wallet-mobile" class="btn btn-primary text-lg">Connect Wallet</button>
+    </div>
+
+    <main>
+
+        <section id="hero" class="h-screen min-h-[700px] flex items-center justify-center text-center relative overflow-hidden pt-16">
+            <div class="container mx-auto px-4 reveal is-visible">
+                <div class="text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter leading-tight gradient-text">
+                    Fractional Real Estate.
+                    <br>
+                    <span id="dynamic-hero-text" class="gradient-text-dynamic">Intelligent Ownership.</span>
+                    <span class="caret"></span>
+                </div>
+                <h2 class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mt-8">
+                    Building the world's first self-evolving property network. <br>
+                    Accessible. Transparent. Autonomous.
+                </h2>
+                <div class="mt-12 space-x-4">
+                    <a href="#solution" class="btn btn-primary btn-lg text-lg">Explore The Platform</a>
+                    <a href="#problem" class="btn btn-secondary btn-lg text-lg">Why ComfHutt?</a>
+                </div>
+            </div>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-gray-500 animate-bounce">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+            </div>
+        </section>
+
+        <section id="problem" class="py-32 md:py-48 min-h-screen flex items-center">
+            <div class="container mx-auto max-w-5xl px-4 text-center">
+                <div class="reveal">
+                    <span class="text-lg font-medium text-blue-300">The Challenge</span>
+                    <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mt-4 gradient-text">
+                        Real Estate's Core Challenges.
+                    </h2>
+                    <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mt-8">
+                        The traditional market is rigid and exclusionary. We are here to fix the broken foundation.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 md:gap-8 mt-20 reveal-seq">
+                    <div class="glass-card p-8 reveal-child">
+                        <div class="text-blue-300 mb-4 text-4xl"><i class="las la-lock"></i></div>
+                        <h3 class="text-2xl font-semibold mb-3">Access Barriers</h3>
+                        <p class="text-gray-300">High entry points exclude everyday investors from significant wealth opportunities.</p>
+                    </div>
+                    <div class="glass-card p-8 reveal-child">
+                        <h3 class="text-2xl font-semibold mb-3">Lack of Transparency</h3>
+                        <p class="text-gray-300">Hidden fees and intermediaries create distrust, eroding investor confidence.</p>
+                    </div>
+                    <div class="glass-card p-8 reveal-child">
+                        <h3 class="text-2xl font-semibold mb-3">Operational Inefficiency</h3>
+                        <p class="text-gray-300">Slow processes, manual settlements, and liquidity delays hinder growth.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="py-32 md:py-48 min-h-screen">
+            <div class="container mx-auto max-w-6xl px-4">
+                <div class="text-center max-w-4xl mx-auto reveal">
+                    <span class="text-lg font-medium text-blue-300">The Solution</span>
+                    <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mt-4 gradient-text">
+                        Intelligent Ownership.
+                    </h2>
+                    <p class="text-xl md:text-2xl text-gray-300 mt-8">
+                        Fractional ownership meets autonomous intelligence.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-16 md:gap-8 mt-24">
+                    <div class="md:w-1/3 reveal">
+                        <div class="p-6">
+                            <div class="premium-icon-bg">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-3xl font-semibold mb-3">Fractional Tokenization</h3>
+                            <p class="text-gray-300 text-lg">Own from 0.1 sq.m. We are democratizing access with entry points as low as <span class="text-white font-bold">$100</span>.</p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/3 reveal">
+                        <div class="p-6">
+                            <div class="premium-icon-bg">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-3xl font-semibold mb-3">AI Smart Validator</h3>
+                            <p class="text-gray-300 text-lg">Advanced AI verifies property data instantly, ensuring asset integrity and compliance before it hits the chain.</p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/3 reveal">
+                        <div class="p-6">
+                            <div class="premium-icon-bg">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h18M16.5 3 21 7.5m0 0L16.5 12M21 7.5H3" />
+                                </svg>
+                            </div>
+                            <h3 class="text-3xl font-semibold mb-3">Smart Contract Escrow</h3>
+                            <p class="text-gray-300 text-lg">Immutable ledgers for transparent transactions. No hidden fees, just secure, automated settlements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="opportunity" class="py-32 md:py-64 min-h-screen flex items-center relative overflow-hidden">
+            <div class="absolute inset-0 z-0 opacity-20" style="background-image: url('https://placehold.co/1920x1080/0A0A0A/FFFFFF?text=Digital+India+Map'); background-size: cover; background-position: center;"></div>
+            
+            <div class="container mx-auto max-w-5xl px-4 text-center relative z-10 reveal">
+                <span class="text-lg font-medium text-blue-300">The Opportunity</span>
+                <h2 class="text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter mt-4 gradient-text">
+                    $1 Trillion.
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mt-8">
+                    That is the potential of the Indian real estate market by 2030, growing at 9% CAGR.
+                </p>
+                <p class="text-xl md:text-2xl text-white font-medium max-w-3xl mx-auto mt-8">
+                    Fueled by digital-native demand for crypto-backed assets.
+                </p>
+            </div>
+        </section>
+        
+        <section id="roadmap" class="py-32 md:py-48">
+            <div class="container mx-auto max-w-5xl px-4">
+                <div class="text-center max-w-3xl mx-auto reveal">
+                    <span class="text-lg font-medium text-blue-300">Revenue Model</span>
+                    <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mt-4 gradient-text">
+                        Three-Stage Growth.
+                    </h2>
+                    <p class="text-xl md:text-2xl text-gray-300 mt-8">
+                        We are building a complete ecosystem, from transaction economics to a full-scale AI SaaS.
+                    </p>
+                </div>
+                
+                <div class="mt-20 max-w-3xl mx-auto reveal-seq">
+                    <div class="relative pl-12 pb-12 border-l-2 border-white/10 reveal-child">
+                        <div class="absolute -left-1.5 top-1 w-3 h-3 rounded-full roadmap-dot-active"></div>
+                        <span class="text-sm font-semibold text-blue-300">Stage 1 (Year 1-2)</span>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-white mt-2">Core Platform & Transaction Economics</h3>
+                        <p class="text-gray-300 text-lg mt-2">Foundation built on transaction fees (1-2%), tokenization fees for developers, and smart escrow services.</p>
+                    </div>
+                    <div class="relative pl-12 pb-12 border-l-2 border-white/10 reveal-child">
+                        <div class="absolute -left-1.5 top-1 w-3 h-3 rounded-full roadmap-dot"></div>
+                        <span class="text-sm font-semibold text-gray-400">Stage 2 (Year 3-4)</span>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-white mt-2">Growth Layer & Wallet Services</h3>
+                        <p class="text-gray-300 text-lg mt-2">Expansion via recurring B2B developer subscriptions and float revenue from our native wallet ecosystem.</p>
+                    </div>
+                    <div class="relative pl-12 pb-12 border-l-2 border-white/10 reveal-child">
+                        <div class="absolute -left-1.5 top-1 w-3 h-3 rounded-full roadmap-dot"></div>
+                        <span class="text-sm font-semibold text-gray-400">Stage 3 (Year 5+)</span>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-white mt-2">AI-Powered Ecosystem</h3>
+                        <p class="text-gray-300 text-lg mt-2">Licensing our AI Validator SaaS to other PropTech platforms and offering premium predictive analytics.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="validator" class="py-32 md:py-48">
+            <div class="container mx-auto max-w-6xl px-4">
+                
+                <div class="text-center max-w-3xl mx-auto reveal">
+                    <span class="text-lg font-medium text-purple-400">Autonomous Real Estate Intelligence</span>
+                    <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mt-4 gradient-text">
+                        The AI Smart Validator.
+                    </h2>
+                    <p class="text-xl md:text-2xl text-gray-300 mt-8">
+                        Our proprietary AI model doesn't just list properties; it audits them. From legal title discrepancies to market fit scoring, we ensure 94% accuracy in validation before tokenization occurs[cite: 129].
+                    </p>
+                </div>
+                
+                <h3 class="text-3xl font-bold text-white text-center mt-24 md:mt-32 mb-10 reveal">
+                    Try the Validator Demo
+                </h3>
+
+                <div class="glass-card p-6 md:p-10 reveal">
+                    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                        
+                        <div class="lg:w-1/2">
+                            <h3 class="text-3xl font-bold text-white mb-6">Property Input</h3>
+                            <form id="ai-form" class="space-y-5">
+                                <div>
+                                    <label for="address" class="ai-form-label">Property Address</label>
+                                    <input type="text" name="address" id="address" class="ai-form-input" placeholder="e.g., 123 Lodha World, Mumbai">
+                                </div>
+                                <div>
+                                    <label for="asset-type" class="ai-form-label">Asset Type</label>
+                                    <select id="asset-type" name="asset-type" class="ai-form-input">
+                                        <option>Residential (Condo/Apartment)</option>
+                                        <option>Residential (Villa)</option>
+                                        <option>Commercial (Office)</option>
+                                        <option>Commercial (Retail)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="file-upload" class="ai-form-label">Legal Documents</label>
+                                    <button type="button" class="ai-form-input ai-form-file-btn">
+                                        Click to upload Title Deed, Valuations...
+                                    </button>
+                                </div>
+                                
+                                <button type="submit" id="ai-form-button" class="btn btn-primary w-full mt-6 text-lg">
+                                    Run AI Analysis
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div class="lg:w-1/2">
+                            <h3 class="text-3xl font-bold text-white mb-6">Validation Score</h3>
+                            <div id="ai-result-panel" class="glass-card p-6 h-full min-h-[250px] transition-all duration-300">
+                                <div class="flex flex-col items-center justify-center h-full text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-4 pulse-svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h3.75" />
+                                    </svg>
+                                    <p class="text-lg">Awaiting property data...</p>
+                                    <p class="text-sm">Our autonomous system will check legal & market data.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <template id="ai-result-processing-tpl">
+            <div class="flex flex-col items-center justify-center h-full text-gray-300">
+                <svg class="animate-spin w-12 h-12 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="text-lg font-semibold">AI Analyzing Asset...</p>
+                <p class="text-sm">Cross-referencing land registry & market comp.</p>
+            </div>
+        </template>
+        
+        <template id="ai-result-success-tpl">
+            <div class="h-full">
+                <p class="text-sm text-green-400 font-medium">Result: Verified & Listable</p>
+                <div class="text-center my-4">
+                    <p class="text-6xl font-bold text-white">94<span class="text-4xl text-gray-400">/100</span></p>
+                    <p class="text-xl font-semibold gradient-text">ComfHutt Trust Score</p>
+                </div>
+                <p class="text-sm font-medium text-white mb-2">Key Insights:</p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center text-green-300"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg>High-Yield Potential (CAGR > 9%)</li>
+                    <li class="flex items-center text-green-300"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg>Clear Title (Blockchain Verified)</li>
+                    <li class="flex items-center text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg>Market Value analysis complete.</li>
+                </ul>
+            </div>
+        </template>
+        
+        <template id="ai-result-fail-tpl">
+            <div class="h-full">
+                <p class="text-sm text-yellow-400 font-medium">Result: Manual Review Required</p>
+                <div class="text-center my-4">
+                    <p class="text-6xl font-bold text-white">48<span class="text-4xl text-gray-400">/100</span></p>
+                    <p class="text-xl font-semibold gradient-text">ComfHutt Trust Score</p>
+                </div>
+                <p class="text-sm font-medium text-white mb-2">Issues Detected:</p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center text-yellow-300"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" /></svg>Title Deed Discrepancy</li>
+                    <li class="flex items-center text-yellow-300"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" /></svg>Low Liquidity Score</li>
+                </ul>
+            </div>
+        </template>
+
+        <section id="cta" class="py-32 md:py-48">
+             <div class="container mx-auto max-w-6xl px-4">
+                <div class="text-center max-w-3xl mx-auto reveal">
+                    <span class="text-lg font-medium text-blue-300">Live Preview</span>
+                    <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mt-4 gradient-text">
+                        Invest in Seconds.
+                    </h2>
+                    <p class="text-xl md:text-2xl text-gray-300 mt-8">
+                        Experience the future interface of real estate investing.
+                    </p>
+                </div>
+                
+                <div class="glass-card mt-20 p-6 md:p-10 reveal">
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <div class="lg:w-3/5">
+                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-800">
+                                <img src="https://placehold.co/800x450/1a1a1a/FFFFFF?text=Luxury+Mumbai+Condo" alt="Mumbai Luxury High-Rise" class="w-full h-full object-cover">
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 text-center">
+                                <div>
+                                    <span class="text-sm text-gray-400">Total Value</span>
+                                    <p class="text-xl font-semibold text-white">₹12 Cr</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-400">Min. Investment</span>
+                                    <p class="text-xl font-semibold text-white">₹8,500 (~$100)</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-400">Est. Yield (APY)</span>
+                                    <p class="text-xl font-semibold text-green-400">9.5%</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-400">Tokens Sold</span>
+                                    <p class="text-xl font-semibold text-white">42%</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="lg:w-2/5">
+                            <h3 class="text-3xl font-bold text-white">Lodha World One - Unit 32A</h3>
+                            <p class="text-gray-300 text-lg mt-2">Mumbai, Maharashtra, India</p>
+                            
+                            <p class="text-gray-400 mt-6">A 2-bed, 3-bath luxury condo. Verified by ComfHutt AI Smart Validator.</p>
+                            
+                            <div class="mt-8">
+                                <label for="amount" class="block text-sm font-medium text-gray-300 ml-4">Amount (in INR)</label>
+                                <div class="mt-1 relative">
+                                    <input type="text" name="amount" id="amount" class="block w-full p-3 rounded-full bg-white/5 border border-white/10 text-white text-xl pl-5" placeholder="10,000">
+                                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                        <span class="text-gray-400 sm:text-sm">INR</span>
+                                    </div>
+                                </div>
+                                <p class="text-gray-300 mt-2 ml-4">= 1.17 Tokens</p>
+                            </div>
+                            
+                            <button id="connect-wallet-demo" class="btn btn-primary w-full mt-6 text-lg">
+                                Connect Wallet to Purchase
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-16 border-t border-white/10">
+        <div class="container mx-auto max-w-7xl px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="md:col-span-1">
+                    <div class="text-2xl font-bold tracking-tighter uppercase">ComfHutt</div>
+                    <p class="text-gray-400 mt-4 text-sm">
+                        Fractional Real Estate.
+                        <br>
+                        Intelligent Ownership.
+                    </p>
+                    <div class="mt-6">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Founders</p>
+                        <p class="text-gray-300 font-medium">Murtaza Patel & Yagnesh Akbari</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-200 text-sm tracking-wider uppercase">Platform</h4>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#cta" class="text-gray-400 hover:text-white">Explore Properties</a></li>
+                        <li><a href="#validator" class="text-gray-400 hover:text-white">Smart Validator</a></li>
+                        <li><a href="#solution" class="text-gray-400 hover:text-white">How It Works</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold text-gray-200 text-sm tracking-wider uppercase">Company</h4>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Whitepaper</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Docs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Founders</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold text-gray-200 text-sm tracking-wider uppercase">Connect</h4>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Twitter / X</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Discord</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm">&copy; 2025 ComfHutt. All rights reserved.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+    <div id="modal-content" class="modal-content">
+        <div class="glass-card p-8 w-[90vw] max-w-md text-white shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Wallet Connection</h3>
+                <button id="modal-close-btn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <p class="text-gray-300 mb-6">
+                This is a demo of the ComfHutt MVP. In production, this will connect to MetaMask/Polygon.
+            </p>
+            <button id="modal-close-btn-2" class="btn btn-primary w-full mt-8">
+                Understood
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Hero Typing Effect
+            const dynamicText = document.getElementById('dynamic-hero-text');
+            if (dynamicText) {
+                const words = ["Intelligent Ownership.", "Accessible.", "Liquid.", "Transparent."];
+                let wordIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+
+                function typeEffect() {
+                    const currentWord = words[wordIndex];
+                    let displayText;
+
+                    if (isDeleting) {
+                        displayText = currentWord.substring(0, charIndex - 1);
+                        charIndex--;
+                    } else {
+                        displayText = currentWord.substring(0, charIndex + 1);
+                        charIndex++;
+                    }
+
+                    dynamicText.textContent = displayText;
+
+                    let typeSpeed = isDeleting ? 100 : 200;
+
+                    if (!isDeleting && charIndex === currentWord.length) {
+                        typeSpeed = 2000;
+                        isDeleting = true;
+                    } else if (isDeleting && charIndex === 0) {
+                        isDeleting = false;
+                        wordIndex = (wordIndex + 1) % words.length;
+                        typeSpeed = 500;
+                    }
+                    
+                    setTimeout(typeEffect, typeSpeed);
+                }
+                
+                typeEffect();
+            }
+
+            // Header Scroll Effect
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+
+            // Reveal Animation
+            const revealElements = document.querySelectorAll('.reveal, .reveal-seq');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => observer.observe(el));
+
+            // Modal Logic
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContent = document.getElementById('modal-content');
+            const connectButtons = [
+                document.getElementById('connect-wallet-header'),
+                document.getElementById('connect-wallet-demo'),
+                document.getElementById('connect-wallet-mobile')
+            ];
+            const closeButtons = [
+                document.getElementById('modal-close-btn'),
+                document.getElementById('modal-close-btn-2'),
+                modalBackdrop
+            ];
+
+            const openModal = () => {
+                modalBackdrop.classList.add('is-visible');
+                modalContent.classList.add('is-visible');
+            };
+            const closeModal = () => {
+                modalBackdrop.classList.remove('is-visible');
+                modalContent.classList.remove('is-visible');
+            };
+
+            connectButtons.forEach(btn => {
+                if (btn) btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+            });
+            closeButtons.forEach(btn => {
+                if (btn) btn.addEventListener('click', (e) => { e.preventDefault(); closeModal(); });
+            });
+
+            // AI Form Demo
+            const aiForm = document.getElementById('ai-form');
+            const aiResultPanel = document.getElementById('ai-result-panel');
+            const processingTpl = document.getElementById('ai-result-processing-tpl').innerHTML;
+            const successTpl = document.getElementById('ai-result-success-tpl').innerHTML;
+            const failTpl = document.getElementById('ai-result-fail-tpl').innerHTML;
+
+            if (aiForm) {
+                aiForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    aiResultPanel.innerHTML = processingTpl;
+                    setTimeout(() => {
+                        if (Math.random() > 0.3) {
+                            aiResultPanel.innerHTML = successTpl;
+                        } else {
+                            aiResultPanel.innerHTML = failTpl;
+                        }
+                    }, 3000);
+                });
+            }
+            
+            // Mobile Menu
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+            const closeIcon = document.getElementById('close-icon');
+            const mobileMenuLinks = document.querySelectorAll('#mobile-menu-overlay a, #mobile-menu-overlay button');
+
+            const toggleMenu = () => {
+                mobileMenuOverlay.classList.toggle('is-open');
+                hamburgerIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+                document.body.style.overflow = mobileMenuOverlay.classList.contains('is-open') ? 'hidden' : 'auto';
+            };
+
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (mobileMenuOverlay.classList.contains('is-open')) toggleMenu();
+                    if (link.id === 'connect-wallet-mobile') openModal();
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
