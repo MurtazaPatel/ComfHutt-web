@@ -1,92 +1,114 @@
-# ComfHutt - Intelligent Fractional Real Estate
+# ComfHutt Web Platform
 
-A premium, Next.js-based frontend for ComfHutt, the world's first self-evolving property network. This project converts the original static HTML site into a modern, component-based React application with a focus on "Google-clean" aesthetics and "Apple-premium" feel.
+## Overview
+ComfHutt is a modern web platform built with Next.js 15 (App Router), React, TypeScript, and Tailwind CSS. It features a robust authentication system, waitlist management, and a responsive, high-performance UI.
 
-## 🚀 Project Overview
-
+## Tech Stack
 - **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS v4
-- **Animations:** Framer Motion
-- **Icons:** Lucide React
-- **Font:** Inter (via `next/font`)
+- **Styling:** Tailwind CSS + Framer Motion
+- **Database:** PostgreSQL (via Prisma ORM)
+- **Authentication:** Auth.js (NextAuth v5 Beta)
+- **Validation:** Zod + React Hook Form
+- **Containerization:** Docker + Docker Compose
 
-## 🛠️ Setup & Installation
+## Getting Started
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd comfhutt-next
-    ```
+### Prerequisites
+- Node.js 18+
+- Docker & Docker Compose (optional, for local DB)
+- PostgreSQL (if not using Docker)
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+### Environment Variables
+Create a `.env` file in the root directory (`comfhutt-next/.env`):
 
-3.  **Run the development server:**
-    ```bash
-    npm run dev
-    ```
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/comfhutt?schema=public"
+AUTH_SECRET="your-super-secret-key-generate-with-openssl-rand-base64-32"
+AUTH_URL="http://localhost:3000"
 
-4.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# OAuth Providers (Optional)
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+APPLE_CLIENT_ID=""
+APPLE_CLIENT_SECRET=""
+LINKEDIN_CLIENT_ID=""
+LINKEDIN_CLIENT_SECRET=""
 
-## ✨ Key Features & Improvements
+# Email Server (Optional - for Magic Links)
+EMAIL_SERVER_HOST="smtp.sendgrid.net"
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER="apikey"
+EMAIL_SERVER_PASSWORD=""
+EMAIL_FROM="noreply@comfhutt.com"
+```
 
-### 🎨 UI/UX Redesign (Before vs. After)
+### Local Development
 
-| Feature | Original (HTML/CSS) | New (Next.js + Tailwind) |
-| :--- | :--- | :--- |
-| **Structure** | Monolithic `index.html` | Modular React Components (`/components`) |
-| **Styling** | Custom CSS + Inline Styles | Tailwind CSS v4 Utility Classes |
-| **Responsiveness** | Basic media queries | Mobile-first Tailwind approach |
-| **Animations** | CSS Keyframes & JS Observers | **Framer Motion** for smooth, physics-based reveals |
-| **Interactivity** | Vanilla JS DOM manipulation | **React Hooks** (`useState`, `useEffect`) |
-| **Forms** | Static HTML form | Controlled React components with simulation logic |
-| **Typography** | Standard Web Fonts | Optimized `next/font` (Inter) |
-| **Icons** | Inline SVG | **Lucide React** (Consistent, scalable) |
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-### 🧩 Component Architecture
+2. **Start the database:**
+   If you have Docker installed:
+   ```bash
+   docker compose up -d db
+   ```
 
--   **`Navbar`**: Responsive glassmorphism header with a mobile menu overlay.
--   **`Hero`**: High-impact landing section with a typing effect and staggered reveal animations.
--   **`Problem`**: Grid layout highlighting market challenges with hover effects.
--   **`Solution`**: Feature showcase with custom icon wrappers and clean typography.
--   **`Validator`**: Interactive AI demo simulating property analysis with conditional result rendering.
--   **`Roadmap`**: Vertical timeline with active/inactive states and pulse animations.
--   **`CTA`**: "Live Preview" section featuring a property card and investment simulation.
--   **`Footer`**: Clean, multi-column footer with navigation links.
+3. **Run migrations:**
+   ```bash
+   npx prisma migrate dev
+   ```
 
-### 💎 Design System Highlights
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
--   **Glassmorphism**: Extensive use of `bg-white/5` and `backdrop-blur` for a modern, layered feel.
--   **Gradients**: Subtle text gradients (`gradient-text`) and background auroras (`aurora-bg`) add depth without clutter.
--   **Micro-interactions**: Buttons and cards scale slightly on hover; customized focus rings on inputs.
--   **Whitespace**: Increased padding and margin (`py-20 md:py-48`) for a breathable, luxury layout.
+   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 🔮 Future Backend Integration
+### Docker Deployment
 
-To turn this frontend into a fully functional dApp/Platform, consider the following integrations:
+To build and run the entire application stack using Docker:
 
-1.  **API Routes (`/app/api`)**:
-    -   Create endpoints for form submissions (e.g., `/api/validate-property`).
-    -   Fetch dynamic property data from a database.
+```bash
+docker compose up --build
+```
 
-2.  **Database (PostgreSQL / Supabase)**:
-    -   Store user profiles, property listings, and investment records.
-    -   Use Prisma ORM for type-safe database access.
+## Authentication Flow
 
-3.  **Authentication (Clerk / NextAuth)**:
-    -   Implement user sign-up/login.
-    -   Protect dashboard routes.
+- **Sign Up:** Users can sign up using Email/Password or OAuth providers (Google, Apple, LinkedIn).
+- **Sign In:** Secure login flow with credential validation and error handling.
+- **Waitlist Integration:** If a user signs up with an email that is already on the waitlist, their account is automatically linked, and their waitlist status is updated to "approved".
+- **Protected Routes:**
+  - `/dashboard`: Accessible only to authenticated users.
+  - `/admin`: Accessible only to users with the `admin` role.
 
-4.  **Web3 Integration (Wagmi / RainbowKit)**:
-    -   Replace the "Connect Wallet" buttons with actual wallet connection logic.
-    -   Interact with smart contracts for tokenization and escrow.
+## Admin Dashboard
 
-5.  **AI Service**:
-    -   Connect the `Validator` component to a real Python/FastAPI backend running the AI model.
+To access the admin dashboard, you must manually update a user's role to `admin` in the database:
 
-## 📄 License
+```sql
+UPDATE "User" SET role = 'admin' WHERE email = 'your-email@example.com';
+```
 
+Visit `/admin/dashboard` to view platform metrics.
+
+## YC Demo Script
+
+1. **Create Account:** Go to `/auth/register` and sign up with a new email.
+2. **Dashboard:** You will be redirected to `/dashboard`. Note your User ID and Waitlist status (if applicable).
+3. **Waitlist Logic:** Sign out. Add a new email to the waitlist (via API or future landing page form). Then register with that same email. The system will link the records.
+4. **Admin View:** Log in as an admin (after DB update) and visit `/admin/dashboard` to see user counts.
+
+## Project Structure
+
+- `src/app`: Next.js App Router pages and layouts.
+- `src/components`: Reusable UI components.
+- `src/lib`: Utility functions, database client, and server actions.
+- `src/auth.ts`: Auth.js configuration.
+- `prisma/schema.prisma`: Database schema definition.
+
+## License
 [MIT](LICENSE)
