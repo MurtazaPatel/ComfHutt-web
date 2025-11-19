@@ -1,29 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Check, Sparkles, Loader2 } from "lucide-react";
 import MotionWrapper from "./MotionWrapper";
 import Link from "next/link";
+import { joinWaitlist } from "@/lib/actions/waitlist";
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [reason, setReason] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     
     setStatus("loading");
+    setErrorMessage("");
     
-    // Simulate API call
-    setTimeout(() => {
-      setStatus("success");
-      // Reset form after a delay if needed
-      // setTimeout(() => setStatus("idle"), 3000);
-    }, 1500);
+    startTransition(() => {
+      joinWaitlist({ email, name })
+        .then((data) => {
+          if (data.error) {
+            setStatus("error");
+            setErrorMessage(data.error);
+          }
+          
+          if (data.success) {
+            setStatus("success");
+          }
+        })
+        .catch(() => {
+          setStatus("error");
+          setErrorMessage("Something went wrong.");
+        });
+    });
   };
 
   return (
@@ -137,6 +152,9 @@ export default function Waitlist() {
                     </>
                   )}
                 </button>
+                {status === "error" && (
+                  <p className="text-red-400 text-sm text-center mt-2">{errorMessage}</p>
+                )}
               </form>
             </div>
           </MotionWrapper>

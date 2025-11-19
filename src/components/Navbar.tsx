@@ -63,15 +63,15 @@ export default function Navbar() {
                 {item}
               </Link>
             ))}
-            <Link href="#cta" className="btn btn-secondary text-sm font-medium">
-              Launch App
+            <Link href="/dashboard" className="btn btn-secondary text-sm font-medium">
+              Dashboard
             </Link>
           </div>
 
           <div className="hidden md:block">
-            <button className="btn btn-primary text-sm font-medium">
-              Connect Wallet
-            </button>
+            <Link href="/auth/signin" className="btn btn-primary text-sm font-medium">
+              Sign In
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -112,15 +112,15 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              href="#cta"
+              href="/dashboard"
               onClick={closeMobileMenu}
               className="btn btn-secondary text-lg w-3/4 text-center"
             >
-              Launch App
+              Dashboard
             </Link>
-            <button className="btn btn-primary text-lg w-3/4">
-              Connect Wallet
-            </button>
+            <Link href="/auth/signin" className="btn btn-primary text-lg w-3/4 text-center" onClick={closeMobileMenu}>
+              Sign In
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
