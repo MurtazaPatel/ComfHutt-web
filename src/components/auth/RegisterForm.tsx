@@ -4,6 +4,8 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 import { registerSchema } from "@/lib/validations/auth";
 import { CardWrapper } from "@/components/auth/CardWrapper";
@@ -11,6 +13,7 @@ import { register } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
 
 export const RegisterForm = () => {
+  const router = useRouter();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -36,6 +39,9 @@ export const RegisterForm = () => {
           
           if (data.success) {
             setSuccess(data.success);
+            setTimeout(() => {
+              router.push("/dashboard");
+            }, 1000);
           }
         })
         .catch(() => setError("Something went wrong"));
@@ -100,9 +106,16 @@ export const RegisterForm = () => {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full h-10 rounded-md bg-white text-black font-medium hover:bg-white/90 transition-colors disabled:opacity-50"
+          className="w-full h-10 rounded-md bg-white text-black font-medium hover:bg-white/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          {isPending ? "Loading..." : "Create account"}
+          {isPending ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Creating account...
+            </>
+          ) : (
+            "Create account"
+          )}
         </button>
       </form>
     </CardWrapper>
