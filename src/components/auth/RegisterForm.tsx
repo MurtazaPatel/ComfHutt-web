@@ -5,12 +5,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 
 import { registerSchema } from "@/lib/validations/auth";
 import { CardWrapper } from "@/components/auth/CardWrapper";
 import { register } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
+import { LoadingState } from "@/components/auth/LoadingState";
 
 export const RegisterForm = () => {
   const router = useRouter();
@@ -55,7 +55,12 @@ export const RegisterForm = () => {
       backButtonHref="/auth/signin"
       showSocial
     >
-      <form 
+      {isPending ? (
+        <div className="py-10 flex justify-center">
+          <LoadingState message="Creating your identity..." />
+        </div>
+      ) : (
+      <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6"
       >
@@ -108,16 +113,10 @@ export const RegisterForm = () => {
           disabled={isPending}
           className="w-full h-10 rounded-md bg-white text-black font-medium hover:bg-white/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          {isPending ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Creating account...
-            </>
-          ) : (
-            "Create account"
-          )}
+          Create account
         </button>
       </form>
+      )}
     </CardWrapper>
   );
 };

@@ -13,7 +13,7 @@ export default function Waitlist() {
   const [reason, setReason] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition(); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

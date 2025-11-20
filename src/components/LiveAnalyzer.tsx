@@ -133,17 +133,17 @@ export default function LiveAnalyzer() {
                    <motion.div
                      key={i}
                      className="flex-1 bg-cyan-500/30 rounded-t-sm"
-                     animate={{ 
+                     animate={{
                        height: [
-                         `${20 + Math.random() * 60}%`, 
-                         `${30 + Math.random() * 50}%`, 
-                         `${20 + Math.random() * 60}%`
-                       ] 
+                         `${20 + (i * 10) % 60}%`,
+                         `${30 + (i * 5) % 50}%`,
+                         `${20 + (i * 10) % 60}%`
+                       ]
                      }}
-                     transition={{ 
-                       duration: 2 + Math.random() * 2, 
-                       repeat: Infinity, 
-                       ease: "easeInOut" 
+                     transition={{
+                       duration: 2 + (i % 2),
+                       repeat: Infinity,
+                       ease: "easeInOut"
                      }}
                    />
                  ))}

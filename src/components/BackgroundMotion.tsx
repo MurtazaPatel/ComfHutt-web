@@ -183,15 +183,15 @@ function AdvantagesBackground({ scrollY }: { scrollY: MotionValue<number> }) {
           key={i}
           className="absolute w-2 h-2 bg-blue-400/20 rounded-full"
           style={{
-            top: `${20 + Math.random() * 60}%`,
-            left: `${10 + Math.random() * 80}%`,
+            top: `${20 + (i * 13) % 60}%`,
+            left: `${10 + (i * 17) % 80}%`,
           }}
           animate={{
             scale: [1, 2, 1],
             opacity: [0.2, 0.5, 0.2],
           }}
           transition={{
-            duration: 3 + Math.random() * 2,
+            duration: 3 + (i % 2),
             repeat: Infinity,
             delay: i * 0.5,
           }}

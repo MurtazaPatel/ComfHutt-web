@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Problem from "@/components/Problem";
+import { auth } from "@/auth";
 import Solution from "@/components/Solution";
 import Opportunity from "@/components/Opportunity";
 import LiveAnalyzer from "@/components/LiveAnalyzer";
@@ -9,7 +10,9 @@ import ProductPreview from "@/components/ProductPreview";
 import Waitlist from "@/components/Waitlist";
 import Footer from "@/components/Footer";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
     <main className="relative min-h-screen overflow-x-hidden">
       {/* Background Effects - Fixed to viewport */}
@@ -37,7 +40,7 @@ export default function Home() {
         </div>
       </div>
 
-      <Navbar />
+      <Navbar user={session?.user} />
       <Hero />
       <Problem />
       <Solution />

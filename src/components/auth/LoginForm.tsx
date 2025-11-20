@@ -11,6 +11,7 @@ import { loginSchema } from "@/lib/validations/auth";
 import { CardWrapper } from "@/components/auth/CardWrapper";
 import { login } from "@/lib/actions/login";
 import { cn } from "@/lib/utils";
+import { LoadingState } from "@/components/auth/LoadingState";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -58,7 +59,12 @@ export const LoginForm = () => {
       backButtonHref="/auth/register"
       showSocial
     >
-      <form 
+      {isPending ? (
+        <div className="py-10 flex justify-center">
+          <LoadingState message="Accessing secure network..." />
+        </div>
+      ) : (
+      <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6"
       >
@@ -116,9 +122,10 @@ export const LoginForm = () => {
           disabled={isPending}
           className="w-full h-10 rounded-md bg-white text-black font-medium hover:bg-white/90 transition-colors disabled:opacity-50"
         >
-          {isPending ? "Loading..." : "Login"}
+          Login
         </button>
       </form>
+      )}
     </CardWrapper>
   );
 };
