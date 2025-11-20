@@ -9,6 +9,7 @@ import Validator from "@/components/Validator";
 import ProductPreview from "@/components/ProductPreview";
 import Waitlist from "@/components/Waitlist";
 import Footer from "@/components/Footer";
+import Share from "@/components/Share";
 
 export default async function Home() {
   const session = await auth();
@@ -49,6 +50,7 @@ export default async function Home() {
       <LiveAnalyzer />
       <ProductPreview />
       <Waitlist />
+      <Share />
       <Footer />
     </main>
   );
