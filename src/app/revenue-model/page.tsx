@@ -52,7 +52,7 @@ export default function RevenueModelPage() {
             <span className="text-base md:text-lg font-medium text-blue-300">
               ComfHutt Economics
             </span>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mt-4 mb-6 gradient-text">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mt-4 mb-6 gradient-text">
               Revenue Model.
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">

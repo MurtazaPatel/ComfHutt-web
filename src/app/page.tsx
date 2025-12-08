@@ -1,56 +1,41 @@
-import Navbar from "@/components/Navbar";
+import React from "react";
+import LandingNavbar from "@/components/LandingNavbar";
 import Hero from "@/components/Hero";
-import Problem from "@/components/Problem";
-import { auth } from "@/auth";
-import Solution from "@/components/Solution";
-import Opportunity from "@/components/Opportunity";
-import LiveAnalyzer from "@/components/LiveAnalyzer";
-import Validator from "@/components/Validator";
-import ProductPreview from "@/components/ProductPreview";
-import Waitlist from "@/components/Waitlist";
+import TrustStrip from "@/components/TrustStrip";
+import HowItWorks from "@/components/HowItWorks";
+import FeatureStripe from "@/components/FeatureStripe";
+import WealthBuilder from "@/components/WealthBuilder";
+import CredibilityEngine from "@/components/CredibilityEngine";
+import OwnersSection from "@/components/OwnersSection";
+import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
-import Share from "@/components/Share";
 
-export default async function Home() {
-  const session = await auth();
+export const metadata = {
+  title: "ComfHutt | Invest in Real Estate from ₹5,000",
+  description: "Fractional property tokens. Instant buying. Monthly rental income. Easy exits. SPV-backed ownership.",
+  openGraph: {
+    title: "ComfHutt | Fractional Real Estate Investment",
+    description: "Invest in verified real estate starting at ₹5,000. Monthly rental income and easy liquidity.",
+    type: "website",
+    url: "https://comfhutt.com",
+    // images: [{ url: '/og-image.jpg' }], // Placeholder for actual OG image
+  },
+};
 
+export default function LandingPage() {
   return (
-    <main className="relative min-h-screen overflow-x-hidden">
-      {/* Background Effects - Fixed to viewport */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="aurora-bg absolute inset-0 opacity-20" />
-        <div className="animated-grid-bg absolute inset-0 opacity-10">
-          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-            <defs>
-              <pattern
-                id="grid"
-                width="100"
-                height="100"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 100 0 L 0 0 0 100"
-                  fill="none"
-                  stroke="rgba(255, 255, 255, 0.1)"
-                  strokeWidth="1"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-      </div>
-
-      <Navbar user={session?.user} />
+    <main className="w-full bg-white text-gray-900 selection:bg-emerald-100 selection:text-emerald-900">
+      <LandingNavbar />
       <Hero />
-      <Problem />
-      <Solution />
-      <Validator />
-      <Opportunity />
-      <LiveAnalyzer />
-      <ProductPreview />
-      <Waitlist />
-      <Share />
+      <TrustStrip />
+      <HowItWorks />
+      
+      <WealthBuilder />
+
+      <CredibilityEngine />
+      <FeatureStripe />
+      <OwnersSection />
+      <Testimonials />
       <Footer />
     </main>
   );

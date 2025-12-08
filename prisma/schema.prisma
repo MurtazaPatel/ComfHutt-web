@@ -70,3 +70,24 @@ model WaitlistEntry {
   userId    String?  @unique
   user      User?    @relation(fields: [userId], references: [id])
 }
+
+model Lead {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  createdAt DateTime @default(now())
+  source    String?
+  anonymous Boolean  @default(true)
+
+  choiceResponses ChoiceResponse[]
+}
+
+model ChoiceResponse {
+  id        String   @id @default(uuid())
+  leadId    String?
+  lead      Lead?    @relation(fields: [leadId], references: [id])
+  intent    String
+  nps       Int?
+  meta      Json?    @default("{}")
+  createdAt DateTime @default(now())
+}
