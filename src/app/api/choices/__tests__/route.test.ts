@@ -36,16 +36,16 @@ describe("POST /api/choices", () => {
     });
 
     // Mock DB responses
-    (db.lead.upsert as jest.Mock).mockResolvedValue({ id: "lead-123" });
-    (db.choiceResponse.create as jest.Mock).mockResolvedValue({ id: "resp-456" });
+    ((db as any).lead.upsert as jest.Mock).mockResolvedValue({ id: "lead-123" });
+    ((db as any).choiceResponse.create as jest.Mock).mockResolvedValue({ id: "resp-456" });
 
     const res = await POST(req);
     const json = await res.json();
 
     expect(res.status).toBe(200);
     expect(json.ok).toBe(true);
-    expect(db.lead.upsert).toHaveBeenCalled();
-    expect(db.choiceResponse.create).toHaveBeenCalled();
+    expect((db as any).lead.upsert).toHaveBeenCalled();
+    expect((db as any).choiceResponse.create).toHaveBeenCalled();
   });
 
   it("should return 400 on invalid input", async () => {

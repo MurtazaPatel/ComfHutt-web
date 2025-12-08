@@ -44,9 +44,6 @@ export async function POST(req: Request) {
     // Upsert Lead
     // @ts-ignore - Prisma client might not be fully generated in dev environment
     // debug snippet — drop this before the upsert line, inspect logs
-console.log('DB export keys:', Object.keys(db));
-console.log('Is db null/undefined?', db == null);
-console.log('Has lead?', typeof (db as any).lead, Object.prototype.hasOwnProperty.call(db, 'lead'));
 
     const lead = await db.lead.upsert({
       where: { email: validatedData.email },
@@ -82,7 +79,7 @@ console.log('Has lead?', typeof (db as any).lead, Object.prototype.hasOwnPropert
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation failed", details: (error as z.ZodError).errors },
+        { error: "Validation failed", details: (error as any).errors },
         { status: 400 }
       );
     }
