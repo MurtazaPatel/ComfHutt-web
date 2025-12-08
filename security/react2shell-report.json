@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-12-08T12:41:54Z",
+  "environment": {
+    "react_version": "^19.2.1",
+    "next_version": "^16.0.7",
+    "node_version": "v23.11.0"
+  },
+  "findings": {
+    "server_actions_files": [
+      "src/lib/actions/auth.ts",
+      "src/lib/actions/login.ts"
+    ],
+    "server_only_usage": [
+      ""
+    ],
+    "next_config_server_actions": "next.config.ts:    serverActions: {"
+  },
+  "status": "Audit Complete"
+}

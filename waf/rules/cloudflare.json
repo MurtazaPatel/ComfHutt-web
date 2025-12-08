@@ -1,0 +1,17 @@
+[
+  {
+    "description": "Block Suspicious React Flight Headers (React2Shell Mitigation)",
+    "expression": "(http.request.headers[\"rsc\"] eq \"1\" and not http.request.headers[\"content-type\"] contains \"text/x-component\")",
+    "action": "block"
+  },
+  {
+    "description": "Block Extremely Large RSC Payloads",
+    "expression": "(http.request.method eq \"POST\" and http.request.headers[\"next-action\"] ne \"\" and int(http.request.headers[\"content-length\"]) > 102400)",
+    "action": "block"
+  },
+  {
+    "description": "Block Suspicious Content-Types on Server Actions",
+    "expression": "(http.request.method eq \"POST\" and http.request.headers[\"next-action\"] ne \"\" and not http.request.headers[\"content-type\"] in {\"text/x-component\" \"multipart/form-data\" \"application/json\"})",
+    "action": "block"
+  }
+]
