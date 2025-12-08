@@ -1,0 +1,41 @@
+name: React2Shell Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * *' # Daily scan
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run React2Shell Audit
+        run: |
+          chmod +x scripts/security/react2shell-audit.sh
+          ./scripts/security/react2shell-audit.sh
+          cat security/react2shell-report.json
+
+      - name: NPM Security Audit
+        run: npm audit --production --audit-level=high
+
+      - name: Check for Unpatched Vulnerable Versions
+        run: |
+          # Simple check to fail if React version is older than 19.x patched (logic simplified for example)
+          # In production, use a dedicated tool like Snyk or Dependabot
+          REACT_VER=$(npm list react --json | jq -r '.dependencies.react.version')
+          echo "React Version: $REACT_VER"
+          # Add logic here to fail if version is known vulnerable

@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx prisma migrate deploy && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate --schema=./prisma/schema.prisma",
-    "build": "next build",
+    "build:secure": "npx prisma generate --schema=./prisma/schema.prisma && npx npm-audit fix && next build",
     "vercel-build": "npx prisma generate --schema=./prisma/schema.prisma && npx prisma migrate deploy --schema=./prisma/schema.prisma && next build"
   },
   "dependencies": {
@@ -23,11 +23,11 @@
     "gsap": "^3.13.0",
     "lucide-react": "^0.554.0",
     "motion": "^12.23.25",
-    "next": "16.0.3",
+    "next": "^16.0.7",
     "next-auth": "^5.0.0-beta.30",
     "nodemailer": "^7.0.10",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "react-hook-form": "^7.66.1",
     "react-icons": "^5.5.0",
     "server-only": "^0.0.1",
