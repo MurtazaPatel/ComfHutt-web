@@ -1,6 +1,5 @@
 import React from "react";
 import ChoicesCard from "@/components/ChoicesCard";
-import Navbar from "@/components/Navbar";
 
 export const metadata = {
   title: "Your Choice | ComfHutt",
@@ -10,7 +9,6 @@ export const metadata = {
 export default function ChoicePage() {
   return (
     <main className="min-h-screen bg-[#F5F7F8] flex flex-col">
-      <Navbar />
       
       <div className="flex-1 flex items-center justify-center p-4 pt-24 md:pt-32 pb-20 relative overflow-hidden">
          {/* Background Decoration */}

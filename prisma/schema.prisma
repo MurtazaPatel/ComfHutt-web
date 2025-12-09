@@ -91,3 +91,16 @@ model ChoiceResponse {
   meta      Json?    @default("{}")
   createdAt DateTime @default(now())
 }
+
+model ContactUs {
+  id         String   @id @default(uuid())
+  name       String
+  email      String
+  phone      String?
+  message    String
+  createdAt  DateTime @default(now())
+  handled    Boolean  @default(false)
+  source     String?
+  @@index([email])
+  @@index([createdAt])
+}

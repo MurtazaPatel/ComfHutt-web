@@ -9,7 +9,8 @@
     "lint": "eslint",
     "postinstall": "prisma generate --schema=./prisma/schema.prisma",
     "build:secure": "npx prisma generate --schema=./prisma/schema.prisma && npx npm-audit fix && next build",
-    "vercel-build": "npx prisma generate --schema=./prisma/schema.prisma && npx prisma migrate deploy --schema=./prisma/schema.prisma && next build"
+    "vercel-build": "npx prisma generate --schema=./prisma/schema.prisma && npx prisma migrate deploy --schema=./prisma/schema.prisma && next build",
+    "mobile-smoke": "node scripts/mobile-smoke.js"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

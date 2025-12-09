@@ -4,11 +4,20 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ShieldCheck, TrendingUp, Bed, MapPin, Building2 } from "lucide-react";
 import { Property } from "@/lib/mock-data";
+import Link from "next/link";
 
 // --- ScoreWheel (Copied from HeroCard for parity) ---
 const ScoreWheel = ({ score }: { score: number }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
-    <div className="flex flex-col items-center mt-1 group/score relative">
+    <div
+      className="flex flex-col items-center mt-1 group/score relative cursor-help"
+      onClick={(e) => {
+        e.stopPropagation();
+        setShowTooltip(!showTooltip);
+      }}
+    >
       <div className="relative w-14 h-14 flex items-center justify-center">
         {/* Background Ring */}
         <svg className="w-full h-full -rotate-90">
@@ -44,7 +53,7 @@ const ScoreWheel = ({ score }: { score: number }) => {
       <span className="text-[10px] font-bold text-gray-400 mt-1">Score</span>
       
       {/* Tooltip added to match requirements */}
-      <div className="absolute right-0 bottom-full mb-2 w-48 bg-gray-900 text-white text-[10px] p-2 rounded-lg opacity-0 group-hover/score:opacity-100 transition-opacity pointer-events-none z-20 shadow-xl">
+      <div className={`absolute right-0 bottom-full mb-2 w-48 bg-gray-900 text-white text-[10px] p-2 rounded-lg transition-opacity z-20 shadow-xl ${showTooltip ? 'opacity-100 pointer-events-auto' : 'opacity-0 group-hover/score:opacity-100 pointer-events-none'}`}>
          ComfHutt Credibility Score — based on developer, legal, market signals; updated every 30 days.
       </div>
     </div>
@@ -153,82 +162,87 @@ export default function PropertyCard({ property, onView }: PropertyCardProps) {
       </div>
 
       {/* Content Section - Layout matching HeroCard */}
-      <div className="p-4 flex flex-row relative bg-white flex-grow">
+      <div className="p-4 flex flex-col relative bg-white flex-grow">
         
-        {/* LEFT COLUMN (Text Stack) */}
-        <div className="flex-1 flex flex-col justify-between pr-2">
-           
-           {/* Top Info */}
-           <div>
-             <div className="flex justify-between items-start mb-1">
-                <h3 className="font-bold text-gray-900 text-lg leading-tight line-clamp-1">{property.title}</h3>
-             </div>
-             <div className="flex items-center text-gray-500 text-xs mb-3">
-               <MapPin className="w-3 h-3 mr-1" />
-               {property.locality}, {property.city}
-             </div>
-           </div>
+        <div className="flex flex-row mb-4">
+          {/* LEFT COLUMN (Text Stack) */}
+          <div className="flex-1 flex flex-col justify-between pr-2">
+            
+            {/* Top Info */}
+            <div>
+              <div className="flex justify-between items-start mb-1">
+                  <h3 className="font-bold text-gray-900 text-lg leading-tight line-clamp-1">{property.title}</h3>
+              </div>
+              <div className="flex items-center text-gray-500 text-xs mb-3">
+                <MapPin className="w-3 h-3 mr-1" />
+                {property.locality}, {property.city}
+              </div>
+            </div>
 
-           {/* Stats */}
-           <div className="grid grid-cols-2 gap-y-2 gap-x-4 mb-2">
-              <div>
-                <p className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Yield</p>
-                <div className="flex items-center gap-1">
-                  <span className="text-sm font-bold text-emerald-600">{property.projected_yield_percent}%</span>
-                  <TrendingUp className="w-3 h-3 text-emerald-500" />
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+                <div>
+                  <p className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Yield</p>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-bold text-emerald-600">{property.projected_yield_percent}%</span>
+                    <TrendingUp className="w-3 h-3 text-emerald-500" />
+                  </div>
                 </div>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Min Token</p>
-                <p className="text-sm font-bold text-gray-900">₹{property.min_token_price_inr.toLocaleString()}</p>
-              </div>
-           </div>
+                <div>
+                  <p className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Min Token</p>
+                  <p className="text-sm font-bold text-gray-900">₹{property.min_token_price_inr.toLocaleString()}</p>
+                </div>
+            </div>
 
-           {/* Liquidity & Actions (Moved here to fit column) */}
-           <div className="mt-auto space-y-3 pt-2">
-             <div className="w-full">
-               <div className="flex justify-between text-[10px] font-medium text-gray-500 mb-1">
-                 <span>{isSoldOut ? 'Sold Out' : `${Math.round(liquidityPercent)}% Funded`}</span>
-               </div>
-               <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                 <div 
-                   className={`h-full rounded-full ${isSoldOut ? 'bg-gray-400' : 'bg-emerald-500'}`} 
-                   style={{ width: `${liquidityPercent}%` }}
-                 />
-               </div>
-             </div>
+          </div>
 
-             <div className="flex gap-2">
-                <button
-                   onClick={(e) => { e.stopPropagation(); onView(property); }}
-                   className="flex-1 py-1.5 rounded-lg bg-gray-50 text-gray-900 text-[10px] font-bold hover:bg-gray-100 transition-colors border border-gray-200"
-                >
-                  View
-                </button>
-                <button
-                   onClick={(e) => { e.stopPropagation(); }}
-                   disabled={isSoldOut}
-                   className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm ${
-                     isSoldOut 
-                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                     : 'bg-black text-white hover:bg-gray-800'
-                   }`}
-                >
-                  {isSoldOut ? 'Sold Out' : 'Invest'}
-                </button>
-             </div>
-           </div>
-
+          {/* RIGHT COLUMN (Score + Trend placeholder) */}
+          <div className="w-[70px] flex flex-col items-end justify-start relative pl-1 border-l border-dashed border-gray-100">
+            {/* Exact ScoreWheel usage */}
+            <ScoreWheel score={property.credibility_score} />
+          </div>
         </div>
 
-        {/* RIGHT COLUMN (Score + Trend placeholder) */}
-        <div className="w-[70px] flex flex-col items-end justify-start relative pl-1 border-l border-dashed border-gray-100">
-           {/* Exact ScoreWheel usage */}
-           <ScoreWheel score={property.credibility_score} />
-           
-           {/* Optional: Add TrendLine if we had trend data, keeping placeholder for now or omit */}
-           {/* For now just the score as requested */}
+        {/* Liquidity & Actions (Moved here to fit column) */}
+        <div className="mt-auto space-y-3 pt-2 border-t border-gray-50">
+          <div className="w-full mt-2">
+            <div className="flex justify-between text-[10px] font-medium text-gray-500 mb-1">
+              <span>{isSoldOut ? 'Sold Out' : `${Math.round(liquidityPercent)}% Funded`}</span>
+            </div>
+            <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div 
+                className={`h-full rounded-full ${isSoldOut ? 'bg-gray-400' : 'bg-emerald-500'}`} 
+                style={{ width: `${liquidityPercent}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+                onClick={(e) => { e.stopPropagation(); onView(property); }}
+                className="flex-1 py-1.5 rounded-lg bg-gray-50 text-gray-900 text-[10px] font-bold hover:bg-gray-100 transition-colors border border-gray-200"
+            >
+              View
+            </button>
+            {isSoldOut ? (
+              <button
+                disabled
+                className="flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm bg-gray-100 text-gray-400 cursor-not-allowed"
+              >
+                Sold Out
+              </button>
+            ) : (
+              <Link
+                href={`/properties/${property.id}/summary`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm bg-black text-white hover:bg-gray-800 flex items-center justify-center"
+              >
+                Invest
+              </Link>
+            )}
+          </div>
         </div>
+
       </div>
     </motion.div>
   );

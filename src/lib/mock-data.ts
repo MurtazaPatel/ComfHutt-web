@@ -117,3 +117,8 @@ export function generateProperties(count: number = 20): Property[] {
 
   return properties;
 }
+
+export function getPropertyById(id: string): Property | undefined {
+  const allProperties = generateProperties(50); // Generate enough to likely cover the id
+  return allProperties.find(p => p.id === id);
+}

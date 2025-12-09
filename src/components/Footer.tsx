@@ -34,7 +34,7 @@ export default function Footer() {
             <h4 className="font-bold text-gray-900 mb-4">Resources</h4>
             <ul className="space-y-3 text-sm text-gray-600">
               <li><Link href="/docs" className="hover:text-black transition-colors py-1 block">Docs</Link></li>
-              <li><Link href="/whitepaper" className="hover:text-black transition-colors py-1 block">Whitepaper</Link></li>
+              <li><Link href="/docs/comfhutt-whitepaper" className="hover:text-black transition-colors py-1 block">Whitepaper</Link></li>
               <li><Link href="/audit-summary" className="hover:text-black transition-colors py-1 block">Audit Summary</Link></li>
               <li><Link href="/legal" className="hover:text-black transition-colors py-1 block">Public Legal Summary</Link></li>
             </ul>

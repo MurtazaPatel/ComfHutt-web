@@ -8,6 +8,7 @@ import WealthBuilder from "@/components/WealthBuilder";
 import CredibilityEngine from "@/components/CredibilityEngine";
 import OwnersSection from "@/components/OwnersSection";
 import Testimonials from "@/components/Testimonials";
+import ContactUs from "@/components/ContactUs";
 import Footer from "@/components/Footer";
 
 export const metadata = {
@@ -36,6 +37,7 @@ export default function LandingPage() {
       <FeatureStripe />
       <OwnersSection />
       <Testimonials />
+      <ContactUs />
       <Footer />
     </main>
   );

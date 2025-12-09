@@ -2,8 +2,9 @@
 
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ShieldCheck, FileText, Download, Building2, MapPin, AlertCircle, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
+import { X, ShieldCheck, FileText, Download, Building2, MapPin, AlertCircle, ChevronLeft, ChevronRight, Share2, ArrowRight } from "lucide-react";
 import { Property } from "@/lib/mock-data";
+import Link from "next/link";
 
 interface PropertyDetailModalProps {
   property: Property | null;
@@ -44,35 +45,32 @@ export default function PropertyDetailModal({ property, isOpen, onClose }: Prope
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 overflow-y-auto"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
-             {/* Modal Container */}
-            <div className="min-h-screen px-4 text-center">
-              {/* Spacer for vertical centering */}
-              <span className="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
-
+             
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ type: "spring", duration: 0.5 }}
                 onClick={(e) => e.stopPropagation()}
-                className="inline-block w-full max-w-5xl my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl overflow-hidden relative"
+                className="w-full max-w-6xl max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden relative flex flex-col"
               >
                 {/* Close Button */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 z-20 p-2 bg-white/50 hover:bg-white rounded-full transition-colors backdrop-blur-md"
+                  className="absolute top-4 right-4 z-30 p-2.5 bg-white/80 hover:bg-white rounded-full transition-colors backdrop-blur-md shadow-sm"
+                  aria-label="Close modal"
                 >
-                  <X className="w-5 h-5 text-gray-800" />
+                  <X className="w-6 h-6 text-gray-800" />
                 </button>
 
-                <div className="flex flex-col lg:flex-row h-full max-h-[85vh] lg:h-[650px]">
+                <div className="flex flex-col lg:flex-row h-full overflow-y-auto lg:overflow-hidden">
                   
-                  {/* Left Column: Media & Quick Stats */}
-                  <div className="w-full lg:w-3/5 bg-gray-100 relative group flex flex-col h-[400px] lg:h-full">
+                  {/* Left Column: Media (50% width) */}
+                  <div className="w-full lg:w-1/2 bg-gray-100 relative group flex flex-col h-[300px] sm:h-[400px] lg:h-auto min-h-0 flex-shrink-0">
                     {/* Main Image */}
-                    <div className="relative flex-grow overflow-hidden">
+                    <div className="relative w-full h-full overflow-hidden">
                       <motion.img
                         key={currentImage}
                         src={property.photos[currentImage]}
@@ -112,9 +110,19 @@ export default function PropertyDetailModal({ property, isOpen, onClose }: Prope
                     </div>
                   </div>
 
-                  {/* Right Column: Details & Action */}
-                  <div className="w-full lg:w-2/5 p-6 lg:p-8 flex flex-col overflow-y-auto bg-white">
+                  {/* Right Column: Details & Action (50% width) */}
+                  <div className="w-full lg:w-1/2 p-6 lg:p-8 flex flex-col h-auto lg:h-full bg-white lg:overflow-y-auto">
                     
+                    {/* Scrollable container for mobile, but on desktop we want it to fit if possible, or scroll the whole modal content if needed.
+                        The requirement says "right column must remain fully visible and non-scrollable".
+                        This implies the modal height should grow to fit content.
+                        However, if content exceeds viewport, something must scroll.
+                        "Modal must automatically size its height so all details fit without introducing inner scrollbars."
+                        So we let the flex container grow.
+                    */}
+                    
+                    <div className="flex-1 flex flex-col justify-center">
+
                     {/* Header */}
                     <div className="mb-6">
                       <div className="flex items-center gap-2 mb-2">
@@ -175,24 +183,32 @@ export default function PropertyDetailModal({ property, isOpen, onClose }: Prope
                        <div className="flex items-center gap-4">
                          <div className={`
                            w-16 h-16 rounded-full flex items-center justify-center border-4 text-xl font-bold
-                           ${property.credibility_score >= 80 ? 'border-emerald-100 text-emerald-700 bg-emerald-50' : 
+                           ${property.credibility_score >= 80 ? 'border-emerald-100 text-emerald-700 bg-emerald-50' :
                              property.credibility_score >= 60 ? 'border-yellow-100 text-yellow-700 bg-yellow-50' : 'border-red-100 text-red-700 bg-red-50'}
                          `}>
                            {property.credibility_score}
                          </div>
-                         <div className="flex-1 text-xs text-gray-500 space-y-1">
-                           <div className="flex justify-between">
-                             <span>Legal Clarity</span>
-                             <span className="font-medium text-gray-900">High</span>
-                           </div>
-                           <div className="flex justify-between">
-                             <span>Developer Track Record</span>
-                             <span className="font-medium text-gray-900">Verified</span>
-                           </div>
-                           <div className="flex justify-between">
-                             <span>Market Demand</span>
-                             <span className="font-medium text-gray-900">Stable</span>
-                           </div>
+                         <div className="flex-1">
+                            <div className="text-xs text-gray-500 space-y-1 mb-2">
+                                <div className="flex justify-between">
+                                    <span>Legal Clarity</span>
+                                    <span className="font-medium text-gray-900">High</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Developer Track Record</span>
+                                    <span className="font-medium text-gray-900">Verified</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Market Demand</span>
+                                    <span className="font-medium text-gray-900">Stable</span>
+                                </div>
+                            </div>
+                            <Link
+                                href={`/properties/${property.id}/summary`}
+                                className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 group/link"
+                            >
+                                Learn more about score <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
+                            </Link>
                          </div>
                        </div>
                     </div>
@@ -213,25 +229,30 @@ export default function PropertyDetailModal({ property, isOpen, onClose }: Prope
 
                     {/* CTA */}
                     <div className="mt-8 pt-6 border-t border-gray-100">
-                      <button 
-                        className={`w-full py-4 rounded-xl font-bold text-lg transition-all transform active:scale-[0.98] ${
-                          isSoldOut 
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                            : 'bg-black text-white hover:bg-gray-800 shadow-xl shadow-gray-200'
-                        }`}
-                        disabled={isSoldOut}
-                      >
-                        {isSoldOut ? 'Sold Out' : 'Start Investing (KYC)'}
-                      </button>
+                      {isSoldOut ? (
+                        <button
+                          className="w-full py-4 rounded-xl font-bold text-lg transition-all transform active:scale-[0.98] bg-gray-100 text-gray-400 cursor-not-allowed"
+                          disabled
+                        >
+                          Sold Out
+                        </button>
+                      ) : (
+                        <Link
+                          href={`/properties/${property.id}/summary`}
+                          className="block w-full text-center py-4 rounded-xl font-bold text-lg transition-all transform active:scale-[0.98] bg-black text-white hover:bg-gray-800 shadow-xl shadow-gray-200"
+                        >
+                          Invest Now
+                        </Link>
+                      )}
                       <p className="text-[10px] text-center text-gray-400 mt-2">
                         {isSoldOut ? 'Join waitlist for resale tokens.' : 'Verification required. No hidden fees.'}
                       </p>
                     </div>
 
                   </div>
+                  </div>
                 </div>
               </motion.div>
-            </div>
           </motion.div>
         </>
       )}

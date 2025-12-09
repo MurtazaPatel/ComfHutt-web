@@ -145,10 +145,10 @@ export default function MarketplacePage() {
   const hasActiveFilters = Object.values(filters).some(v => v !== "" && v !== "All");
 
   return (
-    <div className="min-h-screen bg-[#F5F7F8] font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-[#F5F7F8] font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden">
       <Navbar />
 
-      <main className="pt-24 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
+      <main className="pt-24 pb-20 px-4 md:px-8 max-w-7xl mx-auto overflow-x-hidden">
         
         {/* Header Section */}
         <div className="text-center mb-12 space-y-4">
@@ -198,7 +198,7 @@ export default function MarketplacePage() {
             <div className="hidden md:block w-px h-8 bg-gray-200" />
 
             {/* Filters Row */}
-            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-center md:justify-start">
+            <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar mask-gradient-right md:mask-none md:flex-wrap">
               
               {/* Budget Filter */}
               <FilterDropdown label="Budget" isActive={!!filters.minBudget || !!filters.maxBudget}>

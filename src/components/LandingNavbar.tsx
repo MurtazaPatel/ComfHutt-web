@@ -50,6 +50,9 @@ export default function Navbar() {
         <Link href="/docs" className="hover:text-black transition-colors">
           Docs
         </Link>
+        <Link href="/marketplace" className="hover:text-black transition-colors">
+          Marketplace
+        </Link>
       </div>
 
       <div className="hidden md:block">
@@ -82,21 +85,21 @@ export default function Navbar() {
             <div className="flex flex-col p-6 space-y-4">
               <Link
                 href="#how-it-works"
-                className="text-lg font-medium text-gray-700 hover:text-black transition-colors"
+                className="text-lg font-medium text-gray-700 hover:text-black transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
               </Link>
               <Link
                 href="#owners"
-                className="text-lg font-medium text-gray-700 hover:text-black transition-colors"
+                className="text-lg font-medium text-gray-700 hover:text-black transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Owners
               </Link>
               <Link
                 href="/docs"
-                className="text-lg font-medium text-gray-700 hover:text-black transition-colors"
+                className="text-lg font-medium text-gray-700 hover:text-black transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Docs
