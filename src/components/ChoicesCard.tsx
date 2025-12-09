@@ -73,6 +73,12 @@ export default function ChoicesCard() {
       console.log("Analytics: choices.submitted", data);
       
       setIsSuccess(true);
+
+      // Redirect to marketplace after short delay
+      setTimeout(() => {
+        window.location.href = "/marketplace";
+      }, 2000);
+
     } catch (error) {
       console.error(error);
       alert("Something went wrong. Please try again.");
@@ -93,13 +99,13 @@ export default function ChoicesCard() {
         </div>
         <h3 className="text-2xl font-bold text-gray-900 mb-2">You're on the list.</h3>
         <p className="text-gray-500 mb-8">
-          We've received your preferences. Expect an invite to our private beta shortly.
+          We've received your preferences. Redirecting you to the live marketplace preview...
         </p>
         <button
-          onClick={() => window.location.href = "/"}
+          onClick={() => window.location.href = "/marketplace"}
           className="px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-black transition-colors"
         >
-          Return Home
+          Go to Marketplace Now
         </button>
       </motion.div>
     );
