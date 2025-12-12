@@ -5,6 +5,9 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ShieldCheck, TrendingUp, Bed, MapPin, Building2 } from "lucide-react";
 import { Property } from "@/lib/mock-data";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { startListingRouter } from "@/utils/onboarding";
 
 // --- ScoreWheel (Copied from HeroCard for parity) ---
 const ScoreWheel = ({ score }: { score: number }) => {
@@ -71,6 +74,9 @@ export default function PropertyCard({ property, onView }: PropertyCardProps) {
   const [isFocused, setIsFocused] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const shouldReduceMotion = useReducedMotion();
+  const router = useRouter();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
   const isSoldOut = property.tokens_sold >= property.tokens_total;
   const isHot = !isSoldOut && (property.tokens_total - property.tokens_sold) / property.tokens_total < 0.25;
@@ -223,6 +229,22 @@ export default function PropertyCard({ property, onView }: PropertyCardProps) {
                 className="flex-1 py-1.5 rounded-lg bg-gray-50 text-gray-900 text-[10px] font-bold hover:bg-gray-100 transition-colors border border-gray-200"
             >
               View
+            </button>
+            <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  startListingRouter(router, {
+                    propertyId: property.id,
+                    title: property.title,
+                    city: property.city,
+                    valuation: `₹${property.min_token_price_inr * property.tokens_total}`, // Approximate
+                    source: "property_card"
+                  }, isAuthenticated);
+                }}
+                className="flex-1 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-[10px] font-bold hover:bg-blue-100 transition-colors border border-blue-200"
+                aria-label={`Start listing similar to ${property.title}`}
+            >
+               List Similar
             </button>
             {isSoldOut ? (
               <button

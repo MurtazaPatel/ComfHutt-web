@@ -20,15 +20,23 @@ export const CardWrapper = ({
   showSocial,
 }: CardWrapperProps) => {
   return (
-    <div className="w-[400px] shadow-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-8">
+    <div className="w-full flex flex-col gap-8">
       <Header label={headerLabel} />
-      <div className="mt-6">{children}</div>
+      <div className="w-full">{children}</div>
       {showSocial && (
-        <div className="mt-6">
+        <div className="w-full">
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-black px-2 text-white/40">Or continue with</span>
+            </div>
+          </div>
           <Social />
         </div>
       )}
-      <div className="mt-6 text-center">
+      <div className="flex justify-center">
         <BackButton label={backButtonLabel} href={backButtonHref} />
       </div>
     </div>

@@ -3,10 +3,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Loader2, X, ChevronDown, Check, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
+import { startListingRouter } from "@/utils/onboarding";
 import PropertyDetailModal from "@/components/PropertyDetailModal";
+import Pagination from "@/components/Pagination";
 import { Property } from "@/lib/mock-data";
 
 // --- Types ---
@@ -61,9 +65,18 @@ const FilterDropdown = ({
 
 
 export default function MarketplacePage() {
+  const router = useRouter();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const ITEMS_PER_PAGE = 15;
   
   // Filter State
   const [filters, setFilters] = useState<Filters>({
@@ -85,13 +98,28 @@ export default function MarketplacePage() {
     return () => clearTimeout(handler);
   }, [filters.location]);
 
-  // Fetch properties (Initial load)
+  // Fetch properties
   useEffect(() => {
     async function fetchProperties() {
+      setLoading(true);
       try {
-        const res = await fetch(`/api/properties?limit=50&regions=${QUICK_REGIONS.join(',')}`);
-        const data = await res.json();
-        setProperties(data);
+        const queryParams = new URLSearchParams({
+           page: currentPage.toString(),
+           limit: ITEMS_PER_PAGE.toString(),
+           regions: QUICK_REGIONS.join(',')
+        });
+        
+        const res = await fetch(`/api/properties?${queryParams}`);
+        const result = await res.json();
+        
+        if (result.data) {
+           setProperties(result.data);
+           setTotalPages(result.totalPages || 1);
+        } else {
+           // Fallback for older API shape if needed
+           setProperties(Array.isArray(result) ? result : []);
+        }
+
       } catch (err) {
         console.error("Failed to load properties", err);
       } finally {
@@ -99,7 +127,12 @@ export default function MarketplacePage() {
       }
     }
     fetchProperties();
-  }, []);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Filter Logic (Client-Side)
   const filteredProperties = useMemo(() => {
@@ -331,12 +364,12 @@ export default function MarketplacePage() {
             </div>
           )}
 
-          {!loading && filteredProperties.length > 0 && (
-            <div className="mt-12 text-center">
-              <button className="px-6 py-3 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors shadow-sm">
-                Load more properties
-              </button>
-            </div>
+          {!loading && (
+             <Pagination
+               currentPage={currentPage}
+               totalPages={totalPages}
+               onPageChange={handlePageChange}
+             />
           )}
         </div>
 
@@ -348,8 +381,8 @@ export default function MarketplacePage() {
            <p className="text-gray-500 mb-8 max-w-lg mx-auto">
              Tokenize your real estate and reach verified investors instantly. No middlemen, just smart contracts.
            </p>
-           <button 
-             onClick={() => window.location.href = "/choices?intent=list-property"}
+           <button
+             onClick={() => startListingRouter(router, undefined, isAuthenticated)}
              className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-transform active:scale-95 shadow-lg"
            >
              Start Listing <ArrowRight className="w-4 h-4" />

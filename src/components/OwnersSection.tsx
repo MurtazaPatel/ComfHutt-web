@@ -5,8 +5,15 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { CheckCircle2, TrendingUp, BarChart } from "lucide-react";
 import { VARIANTS } from "@/utils/animationUtils";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { startListingRouter } from "@/utils/onboarding";
 
 export default function OwnersSection() {
+  const router = useRouter();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+
   return (
     <section id="owners" className="py-24 bg-white overflow-hidden">
       <div className="container mx-auto px-6">
@@ -87,12 +94,21 @@ export default function OwnersSection() {
               </ul>
 
               <div className="mt-8 pt-6 border-t border-gray-100">
-                <Link
-                  href="/choices?role=owner"
-                  className="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
-                >
-                  Learn More &rarr;
-                </Link>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <button
+                    onClick={() => startListingRouter(router, undefined, isAuthenticated)}
+                    className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white text-sm font-bold rounded-full hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg"
+                    aria-label="List your property now"
+                  >
+                    List Property Now
+                  </button>
+                  <Link
+                    href="/choices?role=owner"
+                    className="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+                  >
+                    Learn More &rarr;
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </motion.div>

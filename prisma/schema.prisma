@@ -104,3 +104,41 @@ model ContactUs {
   @@index([email])
   @@index([createdAt])
 }
+
+model Owner {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String
+  address   String
+  aadharPan String?  // URL/Path to file
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  properties Property[]
+}
+
+model Property {
+  id                String   @id @default(uuid())
+  ownerId           String
+  owner             Owner    @relation(fields: [ownerId], references: [id])
+  title             String
+  type              String   // e.g. Apartment, Villa, etc.
+  location          String
+  builtUpArea       Float?
+  carpetArea        Float?
+  expectedValuation Float?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  documents PropertyDocument[]
+}
+
+model PropertyDocument {
+  id         String   @id @default(uuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  type       String   // e.g. "OWNERSHIP_PROOF", "TAX_RECEIPT", "PHOTO", "VIDEO"
+  url        String
+  createdAt  DateTime @default(now())
+}

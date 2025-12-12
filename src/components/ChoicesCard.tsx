@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronRight, Loader2, Building2, TrendingUp } from "lucide-react";
 import { choiceSchema, ChoiceInput } from "@/lib/validations/choices";
+import { setSeenChoices, getChoicesNext } from "@/utils/choices-flow";
 
 /**
  * ChoicesCard Component
@@ -74,9 +75,16 @@ export default function ChoicesCard() {
       
       setIsSuccess(true);
 
-      // Redirect to marketplace after short delay
+      // Set the flag that the user has seen/completed choices
+      setSeenChoices();
+
+      // Check if there was an intended next destination
+      const nextPayload = getChoicesNext();
+      const nextUrl = nextPayload?.next || "/marketplace";
+
+      // Redirect after short delay
       setTimeout(() => {
-        window.location.href = "/marketplace";
+        window.location.href = nextUrl;
       }, 2000);
 
     } catch (error) {
@@ -102,10 +110,13 @@ export default function ChoicesCard() {
           We've received your preferences. Redirecting you to the live marketplace preview...
         </p>
         <button
-          onClick={() => window.location.href = "/marketplace"}
+          onClick={() => {
+             const nextPayload = getChoicesNext();
+             window.location.href = nextPayload?.next || "/marketplace";
+          }}
           className="px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-black transition-colors"
         >
-          Go to Marketplace Now
+          Continue
         </button>
       </motion.div>
     );

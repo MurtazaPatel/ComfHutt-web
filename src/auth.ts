@@ -13,10 +13,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
-    verifyRequest: "/auth/verify-request",
-    newUser: "/onboarding",
+    signIn: "/signin",
+    error: "/error",
+    verifyRequest: "/verify-request",
+    newUser: "/owner-onboarding",
   },
   providers: [
     Google({
