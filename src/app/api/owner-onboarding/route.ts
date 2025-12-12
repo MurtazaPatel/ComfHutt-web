@@ -22,8 +22,9 @@ export async function POST(req: Request) {
     // 1. Validate Owner Details
     const ownerValidation = ownerDetailsSchema.safeParse(body.owner);
     if (!ownerValidation.success) {
+      const { fieldErrors, formErrors } = ownerValidation.error.flatten();
       return NextResponse.json(
-        { error: "Invalid owner details", details: ownerValidation.error.errors },
+        { error: "Invalid owner details", details: { fieldErrors, formErrors } },
         { status: 400 }
       );
     }
@@ -38,8 +39,9 @@ export async function POST(req: Request) {
     // 2. Validate Property Details (transforming numbers)
     const propertyValidation = propertyDetailsSchema.safeParse(body.property);
     if (!propertyValidation.success) {
+      const { fieldErrors, formErrors } = propertyValidation.error.flatten();
       return NextResponse.json(
-        { error: "Invalid property details", details: propertyValidation.error.errors },
+        { error: "Invalid property details", details: { fieldErrors, formErrors } },
         { status: 400 }
       );
     }
