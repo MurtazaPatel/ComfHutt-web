@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,8 +21,15 @@ export default function Navbar({ user }: NavbarProps) {
       <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between">
         
         {/* LEFT SECTION: BRAND */}
-        <Link href="/" className="font-extrabold text-xl tracking-tight text-black z-50 relative">
-          COMFHUTT
+        <Link href="/" className="z-50 relative block">
+          <Image
+            src="/brand/comfhutt-logo.svg"
+            alt="ComfHutt"
+            width={160}
+            height={32}
+            className="h-6 w-auto md:h-8"
+            priority
+          />
         </Link>
 
         {/* MIDDLE: LINKS (DESKTOP) */}

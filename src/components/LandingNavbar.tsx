@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { redirectToChoices } from "@/utils/navigation";
@@ -35,8 +36,15 @@ export default function Navbar() {
       aria-label="Main Navigation"
     >
       <div className="flex items-center">
-        <Link href="/" className="text-xl font-bold text-black tracking-tight" aria-label="ComfHutt Home">
-          COMFHUTT
+        <Link href="/" className="block" aria-label="ComfHutt Home">
+          <Image
+            src="/brand/comfhutt-logo.svg"
+            alt="ComfHutt"
+            width={160}
+            height={32}
+            className="h-6 w-auto md:h-8"
+            priority
+          />
         </Link>
       </div>
 

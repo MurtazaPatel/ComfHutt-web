@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Providers } from "@/components/Providers";
 
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -17,9 +18,22 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "ComfHutt - Fractional Real Estate. Intelligent Ownership.",
-  description: "ComfHutt is building the world's first self-evolving property network. Fractional ownership meets autonomous intelligence.",
-  keywords: ["ComfHutt", "real estate", "fractional ownership", "proptech", "investing", "blockchain", "AI"],
+  title: "ComfHutt",
+  description:
+    "ComfHutt is building the world's first self-evolving property network. Fractional ownership meets autonomous intelligence.",
+  keywords: [
+    "ComfHutt",
+    "real estate",
+    "fractional ownership",
+    "proptech",
+    "investing",
+    "blockchain",
+    "AI",
+  ],
+
+  icons: {
+    icon: "/brand/comfhutt-icon.svg",
+  },
 };
 
 export default function RootLayout({

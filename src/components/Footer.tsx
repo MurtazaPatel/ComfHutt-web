@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Lock } from "lucide-react";
 
 export default function Footer() {
@@ -12,8 +13,14 @@ export default function Footer() {
           
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
-            <Link href="/" className="text-xl font-bold text-black tracking-tight mb-4 inline-block">
-              COMFHUTT
+            <Link href="/" className="mb-4 inline-block">
+              <Image
+                src="/brand/comfhutt-logo.svg"
+                alt="ComfHutt"
+                width={140}
+                height={28}
+                className="h-6 w-auto"
+              />
             </Link>
             <p className="text-gray-500 text-sm leading-relaxed">
               Making real estate investment accessible, transparent, and liquid for everyone.
