@@ -30,14 +30,14 @@ export default function Hero() {
             className="text-4xl sm:text-5xl lg:text-7xl font-bold text-gray-900 tracking-tight leading-[1.1] mb-6"
             variants={VARIANTS.slideUp}
           >
-            Invest in Real Estate starting at just <span className="text-emerald-600">₹10,000.</span>
+            Fractional Real Estate Investing starting at <span className="text-emerald-600">₹10,000.</span>
           </motion.h1>
 
           <motion.p
             className="text-xl lg:text-2xl text-gray-500 mb-8 max-w-lg leading-relaxed"
             variants={VARIANTS.slideUp}
           >
-            Fractional property tokens. Instant buying. Monthly rental income. Easy exits.
+            Buy fractional shares of high-yield properties in India. Monthly rental income. Legal ownership via SPV.
           </motion.p>
 
           <motion.div

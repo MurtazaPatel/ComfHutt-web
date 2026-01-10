@@ -18,23 +18,26 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "ComfHutt",
+  title: {
+    default: "ComfHutt | Fractional Real Estate Investment Platform",
+    template: "%s | ComfHutt"
+  },
   description:
-    "ComfHutt is building the world's first self-evolving property network. Fractional ownership meets autonomous intelligence.",
+    "ComfHutt is a fractional real estate investment platform in India. Invest in verified properties starting from ₹10,000. SPV-backed ownership with monthly rental income.",
   metadataBase: new URL("https://comfhutt.com"),
   keywords: [
     "ComfHutt",
-    "real estate",
+    "fractional real estate",
+    "property investment India",
     "fractional ownership",
-    "proptech",
-    "investing",
-    "blockchain",
-    "AI",
+    "real estate tokenization",
+    "commercial real estate investing",
+    "passive income real estate"
   ],
   openGraph: {
-    title: "ComfHutt",
+    title: "ComfHutt | Fractional Real Estate Investment Platform",
     description:
-      "ComfHutt is building the world's first self-evolving property network. Fractional ownership meets autonomous intelligence.",
+      "Invest in pre-vetted real estate assets starting at ₹10,000. Secure SPV ownership, monthly rental yields, and AI-driven property scoring.",
     url: "https://comfhutt.com",
     siteName: "ComfHutt",
     locale: "en_IN",
@@ -44,20 +47,32 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "ComfHutt - Self-evolving property network",
+        alt: "ComfHutt - Fractional Real Estate Investment Platform",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ComfHutt",
+    title: "ComfHutt | Fractional Real Estate Investment Platform",
     description:
-      "ComfHutt is building the world's first self-evolving property network. Fractional ownership meets autonomous intelligence.",
+      "Invest in verified real estate assets from ₹10,000. Secure SPV ownership and monthly rental income.",
     images: ["/og-image.png"],
+    creator: "@comfhutt", 
   },
   icons: {
     icon: "/brand/comfhutt-icon.svg",
     apple: "/brand/comfhutt-icon.svg",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

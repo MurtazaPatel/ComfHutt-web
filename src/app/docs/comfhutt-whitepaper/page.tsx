@@ -1,14 +1,54 @@
-"use client";
-
 import React from "react";
 import { Download, FileText, CheckCircle, AlertTriangle, Shield, TrendingUp, Lock } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "ComfHutt Whitepaper | Fractional Real Estate Investment Model",
+  description: "Read the official ComfHutt whitepaper. Understand our SPV-backed fractional ownership model, AI Credibility Score, and legal framework for real estate investing in India.",
+  openGraph: {
+    title: "ComfHutt Whitepaper | Fractional Real Estate Investment Model",
+    description: "Detailed breakdown of ComfHutt's legal structure, business model, and AI technology.",
+    type: "article",
+    url: "https://comfhutt.com/docs/comfhutt-whitepaper",
+  }
+};
 
 export default function WhitepaperPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "ComfHutt Whitepaper: Fractional Real Estate Investment Model",
+    "author": {
+      "@type": "Organization",
+      "name": "ComfHutt"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ComfHutt",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://comfhutt.com/brand/comfhutt-logo.svg"
+      }
+    },
+    "datePublished": "2025-12-01",
+    "dateModified": "2025-12-20",
+    "description": "Comprehensive whitepaper detailing ComfHutt's fractional real estate investment platform, legal SPV structure, and AI-driven property scoring engine."
+  };
+
   return (
     <div className="prose prose-slate max-w-none">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Title Section */}
       <div className="mb-12 border-b border-gray-200 pb-8">
+        <div className="mb-4">
+             <Link href="/" className="text-emerald-600 hover:text-emerald-800 font-medium text-sm no-underline hover:underline">
+               ← Back to Home
+             </Link>
+        </div>
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">ComfHutt Whitepaper</h1>
         <p className="text-xl text-gray-500 font-medium">“Your piece. Your power.”</p>
         <div className="mt-6 flex flex-wrap gap-4">
@@ -51,7 +91,7 @@ export default function WhitepaperPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               "Legally enforceable ownership via SPVs",
-              "Low minimum investment (starts at ₹5,000)",
+              "Low minimum investment (starts at ₹10,000)",
               "Real-time AI property scoring",
               "Audited smart contracts",
               "On-chain proof of documents",
@@ -121,7 +161,7 @@ export default function WhitepaperPage() {
               Fractional Access
             </h3>
             <p className="text-gray-700 pl-8">
-              Investors can purchase micro-shares of premium real estate starting from ₹5,000, enabling diversification across multiple properties instead of concentration in one asset.
+              Investors can purchase micro-shares of premium real estate starting from ₹10,000, enabling diversification across multiple properties instead of concentration in one asset.
             </p>
           </div>
 

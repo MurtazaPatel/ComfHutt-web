@@ -33,9 +33,9 @@ export default function TrustStrip() {
               whileHover={{ scale: 1.05, y: -2 }}
             >
               <item.icon className="w-5 h-5 text-emerald-600 group-hover:text-emerald-500 transition-colors" />
-              <span className="text-sm font-semibold text-gray-600 group-hover:text-gray-900 transition-colors whitespace-nowrap">
+              <h3 className="text-sm font-semibold text-gray-600 group-hover:text-gray-900 transition-colors whitespace-nowrap">
                 {item.label}
-              </span>
+              </h3>
             </motion.div>
           ))}
         </motion.div>

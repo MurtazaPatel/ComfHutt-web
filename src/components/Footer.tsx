@@ -33,6 +33,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-gray-600">
               <li><Link href="#how-it-works" className="hover:text-black transition-colors py-1 block">How It Works</Link></li>
               <li><Link href="#owners" className="hover:text-black transition-colors py-1 block">For Owners</Link></li>
+              <li><Link href="#faq" className="hover:text-black transition-colors py-1 block">FAQs</Link></li>
               <li><Link href="/choices" className="hover:text-black transition-colors py-1 block">Get Started</Link></li>
             </ul>
           </div>
@@ -40,8 +41,8 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-gray-900 mb-4">Resources</h4>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><Link href="/docs" className="hover:text-black transition-colors py-1 block">Docs</Link></li>
               <li><Link href="/docs/comfhutt-whitepaper" className="hover:text-black transition-colors py-1 block">Whitepaper</Link></li>
+              <li><Link href="/docs" className="hover:text-black transition-colors py-1 block">Docs</Link></li>
               <li><Link href="/audit-summary" className="hover:text-black transition-colors py-1 block">Audit Summary</Link></li>
               <li><Link href="/legal" className="hover:text-black transition-colors py-1 block">Public Legal Summary</Link></li>
             </ul>
@@ -57,9 +58,10 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-gray-400">
-            &copy; {new Date().getFullYear()} ComfHutt. All rights reserved.
-          </p>
+          <div className="text-xs text-gray-400">
+            <p>&copy; {new Date().getFullYear()} ComfHutt Technologies Private Limited. All rights reserved.</p>
+            <p className="mt-1">Designed & Developed in India 🇮🇳</p>
+          </div>
           
           <div className="flex items-center space-x-2 text-xs text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
             <Lock className="w-3 h-3" />
@@ -67,8 +69,12 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="mt-8 text-[10px] text-gray-400 text-center max-w-3xl mx-auto leading-relaxed">
-           Disclaimer: Fractional property tokens involve risk. Past performance does not guarantee future results. All yield estimates are projections based on current market data and are not guaranteed. Please read our <Link href="/legal" className="underline hover:text-gray-600">Public Legal Summary</Link> before investing.
+        <div className="mt-8 text-[10px] text-gray-400 text-center max-w-3xl mx-auto leading-relaxed border-t border-gray-50 pt-6">
+           <p className="mb-2 font-semibold">Legal Disclaimer</p>
+           ComfHutt Technologies Pvt Ltd operates as a technology platform connecting investors with fractional real estate opportunities. We are not a registered stock exchange or asset management company. 
+           All investments involve risk, including the potential loss of principal. Past performance of any asset or projection is not a guarantee of future results. 
+           Liquidity is offered via our secondary marketplace but is not guaranteed at any specific time. 
+           Please read our <Link href="/docs/comfhutt-whitepaper" className="underline hover:text-gray-600">Whitepaper</Link> and <Link href="/legal" className="underline hover:text-gray-600">Terms of Use</Link> carefully before investing.
         </div>
       </div>
     </footer>
