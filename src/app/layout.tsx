@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://comfhutt.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "ComfHutt - Fractional Real Estate Investment Platform",
@@ -56,12 +56,15 @@ export const metadata: Metadata = {
     title: "ComfHutt | Fractional Real Estate Investment Platform",
     description:
       "Invest in verified real estate assets from ₹10,000. Secure SPV ownership and monthly rental income.",
-    images: ["/og-image.png"],
+    images: ["https://comfhutt.com/og-image.png"],
     creator: "@comfhutt", 
   },
   icons: {
     icon: "/brand/comfhutt-icon.svg",
     apple: "/brand/comfhutt-icon.svg",
+  },
+  alternates: {
+    canonical: 'https://comfhutt.com',
   },
   robots: {
     index: true,

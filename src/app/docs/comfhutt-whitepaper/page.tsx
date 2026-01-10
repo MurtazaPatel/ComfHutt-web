@@ -6,6 +6,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "ComfHutt Whitepaper | Fractional Real Estate Investment Model",
   description: "Read the official ComfHutt whitepaper. Understand our SPV-backed fractional ownership model, AI Credibility Score, and legal framework for real estate investing in India.",
+  alternates: {
+    canonical: 'https://comfhutt.com/docs/comfhutt-whitepaper',
+  },
   openGraph: {
     title: "ComfHutt Whitepaper | Fractional Real Estate Investment Model",
     description: "Detailed breakdown of ComfHutt's legal structure, business model, and AI technology.",

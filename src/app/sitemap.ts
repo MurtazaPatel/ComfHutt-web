@@ -22,6 +22,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    // Choices page is key for user flow
+    {
+      url: `${baseUrl}/choices`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
     {
       url: `${baseUrl}/auth/signin`,
       lastModified: new Date(),
