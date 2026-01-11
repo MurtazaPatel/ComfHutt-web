@@ -129,11 +129,17 @@ export default function WealthBuilder() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full sm:w-auto">
-              <button className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-full shadow-lg shadow-emerald-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+              <button
+                onClick={() => redirectToChoices(router)}
+                className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-full shadow-lg shadow-emerald-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                 Start Investing
               </button>
               <a
-                href="/properties"
+                href="#faq"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className="group flex items-center text-gray-600 font-medium hover:text-emerald-600 transition-colors justify-center sm:justify-start py-2"
               >
                 Learn More

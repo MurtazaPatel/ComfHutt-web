@@ -60,14 +60,12 @@ export default function ContactUs() {
     {
       name: "Murtaza Patel",
       phone: "+91 7016983248",
-      email: "murtazapatel05@gmail.com",
       initials: "MP",
       color: "bg-emerald-100 text-emerald-700",
     },
     {
       name: "Yagnesh Akbari",
       phone: "+91 9913017800",
-      email: "yagneshakbari6084@gmail.com",
       initials: "YA",
       color: "bg-blue-100 text-blue-700",
     },
@@ -216,13 +214,6 @@ export default function ContactUs() {
                         <Phone className="w-3.5 h-3.5" />
                         {person.phone}
                       </a>
-                      <a 
-                        href={`mailto:${person.email}`} 
-                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors break-all"
-                      >
-                        <Mail className="w-3.5 h-3.5" />
-                        {person.email}
-                      </a>
                     </div>
                   </div>
                 </div>
@@ -231,7 +222,7 @@ export default function ContactUs() {
 
             <div className="pt-6 border-t border-gray-100">
                <p className="text-xs text-gray-400 font-medium">
-                 Office Response Time: <span className="text-emerald-600">Usually replies within 24–48 hours</span>
+                 Feel free to reach out to us at <a href="mailto:support@comfhutt.com" className="text-emerald-600 hover:underline">support@comfhutt.com</a> for more info and queries.
                </p>
             </div>
           </div>

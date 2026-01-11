@@ -142,3 +142,33 @@ model PropertyDocument {
   url        String
   createdAt  DateTime @default(now())
 }
+
+enum InvestmentIntent {
+  JUST_EXPLORING
+  INVEST_WITHIN_3_MONTHS
+  READY_TO_INVEST
+}
+
+enum InvestmentRange {
+  BELOW_10K
+  TEN_TO_FIFTY_K
+  FIFTY_K_TO_TWO_L
+  ABOVE_TWO_L
+}
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+  MIXED_USE
+}
+
+model EarlyAccessUser {
+  id                      String           @id @default(uuid())
+  email                   String           @unique
+  name                    String?
+  investmentIntent        InvestmentIntent
+  expectedInvestmentRange InvestmentRange
+  preferredPropertyType   PropertyType?
+  source                  String           @default("website")
+  createdAt               DateTime         @default(now())
+}

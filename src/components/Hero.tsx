@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import HeroCard from "./HeroCard";
 import { VARIANTS } from "@/utils/animationUtils";
-import { redirectToChoices } from "@/utils/navigation";
+import { redirectToEarlyAccess } from "@/utils/navigation";
 
 export default function Hero() {
   const router = useRouter();
@@ -45,13 +45,13 @@ export default function Hero() {
             variants={VARIANTS.slideUp}
           >
             <button
-              onClick={() => redirectToChoices(router)}
+              onClick={() => redirectToEarlyAccess(router)}
               className="px-8 py-4 bg-black text-white text-lg font-semibold rounded-full hover:bg-gray-800 transition-all transform hover:scale-105 active:scale-95 shadow-lg text-center"
             >
-              GET STARTED
+              JOIN EARLY ACCESS
             </button>
             <button
-              onClick={() => redirectToChoices(router)}
+              onClick={() => redirectToEarlyAccess(router)}
               className="px-8 py-4 bg-gray-100 text-gray-900 text-lg font-medium rounded-full hover:bg-gray-200 transition-all text-center"
             >
               Learn More
