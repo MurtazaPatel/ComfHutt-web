@@ -34,7 +34,7 @@ export default function EarlyAccess() {
           <motion.div variants={VARIANTS.slideUp}>
             <button
               onClick={() => redirectToEarlyAccess(router)}
-              className="px-8 py-4 bg-black text-white text-lg font-semibold rounded-full hover:bg-gray-800 transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+              className="px-8 py-4 bg-black text-white text-lg font-semibold rounded-full hover:bg-gray-800 transition-all transform hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
             >
               Join the Early Access Waitlist
             </button>

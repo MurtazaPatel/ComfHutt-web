@@ -50,12 +50,12 @@ export default function Hero() {
             >
               JOIN EARLY ACCESS
             </button>
-            <button
-              onClick={() => redirectToEarlyAccess(router)}
+            <Link
+              href="/choices"
               className="px-8 py-4 bg-gray-100 text-gray-900 text-lg font-medium rounded-full hover:bg-gray-200 transition-all text-center"
             >
               Learn More
-            </button>
+            </Link>
           </motion.div>
         </motion.div>
 

@@ -11,7 +11,7 @@ import PropertyCard from "@/components/PropertyCard";
 import { startListingRouter } from "@/utils/onboarding";
 import PropertyDetailModal from "@/components/PropertyDetailModal";
 import Pagination from "@/components/Pagination";
-import { Property } from "@/lib/mock-data";
+import { Property, generateProperties } from "@/lib/mock-data";
 
 // --- Types ---
 interface Filters {
@@ -19,11 +19,16 @@ interface Filters {
   minBudget: number | "";
   maxBudget: number | "";
   minYield: number | "";
-  propertyType: "All" | "Residential" | "Commercial";
+  propertyType: string;
   minCredibility: number | "";
 }
 
-const QUICK_REGIONS = ["Gujarat", "Maharashtra", "Karnataka", "Telangana", "Tamil Nadu"];
+const allProperties = generateProperties(50);
+
+const QUICK_REGIONS = [...new Set(allProperties.map(p => p.state))];
+const YIELD_OPTIONS = [...new Set(allProperties.map(p => Math.floor(p.projected_yield_percent)))].sort((a, b) => a - b);
+const CREDIBILITY_OPTIONS = [...new Set(allProperties.map(p => Math.floor(p.credibility_score / 10) * 10))].sort((a, b) => a - b);
+const PROPERTY_TYPES = ["All", ...new Set(allProperties.map(p => p.type))];
 
 // --- Helper Components ---
 
@@ -98,49 +103,13 @@ export default function MarketplacePage() {
     return () => clearTimeout(handler);
   }, [filters.location]);
 
-  // Fetch properties
-  useEffect(() => {
-    async function fetchProperties() {
-      setLoading(true);
-      try {
-        const queryParams = new URLSearchParams({
-           page: currentPage.toString(),
-           limit: ITEMS_PER_PAGE.toString(),
-           regions: QUICK_REGIONS.join(',')
-        });
-        
-        const res = await fetch(`/api/properties?${queryParams}`);
-        const result = await res.json();
-        
-        if (result.data) {
-           setProperties(result.data);
-           setTotalPages(result.totalPages || 1);
-        } else {
-           // Fallback for older API shape if needed
-           setProperties(Array.isArray(result) ? result : []);
-        }
-
-      } catch (err) {
-        console.error("Failed to load properties", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProperties();
-  }, [currentPage]);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   // Filter Logic (Client-Side)
   const filteredProperties = useMemo(() => {
-    return properties.filter((p) => {
+    return allProperties.filter((p) => {
       // Location (Title, City, Locality)
       if (debouncedLocation) {
         const query = debouncedLocation.toLowerCase();
-        const matches = 
+        const matches =
           p.title.toLowerCase().includes(query) ||
           p.city.toLowerCase().includes(query) ||
           p.locality.toLowerCase().includes(query);
@@ -162,7 +131,22 @@ export default function MarketplacePage() {
 
       return true;
     });
-  }, [properties, debouncedLocation, filters.minBudget, filters.maxBudget, filters.minYield, filters.propertyType, filters.minCredibility]);
+  }, [debouncedLocation, filters.minBudget, filters.maxBudget, filters.minYield, filters.propertyType, filters.minCredibility]);
+
+  // Fetch properties
+  useEffect(() => {
+    setLoading(true);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    setProperties(filteredProperties.slice(startIndex, endIndex));
+    setTotalPages(Math.ceil(filteredProperties.length / ITEMS_PER_PAGE));
+    setLoading(false);
+  }, [currentPage, filteredProperties]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const clearFilters = () => {
     setFilters({
@@ -262,7 +246,7 @@ export default function MarketplacePage() {
               {/* Yield Filter */}
               <FilterDropdown label="Min Yield" isActive={!!filters.minYield}>
                  <div className="space-y-2">
-                    {[4, 5, 6, 7, 8].map(val => (
+                    {YIELD_OPTIONS.map(val => (
                        <button
                          key={val}
                          onClick={() => setFilters(prev => ({ ...prev, minYield: val }))}
@@ -280,7 +264,7 @@ export default function MarketplacePage() {
               {/* Type Filter */}
               <FilterDropdown label="Type" isActive={filters.propertyType !== "All"}>
                  <div className="space-y-1">
-                    {["All", "Residential", "Commercial"].map(type => (
+                    {PROPERTY_TYPES.map(type => (
                        <button
                          key={type}
                          onClick={() => setFilters(prev => ({ ...prev, propertyType: type as any }))}
@@ -298,7 +282,7 @@ export default function MarketplacePage() {
                {/* Credibility Filter */}
                <FilterDropdown label="Credibility" isActive={!!filters.minCredibility}>
                  <div className="space-y-2">
-                    {[60, 70, 80, 90].map(val => (
+                    {CREDIBILITY_OPTIONS.map(val => (
                        <button
                          key={val}
                          onClick={() => setFilters(prev => ({ ...prev, minCredibility: val }))}
@@ -341,12 +325,12 @@ export default function MarketplacePage() {
           ) : (
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
               <AnimatePresence mode="popLayout">
-                {filteredProperties.length > 0 ? (
-                  filteredProperties.map((property) => (
+                {properties.length > 0 ? (
+                  properties.map((property) => (
                     <div key={property.id} className="h-full">
-                      <PropertyCard 
-                        property={property} 
-                        onView={setSelectedProperty} 
+                      <PropertyCard
+                        property={property}
+                        onView={setSelectedProperty}
                       />
                     </div>
                   ))

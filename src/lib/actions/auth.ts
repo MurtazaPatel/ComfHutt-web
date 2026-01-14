@@ -2,10 +2,10 @@
 
 import { z } from "zod";
 import { registerSchema } from "@/lib/validations/auth";
-import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import { createUser, getUserByEmail } from "@/lib/users";
 
 export const register = async (values: z.infer<typeof registerSchema>) => {
   const validatedFields = registerSchema.safeParse(values);
@@ -16,40 +16,21 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
 
   const { email, password } = validatedFields.data;
 
-  const existingUser = await db.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (existingUser) {
-    return { error: "Email already in use" };
-  }
-
-  const hashedPassword = await hashPassword(password);
-
-  await db.user.create({
-    data: {
-      name: email.split("@")[0],
-      email,
-      passwordHash: hashedPassword,
-    },
-  });
-
-  // Check if waitlist entry exists and link it
-  const waitlistEntry = await db.waitlistEntry.findUnique({
-    where: { email },
-  });
-
-  if (waitlistEntry) {
-    const user = await db.user.findUnique({ where: { email } });
-    if (user) {
-      await db.waitlistEntry.update({
-        where: { email },
-        data: { userId: user.id, status: "approved" },
-      });
+  try {
+    const existingUser = await getUserByEmail(email);
+    
+    if (existingUser) {
+      return { error: "Email already in use" };
     }
+
+    const hashedPassword = await hashPassword(password);
+
+    await createUser(email, hashedPassword);
+  } catch (error) {
+    console.error("Unexpected error during registration:", error);
+    return { error: "An unexpected error occurred. Please try again." };
   }
+
   
   // Login user after registration
   try {

@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { db } from "@/lib/db"
+import { supabase } from "@/lib/db";
+import { SupabaseAdapter } from "@/lib/supabase-adapter";
 import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
 import Apple from "next-auth/providers/apple"
@@ -8,9 +8,10 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Email from "next-auth/providers/email"
 import { verifyPassword } from "@/lib/password"
 import { loginSchema } from "@/lib/validations/auth"
+import { getUserByEmail } from "@/lib/users";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
+  adapter: SupabaseAdapter(supabase),
   session: { strategy: "jwt" },
   pages: {
     signIn: "/signin",
@@ -49,11 +50,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!result.success) return null;
 
         const { email, password } = result.data;
-        const user = await db.user.findUnique({ where: { email } });
+        let user;
+        try {
+          user = await getUserByEmail(email);
+        } catch (error) {
+          return null;
+        }
 
-        if (!user || !user.passwordHash) return null;
+        if (!user || !user.password_hash) return null;
 
-        const isValid = await verifyPassword(password, user.passwordHash);
+        const isValid = await verifyPassword(password, user.password_hash);
 
         if (!isValid) return null;
 

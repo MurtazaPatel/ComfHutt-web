@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { ownerDetailsSchema, propertyDetailsSchema } from "@/lib/validations/owner-onboarding";
 import { z } from "zod";
+import { upsertOwner, createProperty, createPropertyDocuments } from "@/lib/onboarding";
 import { FEATURES } from "@/config/feature-flags";
 
 export async function POST(req: Request) {
@@ -49,60 +49,56 @@ export async function POST(req: Request) {
     const { owner, property, documents } = body;
     const validatedProperty = propertyValidation.data;
 
-    // 3. Database Transaction
-    // We create the owner, property, and link documents in one transaction to ensure data integrity
-    const result = await db.$transaction(async (tx) => {
-      // Check if owner already exists by email (optional: could update existing or error)
-      // For this flow, we'll create or update based on email uniqueness
-      const existingOwner = await tx.owner.findUnique({
-        where: { email: owner.email },
+    // 3. Database Operations
+    let ownerId;
+    try {
+      ownerId = await upsertOwner({
+        name: owner.name,
+        email: owner.email,
+        phone: owner.phone,
+        address: owner.address,
       });
+    } catch (error) {
+      console.error("Error creating owner:", error);
+      return NextResponse.json(
+        { error: "Could not process owner details. Please try again." },
+        { status: 500 }
+      );
+    }
 
-      let ownerId = existingOwner?.id;
-
-      if (!ownerId) {
-        const newOwner = await tx.owner.create({
-          data: {
-            name: owner.name,
-            email: owner.email,
-            phone: owner.phone,
-            address: owner.address,
-            // aadharPan would be a URL in a real app
-          },
-        });
-        ownerId = newOwner.id;
-      }
-
-      // Create Property
-      const newProperty = await tx.property.create({
-        data: {
-            ownerId: ownerId!,
-            title: validatedProperty.title,
-            type: validatedProperty.type,
-            location: validatedProperty.location,
-            builtUpArea: validatedProperty.builtUpArea,
-            carpetArea: validatedProperty.carpetArea,
-            expectedValuation: validatedProperty.expectedValuation
-        }
+    let propertyId;
+    try {
+      propertyId = await createProperty(ownerId, {
+        title: validatedProperty.title,
+        type: validatedProperty.type,
+        location: validatedProperty.location,
+        built_up_area: validatedProperty.builtUpArea,
+        carpet_area: validatedProperty.carpetArea,
+        expected_valuation: validatedProperty.expectedValuation,
       });
+    } catch (error) {
+      console.error("Error creating property:", error);
+      return NextResponse.json(
+        { error: "Could not process property details. Please try again." },
+        { status: 500 }
+      );
+    }
 
-      // Create Documents if any
-      if (documents && Array.isArray(documents)) {
-        await tx.propertyDocument.createMany({
-            data: documents.map((doc: any) => ({
-                propertyId: newProperty.id,
-                type: doc.type,
-                url: doc.url
-            }))
-        })
+    if (documents && Array.isArray(documents) && documents.length > 0) {
+      try {
+        await createPropertyDocuments(propertyId, documents);
+      } catch (error) {
+        console.error("Error creating documents:", error);
+        return NextResponse.json(
+          { error: "Could not save documents. Please try again." },
+          { status: 500 }
+        );
       }
-
-      return newProperty;
-    });
-
+    }
+    
     return NextResponse.json(
-      { message: "Application submitted successfully", propertyId: result.id },
-      { status: 201 }
+        { message: "Application submitted successfully", propertyId: propertyId },
+        { status: 201 }
     );
   } catch (error) {
     console.error("Owner Onboarding Error:", error);

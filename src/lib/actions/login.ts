@@ -5,7 +5,7 @@ import { AuthError } from "next-auth";
 
 import { signIn } from "@/auth";
 import { loginSchema } from "@/lib/validations/auth";
-import { db } from "@/lib/db";
+import { getUserByEmail } from "@/lib/users";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
   const validatedFields = loginSchema.safeParse(values);
@@ -16,12 +16,15 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
 
   const { email, password } = validatedFields.data;
 
-  const existingUser = await db.user.findUnique({
-    where: { email }
-  });
+  try {
+    const existingUser = await getUserByEmail(email);
 
-  if (!existingUser || !existingUser.email || !existingUser.passwordHash) {
-    return { error: "Email does not exist!" }
+    if (!existingUser) {
+      return { error: "Email does not exist!" };
+    }
+  } catch (error) {
+    console.error("Unexpected error during login:", error);
+    return { error: "An unexpected error occurred. Please try again." };
   }
 
   try {

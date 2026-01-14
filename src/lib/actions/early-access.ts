@@ -1,7 +1,9 @@
 "use server";
 
-import { db } from "@/lib/db";
 import { z } from "zod";
+import { sendEmail } from "@/lib/email";
+import { upsertLead, logLeadEvent } from "@/lib/leads";
+import { createEarlyAccessRequest } from "@/lib/earlyAccess";
 
 const InvestmentIntent = {
   JUST_EXPLORING: "JUST_EXPLORING",
@@ -42,29 +44,84 @@ export async function joinEarlyAccess(data: z.infer<typeof earlyAccessSchema>) {
        return { success: true };
     }
 
-    if (!db || !db.waitlistEntry) {
-        throw new Error("Database client not initialized properly");
+    // 1. Upsert Lead to get a stable lead_id
+    let leadId;
+    try {
+      leadId = await upsertLead(
+        validatedData.email,
+        validatedData.name,
+        "EARLY_ACCESS"
+      );
+    } catch (error: any) {
+      console.error("Error upserting lead:", error);
+      return { success: false, error: "Could not process your request. Please try again." };
     }
 
-    const existingUser = await db.waitlistEntry.findUnique({
-      where: { email: validatedData.email },
-      select: { id: true }
-    });
-
-    if (existingUser) {
-      console.log(`[Waitlist] Duplicate attempt: ${validatedData.email}`);
-      return { success: false, error: "This email is already on the waitlist." };
+    // 2. Insert into early_access_requests table via RPC
+    try {
+      await createEarlyAccessRequest(
+        leadId,
+        validatedData.expectedInvestmentRange,
+        validatedData.investmentIntent,
+        null, // city
+        null // notes
+      );
+    } catch (error: any) {
+      // Handle potential duplicate requests if the unique constraint is on lead_id
+      if (error.code === "23505") {
+        return { success: false, error: "You have already requested early access." };
+      }
+      console.error("Error creating early access request:", error);
+      return { success: false, error: "Could not save your request. Please try again." };
     }
 
-    const newUser = await db.waitlistEntry.create({
-      data: {
-        email: validatedData.email,
-        name: validatedData.name,
-      },
-    });
+    // 3. Log the lead event
+    try {
+      await logLeadEvent(
+        leadId,
+        "EARLY_ACCESS_REQUEST",
+        "EARLY_ACCESS", // source
+        {
+          source: validatedData.source,
+          preferredPropertyType: validatedData.preferredPropertyType,
+        }
+      );
+    } catch (error) {
+      console.error("Error logging lead event:", error);
+      // Non-critical error, so we don't return a failure to the user
+    }
+
+    // Send Internal Notification Email
+    const internalEmailHtml = `
+      <h1>New Early Access request</h1>
+      <p>A new user has requested early access to ComfHutt.</p>
+      <p><strong>Email:</strong> ${validatedData.email}</p>
+      <p><strong>Name:</strong> ${validatedData.name || "N/A"}</p>
+      <p><strong>Investment Intent:</strong> ${validatedData.investmentIntent}</p>
+      <p><strong>Expected Investment Range:</strong> ${validatedData.expectedInvestmentRange}</p>
+      <p><strong>Preferred Property Type:</strong> ${validatedData.preferredPropertyType || "N/A"}</p>
+    `;
+    await sendEmail(
+      "internal@comfhutt.com", // Replace with your internal team's email
+      "New Early Access request",
+      internalEmailHtml
+    );
+
+    // Send User Confirmation Email
+    const userEmailHtml = `
+      <p>Hi ${validatedData.name || "there"},</p>
+      <p>Thanks for joining the ComfHutt early access list.</p>
+      <p>We’re currently preparing the first set of properties and onboarding flows. You’ll hear from us before the public launch when early access opens.</p>
+      <p>— Team ComfHutt</p>
+    `;
+    await sendEmail(
+      validatedData.email,
+      "You’re on the ComfHutt early access list",
+      userEmailHtml
+    );
 
     const duration = Date.now() - startTime;
-    console.log(`[Waitlist] Success: ${newUser.email} (took ${duration}ms)`);
+    console.log(`[Waitlist] Success: ${validatedData.email} (took ${duration}ms)`);
     
     return { success: true };
   } catch (error) {

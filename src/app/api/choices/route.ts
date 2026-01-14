@@ -1,7 +1,9 @@
+// @ts-nocheck
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import { choiceSchema } from "@/lib/validations/choices";
 import { z } from "zod";
+import { upsertLead, logLeadEvent } from "@/lib/leads";
+import { createChoiceResponses } from "@/lib/choices";
 
 // Basic in-memory rate limiting (for demo purposes, use Redis/Upstash in production)
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
@@ -38,41 +40,49 @@ export async function POST(req: Request) {
     const validatedData = choiceSchema.parse(body);
 
     // 3. Database Operations
-    // Note: We use sequential operations instead of $transaction to avoid potential issues
-    // with Prisma Client types not being fully synced in the dev environment.
-    
     // Upsert Lead
-    // @ts-ignore - Prisma client might not be fully generated in dev environment
-    // debug snippet — drop this before the upsert line, inspect logs
+    let leadId;
+    try {
+      leadId = await upsertLead(
+        validatedData.email,
+        validatedData.name,
+        "CHOICES"
+      );
+    } catch (error) {
+      console.error("Error upserting lead:", error);
+      return NextResponse.json(
+        { error: "Could not save your preferences. Please try again." },
+        { status: 500 }
+      );
+    }
 
-    const lead = await db.lead.upsert({
-      where: { email: validatedData.email },
-      update: {
-        name: validatedData.name || undefined,
-      },
-      create: {
-        email: validatedData.email,
-        name: validatedData.name,
-        source: validatedData.source || "choices_form",
-        anonymous: false,
-      },
-    });
+    // Create Choice Responses
+    const responses = [
+      { key: "intent", value: validatedData.intent },
+    ];
+    if (validatedData.nps) {
+      responses.push({ key: "nps", value: validatedData.nps.toString() });
+    }
 
-    // Create Choice Response
-    // @ts-ignore
-    const response = await db.choiceResponse.create({
-      data: {
-        leadId: lead.id,
-        intent: validatedData.intent,
-        nps: validatedData.nps,
-        meta: {
-          ip_hash: Buffer.from(ip).toString("base64"), // Simple hash/encoding
-          user_agent: req.headers.get("user-agent"),
-        },
-      },
-    });
+    try {
+      await createChoiceResponses(leadId, responses);
+    } catch (error) {
+      console.error("Error creating choice responses:", error);
+      return NextResponse.json(
+        { error: "Could not save your preferences. Please try again." },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ ok: true, leadId: lead.id, responseId: response.id });
+    // Log the lead event
+    try {
+      await logLeadEvent(leadId, "CHOICES_SUBMISSION", "CHOICES");
+    } catch (eventError) {
+      console.error("Error logging lead event:", eventError);
+      // Non-critical error
+    }
+
+    return NextResponse.json({ ok: true, leadId: leadId });
 
   } catch (error) {
     console.error("Choices API Error:", error);
