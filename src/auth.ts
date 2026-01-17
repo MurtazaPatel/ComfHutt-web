@@ -17,7 +17,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/signin",
     error: "/error",
     verifyRequest: "/verify-request",
-    newUser: "/owner-onboarding",
+    newUser: "/developer-onboarding",
   },
   providers: [
     Google({

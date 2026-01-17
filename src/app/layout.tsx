@@ -87,7 +87,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${playfair.variable} antialiased bg-zinc-50 text-slate-900 overflow-x-hidden`}
+        className={`${inter.variable} ${playfair.variable} antialiased bg-background text-foreground`}
       >
         <Analytics />
         <Providers>

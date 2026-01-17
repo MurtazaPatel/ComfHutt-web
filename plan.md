@@ -1,172 +1,93 @@
-# Database Schema Replacement and Rewiring Plan
+# ComfHutt Developer Onboarding Page: Redesign & Implementation Plan
 
-This document outlines the plan for replacing the legacy database schema with the new, approved schema.
+## 1. Project Vision
 
-## 1. Legacy Schema Inventory & Removal Plan
+To create a world-class developer onboarding page that embodies the principles of premium, architectural, and inevitable design. The page will be a flagship experience for ComfHutt, signaling trust, scale, and seriousness to a discerning audience of real estate developers.
 
-The following legacy models will be removed from `comfhutt-next/prisma/schema.prisma`:
+## 2. Core Principles
 
-- `WaitlistEntry`
-- `Lead`
-- `ChoiceResponse`
-- `ContactUs`
-- `EarlyAccessUser`
+*   **Content is Sacred**: The provided content will be used exactly as written, with design elevating its meaning.
+*   **Minimalism is Earned**: Every element will have a purpose. No decoration for the sake of it.
+*   **Motion Reveals Meaning**: Animations will be subtle, purposeful, and used to guide the user's attention.
+*   **Structure Over Decoration**: The design will be inspired by architectural principles, using grids, layers, and whitespace as primary tools.
+*   **Psychology-Aware Highlighting**: Key terms related to capital, timing, control, execution, and structure will be highlighted using the ComfHutt accent color.
 
-The following files that use these models will be modified:
+## 3. Tech Stack
 
-- `comfhutt-next/src/lib/actions/auth.ts`
-- `comfhutt-next/src/app/admin/dashboard/page.tsx`
-- `comfhutt-next/src/app/api/choices/route.ts`
-- `comfhutt-next/src/app/api/contact/route.ts`
+*   **Framework**: Next.js (React)
+*   **Styling**: Tailwind CSS
+*   **Animation**: Framer Motion
+*   **UI Components**: shadcn/ui (where appropriate)
+*   **Icons**: Custom SVG icons (abstract, real-estate inspired)
 
-## 2. Input → New Table Mapping
+## 4. Phase 1: Foundational Design & Component Scaffolding
 
-This section maps the user inputs to the new database tables.
+*   **Objective**: To establish the visual language and create the foundational components for the page.
+*   **Tasks**:
+    *   **Palette & Typography**: Define a calm, neutral color palette and select a premium, readable typeface that aligns with the brand's values.
+    *   **Grid System**: Establish a flexible grid system that can adapt to different section layouts.
+    *   **Component Structure**: Create placeholder components for each of the 9 sections, ensuring they are correctly imported into the main page.
+    *   **Custom Icons**: Design a set of custom SVG icons that are abstract and inspired by real-estate concepts (e.g., parcels, blueprints, layers).
 
-### Choices Page
+## 5. Phase 2: Hero Section Redesign
 
-- **Source File**: `comfhutt-next/src/app/api/choices/route.ts`
-- **Handler**: `POST`
-- **Target Table**: `choices_responses`
-- **Fields Written**: `lead_id`, `choice_key`, `choice_value`
-- **Deduplication**: A `users_leads` record is created or updated based on the user's email. The `lead_id` from this record is then used to create a new `choices_responses` record.
+*   **Objective**: To create a powerful, awe-inspiring first impression that slows the reader down.
+*   **Tasks**:
+    *   **Layout**: Design a spacious, centered layout for the hero section that gives the content room to breathe.
+    *   **Typography**: Use a large, bold font for the headline, with a clear hierarchy for the sub-headline and authority cue.
+    *   **CTA**: Design a prominent, yet understated, primary CTA button.
+    *   **Background**: Enhance the existing `HeroBackground` component with more subtle, architectural elements.
+    *   **Animation**: Create a staggered entrance animation for the text elements, with a subtle parallax effect on the background.
 
-### Early Access Form
+## 6. Phase 3: Content Section Implementation (Sections 2-8)
 
-- **Source File**: `comfhutt-next/src/lib/actions/waitlist.ts` (to be created)
-- **Handler**: `POST`
-- **Target Table**: `early_access_requests`
-- **Fields Written**: `lead_id`, `investment_range`, `city`, `intent_level`, `notes`
-- **Deduplication**: A `users_leads` record is created or updated based on the user's email. The `lead_id` from this record is then used to create a new `early_access_requests` record.
+*   **Objective**: To design and build each content section with a unique rhythm and visual identity, while maintaining a cohesive design language.
+*   **Tasks**:
+    *   **Section 2 (Capital Reality) & 3 (Market Pattern)**: Use a two-column layout to create a sense of dialogue between the headline and body text.
+    *   **Section 4 (Smarter Path) & 8 (Trust & Reliability)**: Employ a single, centered column to create a feeling of focus and authority.
+    *   **Section 5 (How It Works) & 6 (Partner Benefits)**: Use a numbered list or a visual flowchart to present the information in a clear, structured way.
+    *   **Section 7 (Why Now)**: Incorporate a subtle data visualization or a blockquote style for the market report excerpt.
+    *   **Highlighting**: Implement the psychology-aware highlighting on the specified keywords.
 
-### Contact Us Form
+## 7. Phase 4: CTA Section (Section 9)
 
-- **Source File**: `comfhutt-next/src/app/api/contact/route.ts`
-- **Handler**: `POST`
-- **Target Table**: `contact_messages`
-- **Fields Written**: `lead_id`, `subject`, `message`
-- **Deduplication**: A `users_leads` record is created or updated based on the user's email. The `lead_id` from this record is then used to create a new `contact_messages` record.
+*   **Objective**: To create a clear, compelling, and low-friction call-to-action section.
+*   **Tasks**:
+    *   **Layout**: Design a clean, focused layout that presents the two CTA options clearly.
+    *   **Buttons**: Create distinct visual treatments for the primary and secondary CTAs.
+    *   **Micro-reassurance**: Display the "No obligations. No pressure. Just clarity." text in a subtle, reassuring way.
 
-## 3. Rewiring Summary
+## 8. Phase 5: Animation & Motion Design
 
-The following is a summary of the required code changes:
+*   **Objective**: To apply consistent, meaningful animations across the entire page.
+*   **Tasks**:
+    *   **Scroll-Triggered Animations**: Use the `MotionWrapper` component to trigger animations as each section scrolls into view.
+    *   **Subtle Effects**: Add subtle hover effects to interactive elements.
+    *   **Performance**: Ensure all animations are smooth and performant, with no jank or lag.
 
-- **`comfhutt-next/prisma/schema.prisma`**:
-    - Remove the legacy models.
-    - Add the new models: `users_leads`, `lead_events`, `choices_responses`, `early_access_requests`, `contact_messages`, and `page_sessions`.
-- **`comfhutt-next/src/app/api/choices/route.ts`**:
-    - Replace the `Lead` and `ChoiceResponse` models with `users_leads` and `choices_responses`.
-    - Implement the logic to create or update a `users_leads` record and then create a `choices_responses` record.
-- **`comfhutt-next/src/app/api/contact/route.ts`**:
-    - Add logic to create or update a `users_leads` record and then create a `contact_messages` record.
-- **`comfhutt-next/src/lib/actions/waitlist.ts`**:
-    - This file will be created to handle the early access form submission.
-    - It will replace the `WaitlistEntry` model with `users_leads` and `early_access_requests`.
-- **`comfhutt-next/src/lib/actions/auth.ts`**:
-    - Remove the logic that links a `WaitlistEntry` to a `User`.
-- **`comfhutt-next/src/app/admin/dashboard/page.tsx`**:
-    - Update the dashboard to use the new `users_leads` table instead of `WaitlistEntry`.
+## 9. Phase 6: Responsive Design & Quality Assurance
 
-## 4. Final SQL (DEV only)
+*   **Objective**: To ensure the page provides a premium experience on all devices.
+*   **Tasks**:
+    *   **Breakpoints**: Test and refine the design at all major breakpoints (desktop, laptop, tablet, mobile).
+    *   **Spacing & Alignment**: Perform a final audit of all spacing and alignment to ensure visual perfection.
+    *   **Cross-Browser Testing**: Test the page in all major browsers.
 
-The following SQL will be generated to create the new tables in the development database.
+## 10. Phase 7: Final Review and Handoff
 
-```sql
--- Create users_leads table
-CREATE TABLE users_leads (
-    id UUID PRIMARY KEY,
-    email TEXT,
-    phone TEXT,
-    name TEXT,
-    source TEXT,
-    first_seen_at TIMESTAMPTZ,
-    last_seen_at TIMESTAMPTZ,
-    environment TEXT
-);
+*   **Objective**: To present the final implementation for review and approval.
+*   **Tasks**:
+    *   **Code Comments**: Add brief comments to the code to explain key design decisions.
+    *   **Presentation**: Prepare a brief presentation of the final design, highlighting how it meets the project's objectives.
 
-CREATE INDEX idx_users_leads_email ON users_leads(email);
+## Mermaid Diagram: Page Flow
 
--- Create lead_events table
-CREATE TABLE lead_events (
-    id UUID PRIMARY KEY,
-    lead_id UUID REFERENCES users_leads(id),
-    event_type TEXT,
-    metadata JSONB,
-    created_at TIMESTAMPTZ,
-    environment TEXT
-);
-
-CREATE INDEX idx_lead_events_lead_id ON lead_events(lead_id);
-
--- Create choices_responses table
-CREATE TABLE choices_responses (
-    id UUID PRIMARY KEY,
-    lead_id UUID REFERENCES users_leads(id),
-    choice_key TEXT,
-    choice_value TEXT,
-    created_at TIMESTAMPTZ,
-    environment TEXT
-);
-
-CREATE INDEX idx_choices_responses_lead_id ON choices_responses(lead_id);
-
--- Create early_access_requests table
-CREATE TABLE early_access_requests (
-    id UUID PRIMARY KEY,
-    lead_id UUID REFERENCES users_leads(id),
-    investment_range TEXT,
-    city TEXT,
-    intent_level TEXT,
-    notes TEXT,
-    created_at TIMESTAMPTZ,
-    environment TEXT
-);
-
-CREATE INDEX idx_early_access_requests_lead_id ON early_access_requests(lead_id);
-
--- Create contact_messages table
-CREATE TABLE contact_messages (
-    id UUID PRIMARY KEY,
-    lead_id UUID REFERENCES users_leads(id),
-    subject TEXT,
-    message TEXT,
-    responded BOOLEAN DEFAULT false,
-    created_at TIMESTAMPTZ,
-    environment TEXT
-);
-
-CREATE INDEX idx_contact_messages_lead_id ON contact_messages(lead_id);
-
--- Create page_sessions table
-CREATE TABLE page_sessions (
-    id UUID PRIMARY KEY,
-    lead_id UUID REFERENCES users_leads(id),
-    page TEXT,
-    referrer TEXT,
-    utm_source TEXT,
-    utm_campaign TEXT,
-    created_at TIMESTAMPTZ,
-    environment TEXT
-);
-
-CREATE INDEX idx_page_sessions_lead_id ON page_sessions(lead_id);
-```
-
-## 5. Deployment Checklist
-
-1.  Apply the new schema to the DEV database.
-2.  Run migrations in the DEV environment.
-3.  Deploy the updated code to the DEV environment.
-4.  Thoroughly test all the rewired data flows.
-5.  Manually apply the new schema to the PROD database.
-6.  Deploy the updated code to the PROD environment.
-7.  Verify that all data flows are working correctly in the PROD environment.
-8.  Remove the legacy tables from the DEV and PROD databases.
-
-## 6. Production Safety Rules
-
--   All schema changes must be reviewed and approved by the principal database engineer.
--   The `DIRECT_URL` must never be used in the runtime code.
--   Schema drift between the DEV and PROD databases must be monitored and prevented.
--   Regular backups of the PROD database must be taken.
--   A rollback plan must be in place before any schema changes are applied to the PROD database.
+\`\`\`mermaid
+graph TD
+    A[Phase 1: Foundation] --> B[Phase 2: Hero Section];
+    B --> C[Phase 3: Content Sections];
+    C --> D[Phase 4: CTA Section];
+    D --> E[Phase 5: Animation];
+    E --> F[Phase 6: Responsive QA];
+    F --> G[Phase 7: Final Review];
+\`\`\`

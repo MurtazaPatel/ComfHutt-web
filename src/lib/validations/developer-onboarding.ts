@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ownerDetailsSchema = z.object({
+export const developerDetailsSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
@@ -28,11 +28,11 @@ export const propertyDetailsSchema = propertyDetailsFormSchema.transform((data) 
 
 // We'll combine these for the full form state
 export const onboardingFormSchema = z.object({
-  owner: ownerDetailsSchema,
+  developer: developerDetailsSchema,
   property: propertyDetailsSchema,
   // Documents are managed via state/separately due to file handling complexities in pure zod forms without server actions immediately
 });
 
-export type OwnerDetails = z.infer<typeof ownerDetailsSchema>;
+export type DeveloperDetails = z.infer<typeof developerDetailsSchema>;
 export type PropertyDetails = z.infer<typeof propertyDetailsFormSchema>;
 export type PropertyDetailsTransformed = z.infer<typeof propertyDetailsSchema>;

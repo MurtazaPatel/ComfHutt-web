@@ -79,16 +79,16 @@ export const requireChoicesBeforeOnboarding = (
 ) => {
   // If feature is disabled, just go to onboarding
   if (!FEATURES.REQUIRE_CHOICES_FOR_FIRST_TIME) {
-     router.push("/owner-onboarding");
+     router.push("/developer-onboarding");
      return;
   }
 
   if (hasSeenChoices()) {
-    router.push("/owner-onboarding");
+    router.push("/developer-onboarding");
   } else {
     // Store intent
     setChoicesNext({
-      next: "/owner-onboarding",
+      next: "/developer-onboarding",
       prefill: prefillData
     });
     // Redirect to choices

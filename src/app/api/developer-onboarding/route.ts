@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { ownerDetailsSchema, propertyDetailsSchema } from "@/lib/validations/owner-onboarding";
+import { developerDetailsSchema, propertyDetailsSchema } from "@/lib/validations/developer-onboarding";
 import { z } from "zod";
 import { upsertOwner, createProperty, createPropertyDocuments } from "@/lib/onboarding";
 import { FEATURES } from "@/config/feature-flags";
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     // 1. Validate Owner Details
-    const ownerValidation = ownerDetailsSchema.safeParse(body.owner);
+    const ownerValidation = developerDetailsSchema.safeParse(body.owner);
     if (!ownerValidation.success) {
       const { fieldErrors, formErrors } = ownerValidation.error.flatten();
       return NextResponse.json(

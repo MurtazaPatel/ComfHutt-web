@@ -20,7 +20,7 @@ describe('onboarding utils', () => {
       startListingRouter(mockRouter, prefillData, true);
 
       expect(sessionStorage.getItem('comfhutt:onboarding_prefill')).toBe(JSON.stringify(prefillData));
-      expect(mockPush).toHaveBeenCalledWith('/owner-onboarding');
+      expect(mockPush).toHaveBeenCalledWith('/developer-onboarding');
       
       const dataLayer = (window as any).dataLayer;
       expect(dataLayer).toContainEqual(expect.objectContaining({
@@ -32,8 +32,8 @@ describe('onboarding utils', () => {
     it('should redirect to login if not authenticated', () => {
         startListingRouter(mockRouter, undefined, false);
 
-        expect(sessionStorage.getItem('comfhutt:onboarding_prefill_return')).toBe(JSON.stringify({ next: "/owner-onboarding" }));
-        expect(mockPush).toHaveBeenCalledWith('/auth/signin?callbackUrl=/owner-onboarding');
+        expect(sessionStorage.getItem('comfhutt:onboarding_prefill_return')).toBe(JSON.stringify({ next: "/developer-onboarding" }));
+        expect(mockPush).toHaveBeenCalledWith('/auth/signin?callbackUrl=/developer-onboarding');
     });
 
     it('should clear stale prefill data if none provided', () => {

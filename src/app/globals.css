@@ -152,5 +152,13 @@ html, body {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .developer-onboarding-page {
+    --comfhutt-accent: oklch(0.646 0.222 41.116);
+    --comfhutt-accent-foreground: oklch(1 0 0);
   }
 }

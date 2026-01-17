@@ -50,6 +50,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/owner-onboarding',
+        destination: '/developer-onboarding',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
