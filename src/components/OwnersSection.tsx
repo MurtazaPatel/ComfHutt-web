@@ -95,13 +95,13 @@ export default function OwnersSection() {
 
               <div className="mt-8 pt-6 border-t border-gray-100">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <button
-                    onClick={() => startListingRouter(router, undefined, isAuthenticated)}
-                    className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white text-sm font-bold rounded-full hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg"
-                    aria-label="List your property now"
-                  >
-                    List Property Now
-                  </button>
+                 <Link
+                   href="/developer-onboarding"
+                   className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white text-sm font-bold rounded-full hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg"
+                   aria-label="List your property now"
+                 >
+                   List Property
+                 </Link>
                   <Link
                     href="/choices?role=owner"
                     className="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
