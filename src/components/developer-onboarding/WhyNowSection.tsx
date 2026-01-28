@@ -8,37 +8,93 @@ const Highlight = ({ children }: { children: React.ReactNode }) => (
 
 export const WhyNowSection = () => {
   return (
-    <section className="py-20 md:py-32 bg-muted/20">
-      <div className="container mx-auto max-w-5xl px-4">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold font-playfair tracking-tight text-balance leading-tight">A shift already underway.</h2>
+    <section className="relative py-24 md:py-32 bg-muted/20 overflow-hidden">
+      {/* Subtle ambient motion */}
+      <motion.div
+        aria-hidden
+        className="absolute -top-48 -right-48 h-[520px] w-[520px] rounded-full bg-[var(--comfhutt-accent)]/10 blur-3xl"
+        animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      <div className="relative container mx-auto max-w-5xl px-4">
+        {/* Heading */}
+        <div className="text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="text-4xl md:text-5xl font-bold font-playfair tracking-tight"
+          >
+            A <Highlight>shift</Highlight> already underway.
+          </motion.h2>
         </div>
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
-          <div>
-            <p className="text-lg md:text-xl text-muted-foreground text-balance">
-              Investor behavior around real estate is changing. More participants want access, but not always through full ownership.
+
+        {/* Core content */}
+        <div className="grid md:grid-cols-2 gap-14 md:gap-20 items-start">
+          {/* Investor side */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="space-y-6"
+          >
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Investor expectations around real estate are changing.
             </p>
-            <blockquote className="mt-6 md:mt-8 border-l-4 border-primary pl-4 md:pl-6 italic text-lg md:text-xl text-foreground text-balance">
-              Market reports indicate a growing demand for <Highlight>structured</Highlight> and fractional ownership models across residential and commercial real estate, as investors look for smaller-ticket participation without full-asset exposure.
-            </blockquote>
-            <p className="mt-3 md:mt-4 text-xs md:text-sm text-muted-foreground">
-              Sources: Knight Frank, ANAROCK, industry real estate market reports
+
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Access matters more than ownership size.
             </p>
-          </div>
-          <div>
-            <p className="text-lg md:text-xl text-muted-foreground text-balance">
-              At the same time, developers are becoming more deliberate about how and when <Highlight>capital</Highlight> enters their projects.
+
+            <div className="rounded-xl bg-background/80 backdrop-blur-sm border border-border/40 p-6">
+              <p className="italic text-base md:text-lg text-foreground">
+                Demand is rising for <Highlight>structured</Highlight>, fractional
+                models that allow participation without full-asset exposure.
+              </p>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Knight Frank, ANAROCK, industry reports
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Developer side */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
+            className="space-y-6"
+          >
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Developers are also rethinking timing.
             </p>
-            <p className="mt-4 md:mt-6 text-lg md:text-xl text-muted-foreground text-balance">
-              As these <Highlight>structures</Highlight> mature, early developer partners help shape standards, terms, and expectations.
+
+            <p className="text-lg md:text-xl text-muted-foreground">
+            It’s not just how much <Highlight>capital</Highlight> comes in, but when.
             </p>
-          </div>
+
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Early partners help shape <Highlight>standards</Highlight>, not just
+              participate in them.
+            </p>
+          </motion.div>
         </div>
-        <div className="text-center mt-16 md:mt-24">
-          <p className="text-xl md:text-2xl font-semibold text-foreground text-balance">
-            Early <Highlight>execution</Highlight> sets standards.
+
+        {/* Closing line */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
+          className="text-center mt-20"
+        >
+          <p className="text-xl md:text-2xl font-semibold text-foreground">
+            Early <Highlight>execution</Highlight> sets the tone.
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

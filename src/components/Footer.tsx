@@ -83,7 +83,7 @@ export default function Footer() {
            ComfHutt Technologies Pvt Ltd operates as a technology platform connecting investors with fractional real estate opportunities. We are not a registered stock exchange or asset management company. 
            All investments involve risk, including the potential loss of principal. Past performance of any asset or projection is not a guarantee of future results. 
            Liquidity is offered via our secondary marketplace but is not guaranteed at any specific time. 
-           Please read our <Link href="/docs/comfhutt-whitepaper" className="underline hover:text-gray-600">Whitepaper</Link> and <Link href="/legal" className="underline hover:text-gray-600">Terms of Use</Link> carefully before investing.
+           Please read our <Link href="/docs/comfhutt-whitepaper" className="underline hover:text-gray-600">Whitepaper</Link> and <Link href="/docs/terms-of-use" className="underline hover:text-gray-600">Terms of Use</Link> carefully before investing.
         </div>
       </div>
     </footer>

@@ -12,22 +12,22 @@ export const MarketDataSection = () => {
       <div className="container mx-auto max-w-5xl px-4">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="md:order-2 md:pl-8 text-center md:text-left">
-            <h2 className="text-4xl md:text-5xl font-bold font-playfair tracking-tight text-balance leading-tight">
-              This pattern shows up again and again.
+            <h2 className="text-5xl md:text-5xl font-bold font-playfair tracking-tight text-balance leading-tight">
+              This pattern shows up <Highlight>again</Highlight> and <Highlight>again</Highlight>.
             </h2>
           </div>
           <div className="md:order-1">
             <p className="text-lg md:text-xl text-muted-foreground text-balance">
-              Across cities and project types, <Highlight>capital</Highlight> gets held up at similar stages. Not because projects aren’t viable. But because <Highlight>capital</Highlight> and <Highlight>execution</Highlight> timelines don’t always align.
+              Across cities and project types, <Highlight>capital</Highlight> gets held up at similar stages. Not because projects aren’t <Highlight> viable</Highlight>. But because <Highlight>capital</Highlight> and <Highlight>execution timelines</Highlight> don’t always align.
             </p>
             <p className="mt-4 md:mt-6 text-lg md:text-xl text-muted-foreground text-balance">
-              At the same time, interest in real estate exposure keeps widening — just not always at full-unit levels.
+              At the same time, interest in <Highlight>real estate</Highlight> exposure keeps <Highlight>widening</Highlight>, just not always at <Highlight>full-unit levels</Highlight>.
             </p>
           </div>
         </div>
         <div className="text-center mt-16 md:mt-24">
           <p className="text-xl md:text-2xl font-semibold text-foreground text-balance">
-            This isn’t a one-off. It’s a recurring pattern.
+            This isn’t a one-off. It’s a recurring <Highlight>pattern</Highlight>.
           </p>
         </div>
       </div>

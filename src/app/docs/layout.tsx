@@ -16,15 +16,11 @@ export default function DocsLayout({
 
   const navItems = [
     {
-      title: "Overview",
-      items: [
-        { name: "Whitepaper", href: "/docs/comfhutt-whitepaper", icon: FileText },
-      ],
-    },
-    {
-      title: "Resources",
+      title: "Documents",
       items: [
         { name: "Pitch Deck", href: "/docs/comfhutt-whitepaper#pitch-deck", icon: Download },
+        { name: "Whitepaper", href: "/docs/comfhutt-whitepaper", icon: FileText },
+        { name: "Terms of Use", href: "/docs/terms-of-use", icon: Book },
       ],
     },
   ];

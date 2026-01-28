@@ -12,6 +12,8 @@ import ContactUs from "@/components/ContactUs";
 import Footer from "@/components/Footer";
 import FAQ from "@/components/FAQ";
 import EarlyAccess from "@/components/EarlyAccess";
+import FractionalRealEstateExplained from "@/components/FractionalRealEstateExplained";
+import ComparisonSection from "@/components/ComparisonSection";
 
 export const metadata = {
   title: "ComfHutt | Invest in Real Estate from ₹10,000",
@@ -126,6 +128,7 @@ export default function LandingPage() {
       <LandingNavbar />
       <Hero />
       <TrustStrip />
+      <FractionalRealEstateExplained />
       <EarlyAccess />
       <HowItWorks />
       
@@ -134,6 +137,7 @@ export default function LandingPage() {
       <CredibilityEngine />
       <FeatureStripe />
       <OwnersSection />
+      <ComparisonSection />
       <Testimonials />
       <FAQ />
       <ContactUs />

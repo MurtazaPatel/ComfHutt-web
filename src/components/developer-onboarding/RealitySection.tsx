@@ -21,13 +21,13 @@ export const RealitySection = () => {
               Even well-located projects face <Highlight>timing</Highlight> gaps. <Highlight>Capital</Highlight> often arrives later than <Highlight>execution</Highlight> needs it.
             </p>
             <p className="mt-4 md:mt-6 text-lg md:text-xl text-muted-foreground text-balance">
-              As phases progress, pressure builds quietly. Not because demand is weak — but because <Highlight>timing</Highlight> is tight.
+              As phases progress, pressure builds quietly. Not because demand is weak, but because <Highlight>timing</Highlight> is tight.
             </p>
           </div>
         </div>
         <div className="text-center mt-16 md:mt-24">
           <p className="text-xl md:text-2xl font-semibold text-foreground text-balance">
-            This is part of building at scale.
+            This is part of building at <Highlight>scale</Highlight>.
           </p>
         </div>
       </div>
