@@ -30,6 +30,18 @@ function isRateLimited(ip: string): boolean {
 }
 
 export async function middleware(req: NextRequest) {
+  const host = req.headers.get('host');
+  
+  // ========== DOMAIN CANONICALIZATION ==========
+  // Redirect www to non-www (before security checks)
+  if (host?.startsWith('www.')) {
+    const url = req.nextUrl.clone();
+    url.host = host.replace('www.', '');
+    console.log(`[Redirect] www.${host} → ${url.host}`);
+    return NextResponse.redirect(url, { status: 301 });
+  }
+
+  // ========== SECURITY HARDENING ==========
   const ip = req.headers.get('x-forwarded-for') || 'unknown';
   const contentType = req.headers.get('content-type') || '';
   const contentLength = parseInt(req.headers.get('content-length') || '0', 10);

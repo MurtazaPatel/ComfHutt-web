@@ -63,9 +63,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/brand/comfhutt-icon.svg", type: "image/svg+xml" },
-      { url: "/brand/comfhutt-icon.ico" }  // Add .ico version too
-    ],
+    { url: "/brand/comfhutt-icon.svg", type: "image/svg+xml" },
+    { url: "/brand/favicon.ico" }  // Add .ico version too
+  ],
     apple: "/brand/comfhutt-icon.svg",
   },
   alternates: {
@@ -89,15 +89,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ComfHutt",
+    "legalName": "COMFHUTT TECHNOLOGIES PRIVATE LIMITED",
+    "url": "https://comfhutt.com",
+    "logo": "https://comfhutt.com/brand/comfhutt-icon.svg",
+    "description": "Fractional Real Estate Investment Platform in India",
+    "foundingDate": "2026-01-15",
+    "sameAs": [
+      "https://www.instagram.com/comfhutt"
+    ]
+  };
+
   return (
     <html lang="en" className="scroll-smooth">
-      <body
-        className={`${inter.variable} ${playfair.variable} antialiased bg-background text-foreground`}
-      >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className={`${inter.variable} ${playfair.variable} antialiased bg-background text-foreground`}>
         <Analytics />
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
