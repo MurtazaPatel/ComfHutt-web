@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -18,6 +19,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  
   title: {
     default: "ComfHutt | Fractional Real Estate Investment Platform",
     template: "%s | ComfHutt"
@@ -60,7 +62,10 @@ export const metadata: Metadata = {
     creator: "@comfhutt", 
   },
   icons: {
-    icon: "/brand/comfhutt-icon.svg",
+    icon: [
+      { url: "/brand/comfhutt-icon.svg", type: "image/svg+xml" },
+      { url: "/brand/comfhutt-icon.ico" }  // Add .ico version too
+    ],
     apple: "/brand/comfhutt-icon.svg",
   },
   alternates: {
