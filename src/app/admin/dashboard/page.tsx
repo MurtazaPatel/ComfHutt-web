@@ -1,33 +1,40 @@
 // @ts-nocheck
 import { supabase } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 const AdminDashboardPage = async () => {
   let userCount = 0;
   let leadCount = 0;
 
-  try {
-    const { count: uCount, error: uError } = await supabase
-      .from("users")
-      .select("*", { count: "exact", head: true });
-    
-    if (!uError && uCount !== null) {
-      userCount = uCount;
+  if (supabase) {
+    try {
+      const { count: uCount, error: uError } = await supabase
+        .from("users")
+        .select("*", { count: "exact", head: true });
+      
+      if (!uError && uCount !== null) {
+        userCount = uCount;
+      }
+    } catch (e) {
+      console.warn("Failed to fetch users count during build/runtime", e);
     }
-  } catch (e) {
-    console.warn("Failed to fetch users count during build/runtime");
+
+    try {
+      const { count: lCount, error: lError } = await supabase
+        .from("users_leads")
+        .select("*", { count: "exact", head: true });
+      
+      if (!lError && lCount !== null) {
+        leadCount = lCount;
+      }
+    } catch (e) {
+      console.warn("Failed to fetch leads count during build/runtime", e);
+    }
+  } else {
+    console.warn("Supabase client not initialized - using default values");
   }
 
-  try {
-    const { count: lCount, error: lError } = await supabase
-      .from("users_leads")
-      .select("*", { count: "exact", head: true });
-    
-    if (!lError && lCount !== null) {
-      leadCount = lCount;
-    }
-  } catch (e) {
-    console.warn("Failed to fetch leads count during build/runtime");
-  }
 
   return (
     <div className="bg-white/5 p-10 rounded-xl border border-white/10">
