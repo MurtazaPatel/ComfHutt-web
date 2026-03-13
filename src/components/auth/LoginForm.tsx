@@ -9,12 +9,14 @@ import Link from "next/link";
 
 import { loginSchema } from "@/lib/validations/auth";
 import { CardWrapper } from "@/components/auth/CardWrapper";
-import { login } from "@/lib/actions/login";
+import { login } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { LoadingState } from "@/components/auth/LoadingState";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
     ? "Email already in use with different provider!"
     : "";
@@ -36,7 +38,7 @@ export const LoginForm = () => {
     setSuccess("");
 
     startTransition(() => {
-      login(values)
+      login(values.email, values.password)
         .then((data) => {
           if (data?.error) {
             form.reset();
@@ -46,6 +48,7 @@ export const LoginForm = () => {
           if (data?.success) {
             form.reset();
             setSuccess(data.success);
+            router.push("/dashboard");
           }
         })
         .catch(() => setError("Something went wrong"));

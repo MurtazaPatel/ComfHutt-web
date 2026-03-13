@@ -6,7 +6,7 @@ import { ShieldCheck, TrendingUp, Bed, MapPin, Building2 } from "lucide-react";
 import { Property } from "@/lib/mock-data";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { getSession } from "@/lib/auth-client";
 import { startListingRouter } from "@/utils/onboarding";
 
 // --- ScoreWheel (Copied from HeroCard for parity) ---
@@ -75,8 +75,13 @@ export default function PropertyCard({ property, onView }: PropertyCardProps) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const shouldReduceMotion = useReducedMotion();
   const router = useRouter();
-  const { status } = useSession();
-  const isAuthenticated = status === "authenticated";
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    getSession().then(session => {
+      setIsAuthenticated(!!session);
+    });
+  }, []);
 
   const isSoldOut = property.tokens_sold >= property.tokens_total;
   const isHot = !isSoldOut && (property.tokens_total - property.tokens_sold) / property.tokens_total < 0.25;

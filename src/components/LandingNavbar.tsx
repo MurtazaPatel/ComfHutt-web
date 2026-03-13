@@ -64,12 +64,12 @@ export default function Navbar() {
       </div>
 
       <div className="hidden md:block">
-        <button
-          onClick={() => redirectToChoices(router)}
-          className="bg-black text-white px-5 py-2.5 text-sm font-medium rounded-full hover:bg-gray-800 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-black"
+        <Link
+          href="/signin"
+          className="bg-black text-white px-5 py-2.5 text-sm font-medium rounded-full hover:bg-gray-800 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-black inline-block text-center"
         >
-          GET STARTED
-        </button>
+          Sign In
+        </Link>
       </div>
 
       <div className="md:hidden flex items-center">
@@ -113,15 +113,13 @@ export default function Navbar() {
                 Docs
               </Link>
               <div className="pt-4">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    redirectToChoices(router);
-                  }}
+                <Link
+                  href="/signin"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="block w-full bg-black text-white text-center px-5 py-3 text-lg font-medium rounded-full hover:bg-gray-800 transition-colors"
                 >
-                  GET STARTED
-                </button>
+                  Sign In
+                </Link>
               </div>
             </div>
           </motion.div>

@@ -1,14 +1,16 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { googleLogin } from "@/lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaLinkedin } from "react-icons/fa";
 
 export const Social = () => {
   const onClick = (provider: "google" | "apple" | "linkedin") => {
-    signIn(provider, {
-      callbackUrl: "/dashboard",
-    });
+    if (provider === "google") {
+      googleLogin();
+    } else {
+      console.warn(`Login with ${provider} is not supported yet`);
+    }
   };
 
   return (

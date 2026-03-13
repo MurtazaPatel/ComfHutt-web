@@ -62,7 +62,7 @@ export default function ChoicesCard() {
   const onSubmit = async (data: ChoiceInput) => {
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/choices", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"}/api/choices`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

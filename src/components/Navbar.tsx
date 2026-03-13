@@ -7,6 +7,8 @@ import Image from "next/image";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/auth-client";
 
 interface NavbarProps {
   user?: any;
@@ -14,7 +16,13 @@ interface NavbarProps {
 
 export default function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await logout();
+    router.push("/signin");
+  };
 
   return (
     <nav className="sticky top-0 w-full z-50 bg-white border-b border-gray-200 backdrop-blur-md">
@@ -88,17 +96,17 @@ export default function Navbar({ user }: NavbarProps) {
                 >
                   Settings
                 </Link>
-                <Link
-                  href="/auth/signout"
-                  className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                <button
+                  onClick={handleSignOut}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                 >
                   Sign Out
-                </Link>
+                </button>
               </div>
             </div>
           ) : (
             <Link
-              href="/auth/signin"
+              href="/signin"
               className="px-4 py-2 rounded-lg text-sm font-semibold bg-black text-white hover:bg-gray-900 transition"
             >
               Sign In
@@ -172,17 +180,19 @@ export default function Navbar({ user }: NavbarProps) {
                       >
                         Settings
                       </Link>
-                      <Link
-                        href="/auth/signout"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="block py-2 text-red-600"
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          handleSignOut();
+                        }}
+                        className="block w-full text-left py-2 text-red-600"
                       >
                         Sign Out
-                      </Link>
+                      </button>
                     </div>
                   ) : (
                      <Link
-                        href="/auth/signin"
+                        href="/signin"
                         onClick={() => setMobileMenuOpen(false)}
                         className="block w-full text-center py-3 bg-black text-white rounded-xl font-bold"
                      >

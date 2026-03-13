@@ -46,7 +46,7 @@ export default function EarlyAccessPage() {
     setError(null);
     try {
       console.log("[Early Access] Submitting data...");
-      const response = await fetch("/api/early-access", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"}/api/early-access`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

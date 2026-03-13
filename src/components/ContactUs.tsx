@@ -27,7 +27,7 @@ export default function ContactUs() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"}/api/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

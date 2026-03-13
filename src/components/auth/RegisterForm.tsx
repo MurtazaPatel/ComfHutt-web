@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 import { registerSchema } from "@/lib/validations/auth";
 import { CardWrapper } from "@/components/auth/CardWrapper";
-import { register } from "@/lib/actions/auth";
+import { register } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { LoadingState } from "@/components/auth/LoadingState";
 
@@ -21,6 +21,7 @@ export const RegisterForm = () => {
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
@@ -31,7 +32,7 @@ export const RegisterForm = () => {
     setSuccess("");
 
     startTransition(() => {
-      register(values)
+      register(values.email, values.password, values.name)
         .then((data) => {
           if (data.error) {
             setError(data.error);
@@ -40,7 +41,7 @@ export const RegisterForm = () => {
           if (data.success) {
             setSuccess(data.success);
             setTimeout(() => {
-              router.push("/dashboard");
+              router.push("/signin?success=registered");
             }, 1000);
           }
         })
@@ -65,6 +66,22 @@ export const RegisterForm = () => {
         className="space-y-6"
       >
         <div className="space-y-4">
+          <div className="group">
+            <label className="text-xs font-medium text-white/60 uppercase tracking-wider mb-1.5 block group-focus-within:text-white transition-colors">Name</label>
+            <input
+              {...form.register("name")}
+              disabled={isPending}
+              placeholder="John Doe"
+              type="text"
+              className={cn(
+                "flex h-11 w-full border-b border-white/20 bg-transparent py-2 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+                form.formState.errors.name && "border-red-500 focus:border-red-500"
+              )}
+            />
+            {form.formState.errors.name && (
+              <p className="text-xs text-red-500 mt-1">{form.formState.errors.name.message}</p>
+            )}
+          </div>
           <div className="group">
             <label className="text-xs font-medium text-white/60 uppercase tracking-wider mb-1.5 block group-focus-within:text-white transition-colors">Email</label>
             <input

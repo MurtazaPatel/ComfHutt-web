@@ -29,7 +29,7 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-export async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const host = req.headers.get('host');
   
   // ========== DOMAIN CANONICALIZATION ==========
@@ -67,6 +67,36 @@ export async function middleware(req: NextRequest) {
     if (isRateLimited(ip)) {
       console.warn(`[Security] Rate limit exceeded for ${ip} on ${req.nextUrl.pathname}`);
       return new NextResponse('Too Many Requests', { status: 429 });
+    }
+  }
+
+  // ========== AUTHENTICATION EXTENSION ==========
+  // We want to protect routes that are inside (protected), typically /dashboard, /admin, etc.
+  const isProtectedRoute = req.nextUrl.pathname.startsWith('/dashboard') || req.nextUrl.pathname.startsWith('/admin');
+
+  if (isProtectedRoute) {
+    const token = req.cookies.get('comfhutt_access_token')?.value;
+
+    if (!token) {
+      return NextResponse.redirect(new URL('/signin', req.url));
+    }
+
+    try {
+      const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
+      const authRes = await fetch(`${backendUrl}/api/auth/me`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!authRes.ok) {
+        return NextResponse.redirect(new URL('/signin', req.url));
+      }
+      
+      // valid token
+    } catch (e) {
+      return NextResponse.redirect(new URL('/signin', req.url));
     }
   }
 

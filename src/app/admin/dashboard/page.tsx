@@ -2,18 +2,31 @@
 import { supabase } from "@/lib/db";
 
 const AdminDashboardPage = async () => {
-  const { count: userCount, error: userError } = await supabase
-    .from("users")
-    .select("*", { count: "exact", head: true });
+  let userCount = 0;
+  let leadCount = 0;
 
-  const { count: leadCount, error: leadError } = await supabase
-    .from("users_leads")
-    .select("*", { count: "exact", head: true });
+  try {
+    const { count: uCount, error: uError } = await supabase
+      .from("users")
+      .select("*", { count: "exact", head: true });
+    
+    if (!uError && uCount !== null) {
+      userCount = uCount;
+    }
+  } catch (e) {
+    console.warn("Failed to fetch users count during build/runtime");
+  }
 
-  if (userError || leadError) {
-    console.error("Error fetching admin dashboard data:", userError, leadError);
-    // You might want to render an error state here
-    return <div>Error loading data.</div>;
+  try {
+    const { count: lCount, error: lError } = await supabase
+      .from("users_leads")
+      .select("*", { count: "exact", head: true });
+    
+    if (!lError && lCount !== null) {
+      leadCount = lCount;
+    }
+  } catch (e) {
+    console.warn("Failed to fetch leads count during build/runtime");
   }
 
   return (

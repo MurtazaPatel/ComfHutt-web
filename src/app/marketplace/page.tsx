@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Loader2, X, ChevronDown, Check, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { getSession } from "@/lib/auth-client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
@@ -71,8 +71,13 @@ const FilterDropdown = ({
 
 export default function MarketplacePage() {
   const router = useRouter();
-  const { status } = useSession();
-  const isAuthenticated = status === "authenticated";
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    getSession().then(session => {
+      setIsAuthenticated(!!session);
+    });
+  }, []);
 
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);

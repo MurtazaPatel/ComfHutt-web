@@ -1,9 +1,21 @@
-import { auth } from "@/auth";
+import { cookies } from "next/headers";
 import { DashboardGrid } from "@/components/dashboard/DashboardGrid";
+import { redirect } from "next/navigation";
 
 const DashboardPage = async () => {
-  const session = await auth();
-  const firstName = session?.user?.name?.split(" ")[0] || "Investor";
+  const cookieStore = await cookies();
+  const token = cookieStore.get("comfhutt_access_token")?.value;
+  
+  if (!token) {
+    redirect("/signin");
+  }
+
+  const res = await fetch(`${process.env.BACKEND_URL || "http://localhost:8080"}/api/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const session = res.ok ? await res.json() : null;
+  const firstName = session?.name?.split(" ")[0] || "Investor";
 
   return (
     <div className="space-y-8">

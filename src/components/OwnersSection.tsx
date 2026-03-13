@@ -6,13 +6,19 @@ import { motion } from "framer-motion";
 import { CheckCircle2, TrendingUp, BarChart } from "lucide-react";
 import { VARIANTS } from "@/utils/animationUtils";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { getSession } from "@/lib/auth-client";
+import { useState, useEffect } from "react";
 import { startListingRouter } from "@/utils/onboarding";
 
 export default function OwnersSection() {
   const router = useRouter();
-  const { status } = useSession();
-  const isAuthenticated = status === "authenticated";
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    getSession().then(session => {
+      setIsAuthenticated(!!session);
+    });
+  }, []);
 
   return (
     <section id="owners" className="py-24 bg-white overflow-hidden">

@@ -1,5 +1,5 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import Navbar from "@/components/Navbar";
 
 interface AdminLayoutProps {
@@ -7,13 +7,24 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = async ({ children }: AdminLayoutProps) => {
-  const session = await auth();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("comfhutt_access_token")?.value;
 
-  if (!session) {
-    redirect("/auth/signin");
+  if (!token) {
+    redirect("/signin");
   }
 
-  if (session.user.role !== "admin") {
+  const res = await fetch(`${process.env.BACKEND_URL || "http://localhost:8080"}/api/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const session = res.ok ? await res.json() : null;
+
+  if (!session) {
+    redirect("/signin");
+  }
+
+  if (session.role !== "admin") {
     redirect("/dashboard");
   }
 
