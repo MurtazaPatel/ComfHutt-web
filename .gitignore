@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Turbo
+.turbo/
+
+# Build outputs (each app has its own)
+.next/
+
+# Misc
+.DS_Store
+*.local
+
+# Legacy lockfile (replaced by pnpm-lock.yaml)
+package-lock.json
+
+# Preserved inner git history (apps/main was formerly comfhutt-next)
+apps/main/.git_old/

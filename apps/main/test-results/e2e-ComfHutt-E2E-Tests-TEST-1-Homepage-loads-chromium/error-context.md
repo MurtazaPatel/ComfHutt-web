@@ -1,0 +1,568 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation "Main Navigation" [ref=e3]:
+      - link "ComfHutt Home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "ComfHutt" [ref=e6]
+      - generic [ref=e7]:
+        - link "How It Works" [ref=e8] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - link "Owners" [ref=e9] [cursor=pointer]:
+          - /url: "#owners"
+        - link "Docs" [ref=e10] [cursor=pointer]:
+          - /url: /docs
+        - link "Marketplace" [ref=e11] [cursor=pointer]:
+          - /url: /marketplace
+      - button "GET STARTED" [ref=e13]
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - heading "Fractional Real Estate Investing starting at ₹10,000." [level=1] [ref=e17]
+        - paragraph [ref=e18]: Buy fractional shares of high-yield properties in India. Monthly rental income. Legal ownership via SPV.
+        - generic [ref=e19]:
+          - button "JOIN EARLY ACCESS" [ref=e20]
+          - link "Learn More" [ref=e21] [cursor=pointer]:
+            - /url: /choices
+      - generic [ref=e24]:
+        - generic [ref=e25] [cursor=pointer]:
+          - generic [ref=e26]:
+            - img "Koramangala Tech Park" [ref=e27]
+            - generic [ref=e28]: Bangalore
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - generic [ref=e31]:
+                - heading "Koramangala Tech Park" [level=3] [ref=e32]
+                - paragraph [ref=e33]: Bangalore, Karnataka
+              - generic [ref=e34]:
+                - generic [ref=e35]:
+                  - paragraph [ref=e36]: Min Ticket
+                  - paragraph [ref=e37]: ₹10,000
+                - generic [ref=e38]:
+                  - paragraph [ref=e39]: Yield
+                  - paragraph [ref=e40]: 8.2%
+              - generic [ref=e41]: Continuously evaluated • SPV-backed
+              - generic [ref=e42]:
+                - generic [ref=e43]: Instant Buy
+                - generic [ref=e44]: AI-Scored
+            - generic [ref=e45]:
+              - generic [ref=e46]:
+                - generic [ref=e47]:
+                  - img [ref=e48]
+                  - generic [ref=e52]: "84"
+                - generic [ref=e53]: Score
+              - img [ref=e55]
+        - generic [ref=e57] [cursor=pointer]:
+          - generic [ref=e58]:
+            - img "Indiranagar Office Hub" [ref=e59]
+            - generic [ref=e60]: Bangalore
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]:
+                - heading "Indiranagar Office Hub" [level=3] [ref=e64]
+                - paragraph [ref=e65]: Bangalore, Karnataka
+              - generic [ref=e66]:
+                - generic [ref=e67]:
+                  - paragraph [ref=e68]: Min Ticket
+                  - paragraph [ref=e69]: ₹15,000
+                - generic [ref=e70]:
+                  - paragraph [ref=e71]: Yield
+                  - paragraph [ref=e72]: 9.1%
+              - generic [ref=e73]: Continuously evaluated • SPV-backed
+              - generic [ref=e74]:
+                - generic [ref=e75]: High Yield
+                - generic [ref=e76]: AI-Scored
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - generic [ref=e79]:
+                  - img [ref=e80]
+                  - generic [ref=e84]: "89"
+                - generic [ref=e85]: Score
+              - img [ref=e87]
+        - generic [ref=e89] [cursor=pointer]:
+          - generic [ref=e90]:
+            - img "LinkBay Residences" [ref=e91]
+            - generic [ref=e92]: Mumbai
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - heading "LinkBay Residences" [level=3] [ref=e96]
+                - paragraph [ref=e97]: Mumbai, Maharashtra
+              - generic [ref=e98]:
+                - generic [ref=e99]:
+                  - paragraph [ref=e100]: Min Ticket
+                  - paragraph [ref=e101]: ₹12,500
+                - generic [ref=e102]:
+                  - paragraph [ref=e103]: Yield
+                  - paragraph [ref=e104]: 7.8%
+              - generic [ref=e105]: Continuously evaluated • SPV-backed
+              - generic [ref=e106]:
+                - generic [ref=e107]: Growth
+                - generic [ref=e108]: AI-Scored
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - generic [ref=e111]:
+                  - img [ref=e112]
+                  - generic [ref=e116]: "76"
+                - generic [ref=e117]: Score
+              - img [ref=e119]
+    - generic [ref=e123]:
+      - generic [ref=e124]:
+        - img [ref=e125]
+        - heading "Verified Documents" [level=3] [ref=e129]
+      - generic [ref=e130]:
+        - img [ref=e131]
+        - heading "Escrow Secured" [level=3] [ref=e134]
+      - generic [ref=e135]:
+        - img [ref=e136]
+        - heading "Audited Smart Contracts" [level=3] [ref=e139]
+      - generic [ref=e140]:
+        - img [ref=e141]
+        - heading "On-chain Ownership Proof" [level=3] [ref=e144]
+      - generic [ref=e145]:
+        - img [ref=e146]
+        - heading "Regulated KYC" [level=3] [ref=e150]
+      - generic [ref=e151]:
+        - img [ref=e152]
+        - heading "Powered by the Credibility Engine" [level=3] [ref=e154]
+    - generic [ref=e156]:
+      - generic [ref=e157]:
+        - heading "What is Fractional Real Estate?" [level=2] [ref=e158]
+        - paragraph [ref=e159]: Owning real estate, just in smaller pieces.
+      - paragraph [ref=e161]: "Think of it like this: Instead of buying an entire property alone, multiple people co-own one real property together."
+      - generic [ref=e162]:
+        - generic [ref=e163]:
+          - heading "1. A real property" [level=3] [ref=e164]:
+            - button "1. A real property" [expanded] [ref=e165] [cursor=pointer]:
+              - generic [ref=e166]:
+                - img [ref=e168]
+                - text: 1. A real property
+              - img [ref=e173]
+          - region "1. A real property" [ref=e175]:
+            - generic [ref=e176]: A real apartment or commercial space that earns rent and has long-term value.
+        - heading "2. Divided into parts" [level=3] [ref=e178]:
+          - button "2. Divided into parts" [ref=e179] [cursor=pointer]:
+            - generic [ref=e180]:
+              - img [ref=e182]
+              - text: 2. Divided into parts
+            - img [ref=e185]
+        - heading "3. You buy fractions" [level=3] [ref=e188]:
+          - button "3. You buy fractions" [ref=e189] [cursor=pointer]:
+            - generic [ref=e190]:
+              - img [ref=e192]
+              - text: 3. You buy fractions
+            - img [ref=e194]
+        - heading "4. You earn like an owner" [level=3] [ref=e197]:
+          - button "4. You earn like an owner" [ref=e198] [cursor=pointer]:
+            - generic [ref=e199]:
+              - img [ref=e201]
+              - text: 4. You earn like an owner
+            - img [ref=e204]
+      - paragraph [ref=e207]:
+        - text: If the property performs well, you benefit.
+        - text: If it doesn’t, the risk is shared.
+    - generic [ref=e210]:
+      - heading "Excited to invest in real estate the smarter way?" [level=2] [ref=e211]
+      - paragraph [ref=e212]: We’re launching ComfHutt soon with a limited set of high-quality, AI-evaluated properties. Join the waitlist to get early access before the public launch.
+      - button "Join the Early Access Waitlist" [ref=e214]
+      - paragraph [ref=e215]:
+        - text: Feel free to contact us for any queries at
+        - link "support@comfhutt.com" [ref=e216] [cursor=pointer]:
+          - /url: mailto:support@comfhutt.com
+    - generic [ref=e218]:
+      - generic [ref=e219]:
+        - heading "How It Works" [level=2] [ref=e220]
+        - paragraph [ref=e221]: Start your real estate investment journey in 5 simple steps.
+      - generic [ref=e225]:
+        - generic [ref=e226]:
+          - img [ref=e229]
+          - heading "Choose a property" [level=3] [ref=e232]
+        - generic [ref=e233]:
+          - img [ref=e236]
+          - heading "Invest as little as ₹10,000" [level=3] [ref=e239]
+        - generic [ref=e240]:
+          - img [ref=e243]
+          - heading "Tokenization & escrow settlement" [level=3] [ref=e247]
+        - generic [ref=e248]:
+          - img [ref=e251]
+          - heading "Monthly rental distribution" [level=3] [ref=e253]
+        - generic [ref=e254]:
+          - img [ref=e257]
+          - heading "Resell tokens on marketplace" [level=3] [ref=e262]
+    - generic [ref=e265]:
+      - generic [ref=e266]:
+        - generic [ref=e268]: Wealth Builder
+        - heading "Don't just buy property. Buy passive income." [level=2] [ref=e269]
+        - paragraph [ref=e270]: Experience the security of property ownership with the flexibility of a stock. Our SPV-backed model ensures your assets are protected while generating consistent monthly returns.
+        - generic [ref=e271]:
+          - generic [ref=e272]:
+            - generic [ref=e273]: I want to invest
+            - generic [ref=e274]:
+              - text: ₹
+              - generic [ref=e275]: 20,000
+          - slider [ref=e279] [cursor=pointer]: "20000"
+          - generic [ref=e280]:
+            - generic [ref=e281]:
+              - paragraph [ref=e282]: Est. Yearly Return
+              - generic [ref=e284]: +8.5%
+            - generic [ref=e285]:
+              - paragraph [ref=e286]: Projected Monthly Rent
+              - paragraph [ref=e287]:
+                - text: ₹
+                - generic [ref=e288]: "142"
+        - generic [ref=e289]:
+          - button "Start Investing" [ref=e290]
+          - link "Learn More" [ref=e291] [cursor=pointer]:
+            - /url: "#faq"
+            - text: Learn More
+            - img [ref=e292]
+      - generic [ref=e295]:
+        - img "Modern Apartment with Greenery" [ref=e297]
+        - generic [ref=e302]: LIVE ASSET
+        - generic [ref=e305]:
+          - img [ref=e307]
+          - generic [ref=e310]:
+            - paragraph [ref=e311]: Wallet Update
+            - generic [ref=e312]:
+              - paragraph [ref=e313]: Rent Paid
+              - generic [ref=e314]:
+                - text: +₹
+                - generic [ref=e315]: "142"
+    - generic [ref=e318]:
+      - generic [ref=e319]:
+        - 'heading "AI-Powered Credibility Score: Intelligence behind every property." [level=2] [ref=e320]'
+        - paragraph [ref=e321]: Continuously rescored by AI models and autonomous agents using verified signals, locality intelligence, owner reliability, and legal checks.
+        - generic [ref=e322]:
+          - generic [ref=e323]: Credibility Score (0–100) — category breakdown available on property pages.
+          - generic [ref=e324]: AI-Assessed • Agent-Monitored • Auto-Updated
+      - generic [ref=e327]:
+        - generic [ref=e328]:
+          - img [ref=e330]
+          - generic [ref=e333]: Locality Indicators
+        - generic [ref=e334]:
+          - img [ref=e336]
+          - generic [ref=e339]: Owner Reliability
+        - generic [ref=e340]:
+          - img [ref=e342]
+          - generic [ref=e345]: Document Health
+        - generic [ref=e346]:
+          - img [ref=e348]
+          - generic [ref=e350]: Market & Risk Signals
+    - generic [ref=e355]:
+      - generic [ref=e358]: Tokenized Ownership
+      - generic [ref=e361]: Secure Escrow Flow
+      - generic [ref=e364]: Automated Rent Payments
+      - generic [ref=e367]: Transferability & Liquidity
+      - generic [ref=e370]: On-chain Auditability
+      - generic [ref=e373]: Continuous Monitoring
+      - generic [ref=e376]: Tokenized Ownership
+      - generic [ref=e379]: Secure Escrow Flow
+      - generic [ref=e382]: Automated Rent Payments
+      - generic [ref=e385]: Transferability & Liquidity
+      - generic [ref=e388]: On-chain Auditability
+      - generic [ref=e391]: Continuous Monitoring
+      - generic [ref=e394]: Tokenized Ownership
+      - generic [ref=e397]: Secure Escrow Flow
+      - generic [ref=e400]: Automated Rent Payments
+      - generic [ref=e403]: Transferability & Liquidity
+      - generic [ref=e406]: On-chain Auditability
+      - generic [ref=e409]: Continuous Monitoring
+    - generic [ref=e411]:
+      - heading "For Property Owners" [level=2] [ref=e413]
+      - generic [ref=e414]:
+        - generic [ref=e416]:
+          - img [ref=e418]
+          - heading "Unlock liquidity for your property" [level=3] [ref=e421]
+          - paragraph [ref=e422]: Accelerate sales cycles and reach verified micro-investors.
+          - list [ref=e423]:
+            - listitem [ref=e424]:
+              - img [ref=e425]
+              - generic [ref=e428]: Instant onboarding for property listing
+            - listitem [ref=e429]:
+              - img [ref=e430]
+              - generic [ref=e433]: Fractional tokens expand buyer pool
+            - listitem [ref=e434]:
+              - img [ref=e435]
+              - generic [ref=e438]: Faster sales cycles for unsold inventory
+            - listitem [ref=e439]:
+              - img [ref=e440]
+              - generic [ref=e443]: Reach verified micro-investors
+            - listitem [ref=e444]:
+              - img [ref=e445]
+              - generic [ref=e448]: Transparent escrow & compliant workflows
+            - listitem [ref=e449]:
+              - img [ref=e450]
+              - generic [ref=e453]: Continuous credibility boosts buyer trust
+        - generic [ref=e455]:
+          - img [ref=e457]
+          - heading "Boost market confidence with transparent intelligence" [level=3] [ref=e458]
+          - paragraph [ref=e459]: Leverage data to showcase value and reliability.
+          - list [ref=e460]:
+            - listitem [ref=e461]:
+              - img [ref=e462]
+              - generic [ref=e465]: Credibility Score increases buyer trust
+            - listitem [ref=e466]:
+              - img [ref=e467]
+              - generic [ref=e470]: Shows verified data, not broker claims
+            - listitem [ref=e471]:
+              - img [ref=e472]
+              - generic [ref=e475]: Helps buyers understand locality & risk at a glance
+            - listitem [ref=e476]:
+              - img [ref=e477]
+              - generic [ref=e480]: Reduces negotiation friction
+            - listitem [ref=e481]:
+              - img [ref=e482]
+              - generic [ref=e485]: Enhances perceived reliability of your project
+          - generic [ref=e487]:
+            - link "List your property now" [ref=e488] [cursor=pointer]:
+              - /url: /developer-onboarding
+              - text: List Property
+            - link "Learn More →" [ref=e489] [cursor=pointer]:
+              - /url: /choices?role=owner
+    - generic [ref=e491]:
+      - generic [ref=e492]:
+        - paragraph [ref=e493]: simple comparison
+        - heading "Why invest in Fractional Real Estate when you have stocks and mutual funds?" [level=2] [ref=e494]
+        - paragraph [ref=e495]: One grows fast but shakes a lot. The other grows slowly but stays solid.
+      - generic [ref=e496]:
+        - generic [ref=e498]:
+          - generic [ref=e499]: stocks & mutual funds
+          - heading "Fast, flexible, stressful" [level=3] [ref=e500]
+          - paragraph [ref=e501]: You can buy and sell anytime. That’s both the benefit and the problem.
+          - generic [ref=e502]:
+            - generic [ref=e505]: Prices go up and down every day
+            - generic [ref=e508]: News, tweets, and fear move the market
+            - generic [ref=e511]: Easy to sell when panic hits
+            - generic [ref=e514]: Returns depend heavily on timing and emotions
+        - generic [ref=e517]:
+          - generic [ref=e518]: fractional real estate
+          - heading "Slow, steady, reliable" [level=3] [ref=e519]
+          - paragraph [ref=e520]: Money is tied to a real property. That’s why it behaves calmly.
+          - generic [ref=e521]:
+            - generic [ref=e522]:
+              - generic [ref=e523]: ✓
+              - generic [ref=e524]: Backed by an actual physical property
+            - generic [ref=e525]:
+              - generic [ref=e526]: ✓
+              - generic [ref=e527]: Earns rent while value grows
+            - generic [ref=e528]:
+              - generic [ref=e529]: ✓
+              - generic [ref=e530]: Prices don’t change every day
+            - generic [ref=e531]:
+              - generic [ref=e532]: ✓
+              - generic [ref=e533]: Encourages holding instead of panic selling
+      - generic [ref=e534]:
+        - paragraph [ref=e536]:
+          - text: Liquidity feels powerful.
+          - text: Discipline is what compounds wealth.
+        - paragraph [ref=e537]: Fractional real estate is not here to replace stocks. It’s here to stop your portfolio from behaving emotionally.
+        - paragraph [ref=e538]: Smart portfolios use both.
+    - generic [ref=e539]:
+      - heading "What our community says" [level=2] [ref=e541]
+      - generic [ref=e543]:
+        - generic [ref=e544]:
+          - paragraph [ref=e545]: "\"Fractional investing made it possible for me to own Grade A commercial real estate without the massive capital requirement.\""
+          - generic [ref=e546]:
+            - paragraph [ref=e547]: Arjun K.
+            - paragraph [ref=e548]: Investor
+        - generic [ref=e549]:
+          - paragraph [ref=e550]: "\"Listing our inventory on ComfHutt accelerated our sales cycle significantly. The transparency is unmatched.\""
+          - generic [ref=e551]:
+            - paragraph [ref=e552]: Ravi S.
+            - paragraph [ref=e553]: Property Owner
+        - generic [ref=e554]:
+          - paragraph [ref=e555]: "\"The Credibility Score gave me the confidence I needed. I knew exactly what I was getting into before investing.\""
+          - generic [ref=e556]:
+            - paragraph [ref=e557]: Sneha P.
+            - paragraph [ref=e558]: Investor
+        - generic [ref=e559]:
+          - paragraph [ref=e560]: "\"Finally, a platform that understands the need for liquidity in real estate assets. A game changer.\""
+          - generic [ref=e561]:
+            - paragraph [ref=e562]: Vikram M.
+            - paragraph [ref=e563]: Investor
+        - generic [ref=e564]:
+          - paragraph [ref=e565]: "\"Fractional investing made it possible for me to own Grade A commercial real estate without the massive capital requirement.\""
+          - generic [ref=e566]:
+            - paragraph [ref=e567]: Arjun K.
+            - paragraph [ref=e568]: Investor
+        - generic [ref=e569]:
+          - paragraph [ref=e570]: "\"Listing our inventory on ComfHutt accelerated our sales cycle significantly. The transparency is unmatched.\""
+          - generic [ref=e571]:
+            - paragraph [ref=e572]: Ravi S.
+            - paragraph [ref=e573]: Property Owner
+        - generic [ref=e574]:
+          - paragraph [ref=e575]: "\"The Credibility Score gave me the confidence I needed. I knew exactly what I was getting into before investing.\""
+          - generic [ref=e576]:
+            - paragraph [ref=e577]: Sneha P.
+            - paragraph [ref=e578]: Investor
+        - generic [ref=e579]:
+          - paragraph [ref=e580]: "\"Finally, a platform that understands the need for liquidity in real estate assets. A game changer.\""
+          - generic [ref=e581]:
+            - paragraph [ref=e582]: Vikram M.
+            - paragraph [ref=e583]: Investor
+        - generic [ref=e584]:
+          - paragraph [ref=e585]: "\"Fractional investing made it possible for me to own Grade A commercial real estate without the massive capital requirement.\""
+          - generic [ref=e586]:
+            - paragraph [ref=e587]: Arjun K.
+            - paragraph [ref=e588]: Investor
+        - generic [ref=e589]:
+          - paragraph [ref=e590]: "\"Listing our inventory on ComfHutt accelerated our sales cycle significantly. The transparency is unmatched.\""
+          - generic [ref=e591]:
+            - paragraph [ref=e592]: Ravi S.
+            - paragraph [ref=e593]: Property Owner
+        - generic [ref=e594]:
+          - paragraph [ref=e595]: "\"The Credibility Score gave me the confidence I needed. I knew exactly what I was getting into before investing.\""
+          - generic [ref=e596]:
+            - paragraph [ref=e597]: Sneha P.
+            - paragraph [ref=e598]: Investor
+        - generic [ref=e599]:
+          - paragraph [ref=e600]: "\"Finally, a platform that understands the need for liquidity in real estate assets. A game changer.\""
+          - generic [ref=e601]:
+            - paragraph [ref=e602]: Vikram M.
+            - paragraph [ref=e603]: Investor
+    - generic [ref=e605]:
+      - generic [ref=e606]:
+        - heading "Frequently Asked Questions" [level=2] [ref=e607]
+        - paragraph [ref=e608]: Clear answers to your questions about fractional ownership.
+      - generic [ref=e609]:
+        - heading "What is fractional real estate investing?" [level=3] [ref=e611]:
+          - button "What is fractional real estate investing?" [ref=e612]:
+            - text: What is fractional real estate investing?
+            - img [ref=e613]
+        - heading "How does ComfHutt work?" [level=3] [ref=e616]:
+          - button "How does ComfHutt work?" [ref=e617]:
+            - text: How does ComfHutt work?
+            - img [ref=e618]
+        - heading "How is ComfHutt different from traditional real estate investing?" [level=3] [ref=e621]:
+          - button "How is ComfHutt different from traditional real estate investing?" [ref=e622]:
+            - text: How is ComfHutt different from traditional real estate investing?
+            - img [ref=e623]
+        - heading "Is ComfHutt legally compliant in India?" [level=3] [ref=e626]:
+          - button "Is ComfHutt legally compliant in India?" [ref=e627]:
+            - text: Is ComfHutt legally compliant in India?
+            - img [ref=e628]
+        - heading "What are the risks involved?" [level=3] [ref=e631]:
+          - button "What are the risks involved?" [ref=e632]:
+            - text: What are the risks involved?
+            - img [ref=e633]
+        - heading "How does rental income distribution work?" [level=3] [ref=e636]:
+          - button "How does rental income distribution work?" [ref=e637]:
+            - text: How does rental income distribution work?
+            - img [ref=e638]
+        - heading "Can investors exit their investment?" [level=3] [ref=e641]:
+          - button "Can investors exit their investment?" [ref=e642]:
+            - text: Can investors exit their investment?
+            - img [ref=e643]
+    - generic [ref=e647]:
+      - generic [ref=e648]:
+        - heading "Get in Touch" [level=2] [ref=e649]
+        - paragraph [ref=e650]: Have questions about fractional ownership? We're here to help.
+        - generic [ref=e651]:
+          - generic [ref=e652]:
+            - generic [ref=e653]: Name
+            - textbox "Name" [ref=e654]
+          - generic [ref=e655]:
+            - generic [ref=e656]: Email
+            - textbox "Email" [ref=e657]
+          - generic [ref=e658]:
+            - generic [ref=e659]: Message
+            - textbox "Message" [ref=e660]
+          - button "Send Message" [ref=e662]
+      - generic [ref=e663]:
+        - generic [ref=e664]:
+          - heading "Direct Contact" [level=3] [ref=e665]
+          - paragraph [ref=e666]: Reach out to our founders directly.
+        - generic [ref=e667]:
+          - generic [ref=e668]:
+            - generic [ref=e669]: MP
+            - generic [ref=e670]:
+              - heading "Murtaza Patel" [level=4] [ref=e671]
+              - link "+91 7016983248" [ref=e673] [cursor=pointer]:
+                - /url: tel:+917016983248
+                - img [ref=e674]
+                - text: +91 7016983248
+          - generic [ref=e676]:
+            - generic [ref=e677]: YA
+            - generic [ref=e678]:
+              - heading "Yagnesh Akbari" [level=4] [ref=e679]
+              - link "+91 9913017800" [ref=e681] [cursor=pointer]:
+                - /url: tel:+919913017800
+                - img [ref=e682]
+                - text: +91 9913017800
+        - paragraph [ref=e685]:
+          - text: Feel free to reach out to us at
+          - link "support@comfhutt.com" [ref=e686] [cursor=pointer]:
+            - /url: mailto:support@comfhutt.com
+          - text: for more info and queries.
+    - generic [ref=e688]:
+      - generic [ref=e689]:
+        - generic [ref=e690]:
+          - link "ComfHutt" [ref=e691] [cursor=pointer]:
+            - /url: /
+            - img "ComfHutt" [ref=e692]
+          - paragraph [ref=e693]: Making real estate investment accessible, transparent, and liquid for everyone.
+        - generic [ref=e694]:
+          - heading "Platform" [level=4] [ref=e695]
+          - list [ref=e696]:
+            - listitem [ref=e697]:
+              - link "How It Works" [ref=e698] [cursor=pointer]:
+                - /url: "#how-it-works"
+            - listitem [ref=e699]:
+              - link "For Owners" [ref=e700] [cursor=pointer]:
+                - /url: "#owners"
+            - listitem [ref=e701]:
+              - link "FAQs" [ref=e702] [cursor=pointer]:
+                - /url: "#faq"
+            - listitem [ref=e703]:
+              - link "Get Started" [ref=e704] [cursor=pointer]:
+                - /url: /choices
+        - generic [ref=e705]:
+          - heading "Resources" [level=4] [ref=e706]
+          - list [ref=e707]:
+            - listitem [ref=e708]:
+              - link "Whitepaper" [ref=e709] [cursor=pointer]:
+                - /url: /docs/comfhutt-whitepaper
+            - listitem [ref=e710]:
+              - link "Docs" [ref=e711] [cursor=pointer]:
+                - /url: /docs
+            - listitem [ref=e712]:
+              - link "Audit Summary" [ref=e713] [cursor=pointer]:
+                - /url: /audit-summary
+            - listitem [ref=e714]:
+              - link "Public Legal Summary" [ref=e715] [cursor=pointer]:
+                - /url: /legal
+        - generic [ref=e716]:
+          - heading "Company" [level=4] [ref=e717]
+          - list [ref=e718]:
+            - listitem [ref=e719]:
+              - link "Contact" [ref=e720] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e721]:
+              - link "Careers" [ref=e722] [cursor=pointer]:
+                - /url: /careers
+      - generic [ref=e723]:
+        - generic [ref=e724]:
+          - paragraph [ref=e725]: © 2026 ComfHutt Technologies Private Limited. All rights reserved.
+          - paragraph [ref=e726]: Designed & Developed in India 🇮🇳
+        - generic [ref=e727]:
+          - link [ref=e728] [cursor=pointer]:
+            - /url: https://www.instagram.com/comfhutt/
+            - img [ref=e729]
+          - link [ref=e732] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/comfhutt/
+            - img [ref=e733]
+        - generic [ref=e737]:
+          - img [ref=e738]
+          - generic [ref=e741]: 0x71C...9A23 (Verified)
+      - generic [ref=e742]:
+        - paragraph [ref=e743]: Legal Disclaimer
+        - text: ComfHutt Technologies Pvt Ltd operates as a technology platform connecting investors with fractional real estate opportunities. We are not a registered stock exchange or asset management company. All investments involve risk, including the potential loss of principal. Past performance of any asset or projection is not a guarantee of future results. Liquidity is offered via our secondary marketplace but is not guaranteed at any specific time. Please read our
+        - link "Whitepaper" [ref=e744] [cursor=pointer]:
+          - /url: /docs/comfhutt-whitepaper
+        - text: and
+        - link "Terms of Use" [ref=e745] [cursor=pointer]:
+          - /url: /docs/terms-of-use
+        - text: carefully before investing.
+  - alert [ref=e746]
+```

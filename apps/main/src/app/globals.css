@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@comfhutt/design-system/tokens.css";
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: none;
+}
+
+#root, .app-container, body > div[data-nextjs-scroll-focus-boundary] {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Accessibility Focus Styles */
+*:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .developer-onboarding-page {
+    --comfhutt-accent: oklch(0.646 0.222 41.116);
+    --comfhutt-accent-foreground: oklch(1 0 0);
+  }
+}

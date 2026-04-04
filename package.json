@@ -1,0 +1,20 @@
+{
+  "name": "comfhutt-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:main": "turbo run dev --filter=@comfhutt/main",
+    "dev:crux": "turbo run dev --filter=@comfhutt/crux",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "puppeteer": "^24.32.1"
+  },
+  "dependencies": {
+    "resend": "^6.7.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
