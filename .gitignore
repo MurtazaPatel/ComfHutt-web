@@ -51,3 +51,4 @@ package-lock.json
 
 # Preserved inner git history (apps/main was formerly comfhutt-next)
 apps/main/.git_old/
+.gstack/
