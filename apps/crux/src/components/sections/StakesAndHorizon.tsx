@@ -1,10 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Player, PlayerEvent } from "@lottiefiles/react-lottie-player";
+import dynamic from "next/dynamic";
+
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((m) => ({ default: m.Player })),
+  { ssr: false }
+);
 
 // Minimal subset of AnimationItem we use
 type AnimationItem = { play: () => void };
+type PlayerEvent = string;
 
 // ─── Lottie sources ───────────────────────────────────────────────────────────
 const LOTTIE_BEAT1 = "https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json";
@@ -56,7 +62,7 @@ function LottiePlayer({
 
   const handleEvent = useCallback(
     (event: PlayerEvent) => {
-      if (event === PlayerEvent.Error) setFailed(true);
+      if (event === "error") setFailed(true);
       onEvent?.(event);
     },
     [onEvent]
