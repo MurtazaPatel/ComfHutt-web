@@ -36,9 +36,10 @@ export default function PricingSection() {
       <div className="mx-auto max-w-[1100px]">
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-8 h-0.5 bg-crux-green" />
@@ -57,10 +58,11 @@ export default function PricingSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {/* Free tier */}
           <motion.div
-            className="bg-white rounded-2xl border border-crux-border p-8"
-            initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            className="bg-white rounded-2xl border border-crux-border p-8 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
           >
             <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-crux-text-secondary mb-6">
               Free
@@ -84,7 +86,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <button className="mt-8 w-full py-3 rounded-xl border-2 border-crux-green text-crux-green font-semibold text-sm hover:bg-crux-green/5 transition-colors cursor-pointer">
+            <button className="mt-8 w-full py-3 rounded-xl border-2 border-crux-green text-crux-green font-semibold text-sm hover:bg-crux-green/5 hover:brightness-105 transition-all duration-200 cursor-pointer">
               Start Free
             </button>
             <p className="mt-3 text-xs text-crux-text-muted text-center">
@@ -94,10 +96,11 @@ export default function PricingSection() {
 
           {/* Pro tier */}
           <motion.div
-            className="bg-crux-bg-accent rounded-2xl border border-crux-green/30 p-8 relative overflow-hidden"
-            initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            className="bg-crux-bg-accent rounded-2xl border border-crux-green/30 p-8 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           >
             {/* Green gradient top border */}
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-green" />
@@ -127,7 +130,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <button className="mt-8 w-full py-3 rounded-xl bg-gradient-green text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            <button className="mt-8 w-full py-3 rounded-xl bg-gradient-green text-white font-semibold text-sm hover:brightness-105 transition-all duration-200 cursor-pointer">
               Upgrade to Pro
             </button>
             <p className="mt-3 text-xs text-crux-text-muted text-center">

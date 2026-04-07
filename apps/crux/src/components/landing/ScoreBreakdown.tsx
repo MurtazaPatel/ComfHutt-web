@@ -120,7 +120,7 @@ function CategoryCard({
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
       className="group bg-white rounded-xl border border-[#E5E7EB] p-6 flex flex-col gap-3
-                 hover:shadow-md hover:border-[#22C55E4D] transition-all duration-200 cursor-default"
+                 hover:shadow-md hover:border-[#22C55E4D] hover:-translate-y-0.5 transition-all duration-200 cursor-default"
     >
       <div className="flex items-center gap-2.5">
         <Icon size={20} className="text-[#22C55E]" strokeWidth={1.75} />
@@ -166,9 +166,10 @@ export default function ScoreBreakdown() {
         <div className="text-center mb-14">
           <motion.div
             className="inline-flex items-center gap-3 mb-4"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <div className="w-6 h-px bg-[#22C55E]" />
             <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#22C55E]">
@@ -178,18 +179,20 @@ export default function ScoreBreakdown() {
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
             className="text-[28px] md:text-[44px] font-bold text-[#111827] tracking-tight leading-tight"
           >
             One score. Six dimensions. 20+ signals.
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
             className="mt-4 text-[17px] text-[#6B7280] max-w-2xl mx-auto leading-relaxed"
           >
             Every property gets a composite credibility score built from six

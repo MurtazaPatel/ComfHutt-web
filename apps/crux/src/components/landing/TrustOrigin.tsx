@@ -1,91 +1,74 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useSectionInView } from "@/hooks/useSectionInView";
-import { useCountUp } from "@/hooks/useCountUp";
+import { Quote } from "lucide-react";
 
-const STATS = [
-  { value: 12847, label: "properties scored", format: (n: number) => n.toLocaleString("en-IN") },
-  { value: 43, label: "Indian cities covered", format: (n: number) => String(n) },
-  { value: 23, label: "live data signals", format: (n: number) => String(n) },
-];
-
-function StatItem({
-  value,
-  label,
-  format,
-  inView,
-  delay,
-}: {
-  value: number;
-  label: string;
-  format: (n: number) => string;
-  inView: boolean;
-  delay: number;
-}) {
-  const count = useCountUp(value, 1800, inView);
-
-  return (
-    <motion.div
-      className="text-center flex-1"
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay }}
-    >
-      <span className="block text-5xl sm:text-[64px] font-extrabold text-crux-text-primary tracking-tight">
-        {format(count)}
-      </span>
-      <span className="block mt-2 text-sm text-crux-text-secondary">
-        {label}
-      </span>
-    </motion.div>
-  );
-}
+const VP = { once: true, margin: "-100px" } as const;
 
 export default function TrustOrigin() {
-  const { ref, isInView } = useSectionInView(0.2);
-
   return (
-    <section ref={ref} className="py-20 md:py-32 bg-[#F9FAFB] px-4">
-      <div className="mx-auto max-w-[1100px]">
-        {/* Stats row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-10 sm:gap-0 max-w-[900px] mx-auto">
-          {STATS.map((stat, i) => (
-            <div key={stat.label} className="flex items-center gap-10 sm:gap-0">
-              {i > 0 && (
-                <div className="hidden sm:block w-px h-16 bg-crux-border mx-10" />
-              )}
-              <StatItem
-                value={stat.value}
-                label={stat.label}
-                format={stat.format}
-                inView={isInView}
-                delay={i * 0.15}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Origin text */}
+    <section className="bg-white py-32 px-4">
+      <div className="mx-auto max-w-3xl text-center">
+        {/* Quotation mark */}
         <motion.div
-          className="text-center mt-16 space-y-2"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.6 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VP}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex justify-center mb-8"
         >
-          <p className="text-xl font-medium text-crux-text-secondary">
-            Built in India. For Indian real estate.
-          </p>
-          <p className="text-[17px] text-crux-text-muted leading-[1.7]">
-            By people who believe data should replace gut feeling.
-          </p>
-          <div className="flex items-center justify-center gap-2 mt-6 opacity-50">
-            <img
-              src="/comfhutt-logo.svg"
-              alt="ComfHutt"
-              className="h-4 w-auto"
-            />
-          </div>
+          <Quote size={48} color="#E5E7EB" strokeWidth={2} />
+        </motion.div>
+
+        {/* Quote text */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VP}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+          className="text-2xl font-medium text-[#111827] italic leading-[1.6] tracking-[-0.2px]"
+          style={{ fontFamily: "Inter, sans-serif" }}
+        >
+          "We built CRUX because every Indian deserves the same property
+          intelligence that institutional investors pay lakhs for. Data should
+          be a right, not a privilege."
+        </motion.p>
+
+        {/* Divider */}
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          whileInView={{ opacity: 1, scaleX: 1 }}
+          viewport={VP}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.25 }}
+          className="mx-auto mt-10 mb-8 h-px bg-[#E5E7EB]"
+          style={{ width: 64 }}
+        />
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VP}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.35 }}
+          className="text-base text-[#6B7280]"
+          style={{ fontFamily: "Inter, sans-serif" }}
+        >
+          Built in India. For Indian real estate.
+        </motion.p>
+
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VP}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.45 }}
+          className="flex justify-center mt-6"
+        >
+          <img
+            src="/comfhutt-logo.svg"
+            alt="ComfHutt"
+            className="h-6 w-auto opacity-60"
+          />
         </motion.div>
       </div>
     </section>
