@@ -1,7 +1,5 @@
 import dynamic from "next/dynamic";
-import Header from "@/components/Header";
 import HeroSection from "@/components/landing/HeroSection";
-import TrustBar from "@/components/landing/TrustBar";
 
 // Below-fold sections — lazy-loaded to reduce initial bundle
 const ScoreBreakdown   = dynamic(() => import("@/components/landing/ScoreBreakdown"));
@@ -15,10 +13,8 @@ const FooterCTA        = dynamic(() => import("@/components/landing/FooterCTA"))
 export default function Home() {
   return (
     <>
-      <Header />
       <main className="flex-1">
         <HeroSection />
-        <TrustBar />
         <ScoreBreakdown />
         <ProductFamily />
         <BeforeAfter />

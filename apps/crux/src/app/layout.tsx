@@ -16,9 +16,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CRUX — AI Property Intelligence | By ComfHutt",
+  title: "CRUX — Property Intelligence Engine by ComfHutt",
   description:
-    "CRUX analyses 20+ live signals — legal, spatial, financial — so you never invest blind. AI-powered property intelligence for Indian real estate.",
+    "Score any property in India. 20+ live data signals — legal, spatial, financial. Free.",
 };
 
 export default function RootLayout({
@@ -35,7 +35,20 @@ export default function RootLayout({
         jetbrainsMono.variable
       )}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body
+        className="min-h-full flex flex-col font-sans"
+        style={{ background: '#0A0A1A' }}
+      >
+        {children}
+      </body>
     </html>
   );
 }
