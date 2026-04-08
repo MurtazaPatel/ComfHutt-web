@@ -1,84 +1,148 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import dynamic from "next/dynamic";
+import { useState, useEffect, useRef } from "react";
 
-const Player = dynamic(
-  () => import("@lottiefiles/react-lottie-player").then((m) => ({ default: m.Player })),
-  { ssr: false }
-);
+// ─── CSS keyframes for custom icons ──────────────────────────────────────────
+const ICON_STYLES = `
+@keyframes hg-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes bar-grow {
+  0%   { transform: scaleY(0); }
+  20%  { transform: scaleY(1); }
+  70%  { transform: scaleY(1); }
+  80%  { transform: scaleY(0); }
+  100% { transform: scaleY(0); }
+}
+`;
 
-// Minimal subset of AnimationItem we use
-type AnimationItem = { play: () => void };
-type PlayerEvent = string;
+// ─── Beat 3: CSS keyframes ────────────────────────────────────────────────────
+const BEAT3_STYLES = `
+@keyframes sh3-key-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes sh3-glow-pulse {
+  0%, 100% { opacity: 0.2; }
+  50%       { opacity: 0.6; }
+}
+@keyframes sh3-key-show {
+  0%, 28%  { opacity: 1; }
+  38%      { opacity: 0; }
+  90%      { opacity: 0; }
+  100%     { opacity: 1; }
+}
+@keyframes sh3-building-show {
+  0%, 28%  { opacity: 0; }
+  38%      { opacity: 1; }
+  90%      { opacity: 1; }
+  100%     { opacity: 0; }
+}
+@keyframes sh3-building-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes sh3-win {
+  0%, 100% { opacity: 0.1; }
+  40%, 60% { opacity: 0.9; }
+}
+`;
 
-// ─── Lottie sources ───────────────────────────────────────────────────────────
-const LOTTIE_BEAT1 = "https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json";
-const LOTTIE_BEAT2 = "https://assets4.lottiefiles.com/packages/lf20_touohxv0.json";
+// ─── Hourglass icon (Stakes section) ─────────────────────────────────────────
+function HourglassIcon() {
+  useEffect(() => {
+    const styleId = "icon-keyframes";
+    if (document.getElementById(styleId)) return;
+    const el = document.createElement("style");
+    el.id = styleId;
+    el.textContent = ICON_STYLES;
+    document.head.appendChild(el);
+    return () => { document.getElementById(styleId)?.remove(); };
+  }, []);
 
-
-// ─── Fallback pulsing circle ──────────────────────────────────────────────────
-function PulsingFallback({ size }: { size: number }) {
   return (
     <div
-      style={{
-        width: size,
-        height: size,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="w-[120px] max-[639px]:w-[80px]"
+      style={{ opacity: 0.7, flexShrink: 0 }}
     >
-      <div
-        className="animate-pulse"
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
-          background: "#22C55E",
-        }}
-      />
+      <svg
+        viewBox="0 0 60 80"
+        width="100%"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <g
+          style={{
+            animation: "hg-spin 3s linear infinite",
+            transformBox: "fill-box",
+            transformOrigin: "center",
+          }}
+        >
+          {/* Top cap */}
+          <line x1="4" y1="8" x2="56" y2="8" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Top-left slant */}
+          <line x1="4" y1="8" x2="30" y2="40" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Top-right slant */}
+          <line x1="56" y1="8" x2="30" y2="40" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Bottom-left slant */}
+          <line x1="30" y1="40" x2="4" y2="72" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Bottom-right slant */}
+          <line x1="30" y1="40" x2="56" y2="72" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Bottom cap */}
+          <line x1="4" y1="72" x2="56" y2="72" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Sand grain at neck */}
+          <circle cx="30" cy="42" r="1.8" fill="#AAAAAA" />
+        </g>
+      </svg>
     </div>
   );
 }
 
-// ─── Lottie player with error fallback ───────────────────────────────────────
-function LottiePlayer({
-  src,
-  size,
-  autoplay = true,
-  loop = true,
-  lottieRef,
-  onEvent,
-}: {
-  src: string;
-  size: { width: number; height: number };
-  autoplay?: boolean;
-  loop?: boolean;
-  lottieRef?: (ref: AnimationItem) => void;
-  onEvent?: (event: PlayerEvent) => void;
-}) {
-  const [failed, setFailed] = useState(false);
-
-  const handleEvent = useCallback(
-    (event: PlayerEvent) => {
-      if (event === "error") setFailed(true);
-      onEvent?.(event);
-    },
-    [onEvent]
-  );
-
-  if (failed) return <PulsingFallback size={Math.max(size.width, size.height)} />;
-
+// ─── Rising bars icon (Horizon section) ──────────────────────────────────────
+function RisingBarsIcon() {
   return (
-    <Player
-      src={src}
-      autoplay={autoplay}
-      loop={loop}
-      style={{ width: size.width, height: size.height }}
-      lottieRef={lottieRef}
-      onEvent={handleEvent}
-    />
+    <svg
+      viewBox="0 0 80 64"
+      width="80"
+      height="64"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      {/* Bar 1 — shortest */}
+      <rect
+        x="8" y="28" width="16" height="32" rx="2"
+        fill="#22C55E"
+        style={{
+          transformBox: "fill-box",
+          transformOrigin: "bottom",
+          animation: "bar-grow 2.5s ease-in-out infinite",
+          animationDelay: "0s",
+        }}
+      />
+      {/* Bar 2 — medium */}
+      <rect
+        x="32" y="16" width="16" height="44" rx="2"
+        fill="#22C55E"
+        style={{
+          transformBox: "fill-box",
+          transformOrigin: "bottom",
+          animation: "bar-grow 2.5s ease-in-out infinite",
+          animationDelay: "0.2s",
+        }}
+      />
+      {/* Bar 3 — tallest */}
+      <rect
+        x="56" y="4" width="16" height="56" rx="2"
+        fill="#22C55E"
+        style={{
+          transformBox: "fill-box",
+          transformOrigin: "bottom",
+          animation: "bar-grow 2.5s ease-in-out infinite",
+          animationDelay: "0.4s",
+        }}
+      />
+    </svg>
   );
 }
 
@@ -124,46 +188,6 @@ function useParallax() {
   return { sectionRef, offset };
 }
 
-// ─── Beat 2 Lottie: start on scroll-into-view ────────────────────────────────
-function Beat2Lottie({ parallaxOffset }: { parallaxOffset: number }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animRef = useRef<AnimationItem | null>(null);
-  const hasStarted = useRef(false);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasStarted.current) {
-          hasStarted.current = true;
-          animRef.current?.play();
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{ transform: `translateY(calc(${parallaxOffset}px * -0.05))` }}
-    >
-      <LottiePlayer
-        src={LOTTIE_BEAT2}
-        size={{ width: 160, height: 160 }}
-        autoplay={false}
-        loop={true}
-        lottieRef={(ref) => {
-          animRef.current = ref;
-        }}
-      />
-    </div>
-  );
-}
-
 // ─── Entrance line styles ─────────────────────────────────────────────────────
 function entranceStyle(inView: boolean, delay: number): React.CSSProperties {
   return {
@@ -175,38 +199,6 @@ function entranceStyle(inView: boolean, delay: number): React.CSSProperties {
 
 // ─── Email validation ─────────────────────────────────────────────────────────
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// ─── Beat 3: CSS keyframes ────────────────────────────────────────────────────
-const BEAT3_STYLES = `
-@keyframes sh3-key-float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-@keyframes sh3-glow-pulse {
-  0%, 100% { opacity: 0.2; }
-  50%       { opacity: 0.6; }
-}
-@keyframes sh3-key-show {
-  0%, 28%  { opacity: 1; }
-  38%      { opacity: 0; }
-  90%      { opacity: 0; }
-  100%     { opacity: 1; }
-}
-@keyframes sh3-building-show {
-  0%, 28%  { opacity: 0; }
-  38%      { opacity: 1; }
-  90%      { opacity: 1; }
-  100%     { opacity: 0; }
-}
-@keyframes sh3-building-float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-@keyframes sh3-win {
-  0%, 100% { opacity: 0.1; }
-  40%, 60% { opacity: 0.9; }
-}
-`;
 
 // ─── Beat 3: Key-to-Building SVG animation ───────────────────────────────────
 function KeyToBuildingAnimation({ parallaxOffset }: { parallaxOffset: number }) {
@@ -329,9 +321,9 @@ export default function StakesAndHorizon() {
   };
 
   return (
-    <section ref={sectionRef} style={{ background: "#0F0F0F" }}>
+    <section ref={sectionRef} style={{ background: "#111318" }}>
       {/* ── BEAT 1: THE STAKES ─────────────────────────────────────────────── */}
-      <div style={{ padding: "120px 0", background: "#0F0F0F" }}>
+      <div style={{ padding: "120px 0", background: "#111318" }}>
         <div
           className="mx-auto px-4"
           style={{ maxWidth: 1024 }}
@@ -396,26 +388,21 @@ export default function StakesAndHorizon() {
               </p>
             </div>
 
-            {/* Right: Lottie */}
+            {/* Right: Hourglass icon */}
             <div
               className="w-full md:w-[40%] flex justify-center order-1 md:order-2"
               style={{
                 transform: `translateY(calc(${offset}px * 0.08))`,
               }}
             >
-              <LottiePlayer
-                src={LOTTIE_BEAT1}
-                size={{ width: 280, height: 280 }}
-                autoplay
-                loop
-              />
+              <HourglassIcon />
             </div>
           </div>
         </div>
       </div>
 
       {/* ── BEAT 2: THE TURN ───────────────────────────────────────────────── */}
-      <div style={{ background: "#0F0F0F", paddingBottom: 80 }}>
+      <div style={{ background: "#111318", paddingBottom: 80 }}>
         {/* Divider */}
         <div
           style={{
@@ -429,8 +416,10 @@ export default function StakesAndHorizon() {
 
         {/* Content centered */}
         <div className="flex flex-col items-center px-4">
-          {/* Beat 2 Lottie with scroll-triggered playback */}
-          <Beat2Lottie parallaxOffset={offset} />
+          {/* Rising bars icon */}
+          <div style={{ marginBottom: 8 }}>
+            <RisingBarsIcon />
+          </div>
 
           {/* Statement */}
           <p
