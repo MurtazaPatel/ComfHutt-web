@@ -211,8 +211,9 @@ export default function HeroSection() {
       </nav>
 
       {/* Layer 4: Hero content */}
-      <section className="relative z-10 flex flex-col items-center justify-center min-h-screen pt-20 px-6 text-center">
-        <div style={{ maxWidth: 720, width: "100%" }}>
+      <section className="relative z-10 flex flex-col items-center min-h-screen pt-20 px-6 text-center">
+        {/* Upper block — grows to fill top half, content anchored to bottom */}
+        <div className="flex-1 flex flex-col items-center justify-end w-full pb-8" style={{ maxWidth: 720 }}>
           {/* Eyebrow */}
           <div
             className="anim"
@@ -251,20 +252,23 @@ export default function HeroSection() {
             className="anim"
             style={{
               fontFamily: "'Instrument Serif', Georgia, serif",
-              fontSize: "clamp(56px, 8vw, 96px)",
-              fontWeight: 400,
               lineHeight: 1.0,
               letterSpacing: "-2px",
               color: "#FFFFFF",
-              marginBottom: 24,
+              marginBottom: 20,
               animationDelay: "0.3s",
             }}
           >
-            Every property
-            <br />
-            has a score.
-            <br />
-            <em style={{ color: "#22C55E", fontStyle: "italic" }}>
+            <span
+              className="block text-4xl md:text-5xl lg:text-6xl leading-tight"
+              style={{ fontWeight: 900 }}
+            >
+              Every property has a score.
+            </span>
+            <em
+              className="block text-5xl md:text-6xl lg:text-7xl leading-tight"
+              style={{ color: "#22C55E", fontStyle: "italic", fontWeight: 900 }}
+            >
               Most buyers never check it.
             </em>
           </h1>
@@ -273,11 +277,11 @@ export default function HeroSection() {
           <p
             className="anim"
             style={{
-              fontSize: "clamp(15px, 2vw, 17px)",
+              fontSize: "clamp(14px, 1.8vw, 16px)",
               color: "rgba(255,255,255,0.52)",
-              lineHeight: 1.75,
-              maxWidth: 480,
-              margin: "0 auto 44px",
+              lineHeight: 1.65,
+              maxWidth: 640,
+              margin: "0 auto 0",
               animationDelay: "0.48s",
             }}
           >
@@ -288,12 +292,13 @@ export default function HeroSection() {
             </span>
             . Takes 11 seconds. Free.
           </p>
+        </div>
 
-          {/* Chat input */}
+        {/* Chat input — sits at the natural midpoint of the hero */}
+        <div className="w-full px-0" style={{ maxWidth: 580 }}>
           <div
-            className="glass-input anim w-full mx-auto rounded-[18px] flex items-center gap-3 px-5 py-4 md:rounded-[18px] rounded-[14px]"
+            className="glass-input anim w-full mx-auto rounded-[18px] flex items-center gap-3 px-5 py-4"
             style={{
-              maxWidth: 580,
               animationDelay: "0.62s",
             }}
           >
@@ -339,7 +344,10 @@ export default function HeroSection() {
               </svg>
             </button>
           </div>
+        </div>
 
+        {/* Lower block — grows to fill bottom half, trust nudge anchored to top */}
+        <div className="flex-1 flex flex-col items-center justify-start w-full pt-4">
           {/* Trust nudge */}
           <p
             className="anim"
@@ -347,7 +355,6 @@ export default function HeroSection() {
               fontSize: 12,
               color: "rgba(255,255,255,0.28)",
               letterSpacing: "0.3px",
-              marginTop: 14,
               animationDelay: "0.75s",
             }}
           >
