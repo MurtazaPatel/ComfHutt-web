@@ -108,7 +108,7 @@ function LeftPanel({
           display: "flex",
           flexDirection: "column",
           gap: 20,
-          padding: isMobile ? "0 24px" : "0",
+          padding: isMobile ? "0 16px" : "0",
         }}
       >
         {/* Eyebrow */}
@@ -1563,8 +1563,8 @@ export default function ProductFamily() {
           style={{
             position: "absolute",
             top: 40,
-            left: isMobile ? 24 : "10%",
-            right: isMobile ? 24 : "auto",
+            left: isMobile ? 16 : "10%",
+            right: isMobile ? 16 : "auto",
             zIndex: 10,
           }}
         >
