@@ -14,7 +14,15 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0F0F0F]/60 border-b border-white/10">
+    <header
+      className="sticky top-0 z-50"
+      style={{
+        background: "rgba(10, 10, 10, 0.35)",
+        backdropFilter: "blur(28px) saturate(180%)",
+        WebkitBackdropFilter: "blur(28px) saturate(180%)",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+      }}
+    >
       <div className="mx-auto max-w-[1100px] px-4 sm:px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2">

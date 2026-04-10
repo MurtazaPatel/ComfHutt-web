@@ -110,7 +110,7 @@ export default function HeroSection() {
 
       {/* Layer 3: Navbar — fixed floating pill */}
       <nav
-        className="glass-input flex items-center justify-between"
+        className="flex items-center justify-between"
         style={{
           position: "fixed",
           top: 16,
@@ -122,7 +122,11 @@ export default function HeroSection() {
           borderRadius: 9999,
           padding: "10px 16px",
           gap: 32,
-          boxShadow: "0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)",
+          background: "rgba(255, 255, 255, 0.08)",
+          backdropFilter: "blur(20px) saturate(160%)",
+          WebkitBackdropFilter: "blur(20px) saturate(160%)",
+          border: "1px solid rgba(255, 255, 255, 0.14)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.10)",
         }}
       >
         {/* Logo */}
@@ -146,11 +150,11 @@ export default function HeroSection() {
               marginBottom: 2,
             }}
           >
-            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>by</span>
+            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.45)" }}>by</span>
             <img
               src="/comfhutt-logo.svg"
               alt="ComfHutt"
-              style={{ height: 14, width: "auto", opacity: 0.45 }}
+              style={{ height: 14, width: "auto", opacity: 0.65 }}
             />
           </span>
         </a>
@@ -163,17 +167,17 @@ export default function HeroSection() {
               href="#"
               style={{
                 fontSize: 13,
-                color: "rgba(255,255,255,0.45)",
+                color: "rgba(255,255,255,0.55)",
                 textDecoration: "none",
                 transition: "color 0.2s",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.color =
-                  "rgba(255,255,255,0.9)";
+                  "rgba(255,255,255,0.95)";
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.color =
-                  "rgba(255,255,255,0.45)";
+                  "rgba(255,255,255,0.55)";
               }}
             >
               {label}
@@ -192,8 +196,6 @@ export default function HeroSection() {
             padding: "12px 18px",
             borderRadius: 100,
             cursor: "pointer",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
             transition: "all 0.2s ease",
           }}
           onMouseEnter={(e) => {
@@ -211,6 +213,14 @@ export default function HeroSection() {
         </button>
       </nav>
 
+      {/* Mobile hero typography overrides */}
+      <style>{`
+        @media (max-width: 639px) {
+          #hero h1 { line-height: 1.18 !important; letter-spacing: 0.01em !important; }
+          #hero .hero-subtitle { font-size: 16px !important; }
+        }
+      `}</style>
+
       {/* Layer 4: Hero content */}
       <section className="relative z-10 flex flex-col items-center pt-20 px-4 sm:px-6 text-center" style={{ minHeight: "100svh" }}>
         {/* Upper block — grows to fill top half, content anchored to bottom */}
@@ -223,7 +233,7 @@ export default function HeroSection() {
               alignItems: "center",
               gap: 10,
               justifyContent: "center",
-              marginBottom: 28,
+              marginBottom: 32,
               animationDelay: "0.15s",
             }}
           >
@@ -238,7 +248,7 @@ export default function HeroSection() {
             <span
               style={{
                 fontSize: 10,
-                letterSpacing: "3px",
+                letterSpacing: "0.18em",
                 textTransform: "uppercase",
                 color: "rgba(255,255,255,0.45)",
                 fontWeight: 500,
@@ -249,40 +259,48 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1
-            className="anim"
-            style={{
-              fontFamily: "'Instrument Serif', Georgia, serif",
-              lineHeight: 1.0,
-              letterSpacing: "-2px",
-              color: "#FFFFFF",
-              marginBottom: 20,
-              animationDelay: "0.3s",
-            }}
-          >
-            <span
-              className="block text-4xl md:text-5xl lg:text-6xl leading-tight"
-              style={{ fontWeight: 900 }}
-            >
-              Every property has a score.
-            </span>
-            <em
-              className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight"
-              style={{ color: "#22C55E", fontStyle: "italic", fontWeight: 900 }}
-            >
-              Most buyers never check it.
-            </em>
-          </h1>
+<h1
+  className="anim"
+  style={{
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    lineHeight: 1.12,
+    letterSpacing: "0.015em",
+    color: "#FFFFFF",
+    marginBottom: 20,
+    animationDelay: "0.3s",
+  }}
+>
+  <span
+    className="block text-4xl md:text-5xl lg:text-6xl"
+    style={{ fontWeight: 400, marginBottom: "0.1em" }}
+  >
+    Every property has a score.
+  </span>
+  <em
+    className="block text-4xl md:text-5xl lg:text-6xl"
+    style={{
+      color: "#22C55E",
+      fontStyle: "italic",
+      fontWeight: 400,
+      letterSpacing: "0.015em",
+      textShadow: "0 0 40px rgba(34, 197, 94, 0.45), 0 0 80px rgba(34, 197, 94, 0.2)",
+    }}
+  >
+    Most buyers never check it.
+  </em>
+</h1>
 
           {/* Subheadline */}
           <p
-            className="anim"
+            className="anim px-5 sm:px-0 hero-subtitle"
             style={{
-              fontSize: "clamp(14px, 1.8vw, 16px)",
+              fontSize: "clamp(15px, 2vw, 18px)",
               color: "rgba(255,255,255,0.52)",
-              lineHeight: 1.65,
-              maxWidth: 640,
-              margin: "0 auto 0",
+              lineHeight: 1.75,
+              letterSpacing: "0.018em",
+              wordSpacing: "0.04em",
+              maxWidth: 580,
+              margin: "28px auto 0",
               animationDelay: "0.48s",
             }}
           >
@@ -353,9 +371,9 @@ export default function HeroSection() {
           <p
             className="anim"
             style={{
-              fontSize: 12,
+              fontSize: 14,
               color: "rgba(255,255,255,0.28)",
-              letterSpacing: "0.3px",
+              letterSpacing: "0.04em",
               animationDelay: "0.75s",
             }}
           >

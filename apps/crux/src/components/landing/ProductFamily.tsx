@@ -568,13 +568,13 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
       seq += 400;
       schedule(() => setPhase(1), seq);
 
-      // Type Q1 chars at 42ms each
+      // Type Q1 chars at 12ms each
       for (let i = 1; i <= Q1.length; i++) {
-        const charDelay = seq + i * 42;
+        const charDelay = seq + i * 12;
         const captured = i;
         schedule(() => setQ1Text(Q1.slice(0, captured)), charDelay);
       }
-      seq += Q1.length * 42 + 100;
+      seq += Q1.length * 12 + 100;
 
       // Typing dots for R1
       schedule(() => {
@@ -594,11 +594,11 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
       // Start typing Q2
       schedule(() => setPhase(4), seq);
       for (let i = 1; i <= Q2.length; i++) {
-        const charDelay = seq + i * 42;
+        const charDelay = seq + i * 12;
         const captured = i;
         schedule(() => setQ2Text(Q2.slice(0, captured)), charDelay);
       }
-      seq += Q2.length * 42 + 100;
+      seq += Q2.length * 12 + 100;
 
       // Typing dots for R2
       schedule(() => {
@@ -1396,8 +1396,8 @@ function WatchWidget({ isMobile }: { isMobile: boolean }) {
           {WATCH_ALERTS.slice(0, visibleCount).map((alert) => (
             <motion.div
               key={alert.id}
-              initial={{ opacity: 0, x: 36 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: isMobile ? 0 : 36, y: isMobile ? 16 : 0 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               transition={{
                 duration: 0.35,
@@ -1541,7 +1541,7 @@ export default function ProductFamily() {
     <div
       ref={outerRef}
       id="products"
-      style={{ position: "relative", height: "600vh" }}
+      style={{ position: "relative", height: "600vh", scrollMarginTop: 80 }}
     >
       <div
         style={{
@@ -1561,11 +1561,12 @@ export default function ProductFamily() {
         {/* ── Section header (pinned, not animated) ── */}
         <div
           style={{
-            position: "absolute",
-            top: 40,
-            left: isMobile ? 16 : "10%",
-            right: isMobile ? 16 : "auto",
-            zIndex: 10,
+            position: isMobile ? "relative" : "absolute",
+            top: isMobile ? "auto" : 96,
+            left: isMobile ? "auto" : "10%",
+            right: isMobile ? "auto" : "auto",
+            padding: isMobile ? "72px 16px 0" : undefined,
+            zIndex: isMobile ? 1 : 10,
           }}
         >
           <div
@@ -1621,7 +1622,7 @@ export default function ProductFamily() {
               display: "flex",
               flexDirection: "column",
               flex: 1,
-              paddingTop: 110,
+              paddingTop: 16,
               paddingBottom: 48,
               gap: 16,
               overflow: "hidden",
@@ -1663,7 +1664,7 @@ export default function ProductFamily() {
               display: "flex",
               flex: 1,
               alignItems: "center",
-              paddingTop: 90,
+              paddingTop: 140,
             }}
           >
             {/* Left text panel */}
