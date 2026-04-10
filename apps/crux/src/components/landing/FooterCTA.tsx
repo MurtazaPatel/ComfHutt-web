@@ -40,9 +40,9 @@ export default function FooterCTA() {
   return (
     <footer className="bg-white">
       {/* ── CTA section ── */}
-      <div className="py-32 px-4">
+      <div className="py-16 sm:py-32 px-4">
         <motion.div
-          className="mx-auto max-w-2xl rounded-3xl p-12 text-center border border-[#22C55E33]"
+          className="mx-auto max-w-2xl rounded-3xl p-6 sm:p-12 text-center border border-[#22C55E33]"
           style={{
             background:
               "linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 50%, #F0FDF4 100%)",
@@ -53,7 +53,7 @@ export default function FooterCTA() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <motion.h2
-            className="text-[32px] font-bold text-crux-text-primary leading-tight tracking-[-0.5px]"
+            className="text-[24px] sm:text-[32px] font-bold text-crux-text-primary leading-tight tracking-[-0.5px]"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
@@ -73,7 +73,7 @@ export default function FooterCTA() {
           </motion.p>
 
           <motion.div
-            className="mt-16 max-w-lg mx-auto"
+            className="mt-8 sm:mt-16 max-w-lg mx-auto"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
@@ -133,33 +133,13 @@ export default function FooterCTA() {
               {/* Logo lockup */}
               <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
                 {/* Green square icon */}
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    background: "#22C55E",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M7 2L12 5V9L7 12L2 9V5L7 2Z"
-                      stroke="#FFFFFF"
-                      strokeWidth="1.5"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
+                
                 <span
                   style={{
                     fontSize: 18,
                     fontWeight: 800,
                     letterSpacing: "-0.03em",
-                    color: "#111827",
+                    color: "#22C55E",
                   }}
                 >
                   CRUX
@@ -196,6 +176,8 @@ export default function FooterCTA() {
                           color: "#6B7280",
                           textDecoration: "none",
                           transition: "color 0.2s ease",
+                          display: "inline-block",
+                          padding: "6px 0",
                         }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = "#22C55E")}
                         onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
