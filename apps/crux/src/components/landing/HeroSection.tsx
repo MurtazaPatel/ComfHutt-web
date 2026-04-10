@@ -65,7 +65,8 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen w-full overflow-hidden bg-[#0A0A1A]"
+      className="relative w-full overflow-hidden bg-[#0A0A1A]"
+      style={{ minHeight: "100svh" }}
     >
       {/* Layer 1: Grainient background */}
       <div className="absolute inset-0">
@@ -119,7 +120,7 @@ export default function HeroSection() {
           width: "fit-content",
           minWidth: "min(720px, 90vw)",
           borderRadius: 9999,
-          padding: "10px 20px",
+          padding: "10px 16px",
           gap: 32,
           boxShadow: "0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
@@ -188,7 +189,7 @@ export default function HeroSection() {
             color: "#22C55E",
             fontSize: 13,
             fontWeight: 500,
-            padding: "8px 18px",
+            padding: "12px 18px",
             borderRadius: 100,
             cursor: "pointer",
             backdropFilter: "blur(16px)",
@@ -211,7 +212,7 @@ export default function HeroSection() {
       </nav>
 
       {/* Layer 4: Hero content */}
-      <section className="relative z-10 flex flex-col items-center min-h-screen pt-20 px-6 text-center">
+      <section className="relative z-10 flex flex-col items-center pt-20 px-4 sm:px-6 text-center" style={{ minHeight: "100svh" }}>
         {/* Upper block — grows to fill top half, content anchored to bottom */}
         <div className="flex-1 flex flex-col items-center justify-end w-full pb-8" style={{ maxWidth: 720 }}>
           {/* Eyebrow */}
@@ -266,7 +267,7 @@ export default function HeroSection() {
               Every property has a score.
             </span>
             <em
-              className="block text-5xl md:text-6xl lg:text-7xl leading-tight"
+              className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight"
               style={{ color: "#22C55E", fontStyle: "italic", fontWeight: 900 }}
             >
               Most buyers never check it.
@@ -305,13 +306,13 @@ export default function HeroSection() {
             <input
               type="text"
               placeholder="Enter any address in India..."
-              className="flex-1 bg-transparent border-none outline-none text-white text-[15px] placeholder:text-white/30"
+              className="flex-1 bg-transparent border-none outline-none text-white text-base placeholder:text-white/30"
               style={{ caretColor: "#22C55E" }}
             />
             <button
               style={{
-                width: 36,
-                height: 36,
+                width: 44,
+                height: 44,
                 background: "#22C55E",
                 borderRadius: 10,
                 border: "none",
@@ -381,8 +382,9 @@ export default function HeroSection() {
           alignItems: "center",
         }}
       >
-        {/* Sticky label */}
+        {/* Sticky label — hidden on small mobile */}
         <div
+          className="hidden sm:block"
           style={{
             flexShrink: 0,
             paddingLeft: 32, paddingRight: 24,
