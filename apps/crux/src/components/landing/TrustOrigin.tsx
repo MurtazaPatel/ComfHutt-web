@@ -7,7 +7,7 @@ const VP = { once: true, margin: "-100px" } as const;
 
 export default function TrustOrigin() {
   return (
-    <section className="bg-white py-32 px-4">
+    <section className="bg-white py-20 md:py-32 px-4">
       <div className="mx-auto max-w-3xl text-center">
         {/* Quotation mark */}
         <motion.div
