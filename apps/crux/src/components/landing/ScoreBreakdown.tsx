@@ -183,7 +183,7 @@ export default function ScoreBreakdown() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-            className="text-[28px] md:text-[44px] font-bold text-[#111827] tracking-tight leading-tight"
+            className="text-[32px] md:text-[44px] font-bold text-[#111827] tracking-tight leading-tight"
           >
             One score. Six dimensions. 20+ signals.
           </motion.h2>
