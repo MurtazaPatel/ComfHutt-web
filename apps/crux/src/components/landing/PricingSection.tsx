@@ -86,7 +86,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <button className="mt-8 w-full py-3 rounded-xl border-2 border-crux-green text-crux-green font-semibold text-sm hover:bg-crux-green/5 hover:brightness-105 transition-all duration-200 cursor-pointer">
+            <button className="mt-8 w-full py-3 min-h-11 rounded-xl border-2 border-crux-green text-crux-green font-semibold text-sm hover:bg-crux-green/5 hover:brightness-105 transition-all duration-200 cursor-pointer">
               Start Free
             </button>
             <p className="mt-3 text-xs text-crux-text-muted text-center">
@@ -130,7 +130,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <button className="mt-8 w-full py-3 rounded-xl bg-gradient-green text-white font-semibold text-sm hover:brightness-105 transition-all duration-200 cursor-pointer">
+            <button className="mt-8 w-full py-3 min-h-11 rounded-xl bg-gradient-green text-white font-semibold text-sm hover:brightness-105 transition-all duration-200 cursor-pointer">
               Upgrade to Pro
             </button>
             <p className="mt-3 text-xs text-crux-text-muted text-center">
