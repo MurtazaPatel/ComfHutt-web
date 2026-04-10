@@ -323,7 +323,7 @@ export default function StakesAndHorizon() {
   return (
     <section ref={sectionRef} style={{ background: "#111318" }}>
       {/* ── BEAT 1: THE STAKES ─────────────────────────────────────────────── */}
-      <div style={{ padding: "120px 0", background: "#111318" }}>
+      <div className="py-16 md:py-30" style={{ background: "#111318" }}>
         <div
           className="mx-auto px-4"
           style={{ maxWidth: 1024 }}
@@ -402,7 +402,7 @@ export default function StakesAndHorizon() {
       </div>
 
       {/* ── BEAT 2: THE TURN ───────────────────────────────────────────────── */}
-      <div style={{ background: "#111318", paddingBottom: 80 }}>
+      <div className="pb-12 md:pb-20" style={{ background: "#111318" }}>
         {/* Divider */}
         <div
           style={{
@@ -449,9 +449,9 @@ export default function StakesAndHorizon() {
 
       {/* ── BEAT 3: THE HORIZON ────────────────────────────────────────────── */}
       <div
+        className="py-16 md:py-30"
         style={{
           background: "linear-gradient(to bottom, #0F0F0F 0%, #0A0A1A 100%)",
-          padding: "120px 0",
         }}
       >
         <div className="mx-auto px-4" style={{ maxWidth: 1024 }}>
@@ -591,7 +591,7 @@ export default function StakesAndHorizon() {
                             borderRadius: 8,
                             padding: "14px 18px",
                             color: "#FFFFFF",
-                            fontSize: 15,
+                            fontSize: 16,
                             outline: "none",
                             transition: "border-color 200ms ease",
                           }}
@@ -658,7 +658,7 @@ function Pill({ label }: { label: string }) {
       style={{
         border: `1px solid ${hovered ? "#22C55E" : "#2a2a2a"}`,
         borderRadius: 999,
-        padding: "8px 20px",
+        padding: "12px 20px",
         background: "transparent",
         fontSize: 13,
         color: hovered ? "#22C55E" : "#AAAAAA",
