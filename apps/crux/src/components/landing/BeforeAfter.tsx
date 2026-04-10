@@ -25,7 +25,7 @@ export default function BeforeAfter() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden py-28 px-6 sm:py-20 sm:px-5">
+    <section ref={sectionRef} className="relative overflow-hidden py-16 px-4 sm:py-20 sm:px-5">
       {/* Background */}
       <div className="absolute inset-0">
         <Grainient
