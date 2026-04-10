@@ -1,150 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-
-// ─── CSS keyframes for custom icons ──────────────────────────────────────────
-const ICON_STYLES = `
-@keyframes hg-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-@keyframes bar-grow {
-  0%   { transform: scaleY(0); }
-  20%  { transform: scaleY(1); }
-  70%  { transform: scaleY(1); }
-  80%  { transform: scaleY(0); }
-  100% { transform: scaleY(0); }
-}
-`;
-
-// ─── Beat 3: CSS keyframes ────────────────────────────────────────────────────
-const BEAT3_STYLES = `
-@keyframes sh3-key-float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-@keyframes sh3-glow-pulse {
-  0%, 100% { opacity: 0.2; }
-  50%       { opacity: 0.6; }
-}
-@keyframes sh3-key-show {
-  0%, 28%  { opacity: 1; }
-  38%      { opacity: 0; }
-  90%      { opacity: 0; }
-  100%     { opacity: 1; }
-}
-@keyframes sh3-building-show {
-  0%, 28%  { opacity: 0; }
-  38%      { opacity: 1; }
-  90%      { opacity: 1; }
-  100%     { opacity: 0; }
-}
-@keyframes sh3-building-float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-@keyframes sh3-win {
-  0%, 100% { opacity: 0.1; }
-  40%, 60% { opacity: 0.9; }
-}
-`;
-
-// ─── Hourglass icon (Stakes section) ─────────────────────────────────────────
-function HourglassIcon() {
-  useEffect(() => {
-    const styleId = "icon-keyframes";
-    if (document.getElementById(styleId)) return;
-    const el = document.createElement("style");
-    el.id = styleId;
-    el.textContent = ICON_STYLES;
-    document.head.appendChild(el);
-    return () => { document.getElementById(styleId)?.remove(); };
-  }, []);
-
-  return (
-    <div
-      className="w-[120px] max-[639px]:w-[80px]"
-      style={{ opacity: 0.7, flexShrink: 0 }}
-    >
-      <svg
-        viewBox="0 0 60 80"
-        width="100%"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <g
-          style={{
-            animation: "hg-spin 3s linear infinite",
-            transformBox: "fill-box",
-            transformOrigin: "center",
-          }}
-        >
-          {/* Top cap */}
-          <line x1="4" y1="8" x2="56" y2="8" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Top-left slant */}
-          <line x1="4" y1="8" x2="30" y2="40" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Top-right slant */}
-          <line x1="56" y1="8" x2="30" y2="40" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Bottom-left slant */}
-          <line x1="30" y1="40" x2="4" y2="72" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Bottom-right slant */}
-          <line x1="30" y1="40" x2="56" y2="72" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Bottom cap */}
-          <line x1="4" y1="72" x2="56" y2="72" stroke="#CCCCCC" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Sand grain at neck */}
-          <circle cx="30" cy="42" r="1.8" fill="#AAAAAA" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-// ─── Rising bars icon (Horizon section) ──────────────────────────────────────
-function RisingBarsIcon() {
-  return (
-    <svg
-      viewBox="0 0 80 64"
-      width="80"
-      height="64"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      {/* Bar 1 — shortest */}
-      <rect
-        x="8" y="28" width="16" height="32" rx="2"
-        fill="#22C55E"
-        style={{
-          transformBox: "fill-box",
-          transformOrigin: "bottom",
-          animation: "bar-grow 2.5s ease-in-out infinite",
-          animationDelay: "0s",
-        }}
-      />
-      {/* Bar 2 — medium */}
-      <rect
-        x="32" y="16" width="16" height="44" rx="2"
-        fill="#22C55E"
-        style={{
-          transformBox: "fill-box",
-          transformOrigin: "bottom",
-          animation: "bar-grow 2.5s ease-in-out infinite",
-          animationDelay: "0.2s",
-        }}
-      />
-      {/* Bar 3 — tallest */}
-      <rect
-        x="56" y="4" width="16" height="56" rx="2"
-        fill="#22C55E"
-        style={{
-          transformBox: "fill-box",
-          transformOrigin: "bottom",
-          animation: "bar-grow 2.5s ease-in-out infinite",
-          animationDelay: "0.4s",
-        }}
-      />
-    </svg>
-  );
-}
+import PeepsShield from "@/components/PeepsShield";
+import PeepsGrowth from "@/components/PeepsGrowth";
+import PeepsSignup from "@/components/PeepsSignup";
 
 // ─── Scroll entrance hook ────────────────────────────────────────────────────
 function useScrollEntrance(threshold = 0.2) {
@@ -199,100 +58,6 @@ function entranceStyle(inView: boolean, delay: number): React.CSSProperties {
 
 // ─── Email validation ─────────────────────────────────────────────────────────
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// ─── Beat 3: Key-to-Building SVG animation ───────────────────────────────────
-function KeyToBuildingAnimation({ parallaxOffset }: { parallaxOffset: number }) {
-  useEffect(() => {
-    const styleId = "sh3-keyframes";
-    if (document.getElementById(styleId)) return;
-    const el = document.createElement("style");
-    el.id = styleId;
-    el.textContent = BEAT3_STYLES;
-    document.head.appendChild(el);
-    return () => {
-      document.getElementById(styleId)?.remove();
-    };
-  }, []);
-
-  return (
-    <div
-      className="hidden md:flex justify-center md:w-[40%] order-1"
-      style={{ transform: `translateY(${parallaxOffset * 0.12}px)` }}
-    >
-      <svg
-        viewBox="0 0 320 380"
-        width="300"
-        height="360"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ overflow: "visible" }}
-        aria-hidden="true"
-      >
-        <defs>
-          <filter id="sh3-glow-filter" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="14" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* ── KEY GROUP — Act 1 ── */}
-        <g style={{ animation: "sh3-key-show 12s ease-in-out infinite" }}>
-          {/* Pulsing glow behind bow */}
-          <circle
-            cx="128"
-            cy="182"
-            r="58"
-            fill="#22C55E"
-            filter="url(#sh3-glow-filter)"
-            style={{ animation: "sh3-glow-pulse 3s ease-in-out infinite" }}
-          />
-          {/* Floating key */}
-          <g style={{ animation: "sh3-key-float 2s ease-in-out infinite", transformOrigin: "160px 182px" }}>
-            {/* Bow outline */}
-            <circle cx="128" cy="182" r="38" fill="none" stroke="#22C55E" strokeWidth="2.5" />
-            {/* Bow inner hole */}
-            <circle cx="128" cy="182" r="13" fill="none" stroke="#22C55E" strokeWidth="2" />
-            {/* Shaft */}
-            <rect x="128" y="175" width="118" height="14" fill="#22C55E" />
-            {/* Tooth 1 */}
-            <rect x="187" y="189" width="11" height="22" fill="#22C55E" />
-            {/* Tooth 2 */}
-            <rect x="213" y="189" width="11" height="15" fill="#22C55E" />
-          </g>
-        </g>
-
-        {/* ── BUILDING GROUP — Act 3 ── */}
-        <g style={{ animation: "sh3-building-show 12s ease-in-out infinite" }}>
-          <g style={{ animation: "sh3-building-float 4s ease-in-out infinite", transformOrigin: "160px 225px" }}>
-            {/* Rooftop antenna */}
-            <line x1="160" y1="152" x2="160" y2="132" stroke="#22C55E" strokeWidth="2" strokeLinecap="round" />
-            <circle cx="160" cy="130" r="3" fill="#22C55E" />
-            {/* Building body */}
-            <rect x="120" y="152" width="80" height="140" fill="none" stroke="#22C55E" strokeWidth="2.5" />
-            {/* Windows — Row 1 */}
-            <rect x="133" y="174" width="13" height="14" fill="#22C55E"
-              style={{ animation: "sh3-win 1.8s ease-in-out infinite", animationDelay: "0s" }} />
-            <rect x="154" y="174" width="13" height="14" fill="#22C55E"
-              style={{ animation: "sh3-win 1.8s ease-in-out infinite", animationDelay: "0.3s" }} />
-            <rect x="175" y="174" width="13" height="14" fill="#22C55E"
-              style={{ animation: "sh3-win 1.8s ease-in-out infinite", animationDelay: "0.6s" }} />
-            {/* Windows — Row 2 */}
-            <rect x="133" y="204" width="13" height="14" fill="#22C55E"
-              style={{ animation: "sh3-win 1.8s ease-in-out infinite", animationDelay: "0.9s" }} />
-            <rect x="154" y="204" width="13" height="14" fill="#22C55E"
-              style={{ animation: "sh3-win 1.8s ease-in-out infinite", animationDelay: "1.2s" }} />
-            <rect x="175" y="204" width="13" height="14" fill="#22C55E"
-              style={{ animation: "sh3-win 1.8s ease-in-out infinite", animationDelay: "1.5s" }} />
-            {/* Ground line */}
-            <line x1="100" y1="292" x2="220" y2="292" stroke="#555555" strokeWidth="1" />
-          </g>
-        </g>
-      </svg>
-    </div>
-  );
-}
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function StakesAndHorizon() {
@@ -395,7 +160,7 @@ export default function StakesAndHorizon() {
                 transform: `translateY(calc(${offset}px * 0.08))`,
               }}
             >
-              <HourglassIcon />
+              <PeepsShield />
             </div>
           </div>
         </div>
@@ -418,7 +183,7 @@ export default function StakesAndHorizon() {
         <div className="flex flex-col items-center px-4">
           {/* Rising bars icon */}
           <div style={{ marginBottom: 8 }}>
-            <RisingBarsIcon />
+            <PeepsGrowth />
           </div>
 
           {/* Statement */}
@@ -457,7 +222,7 @@ export default function StakesAndHorizon() {
         <div className="mx-auto px-4" style={{ maxWidth: 1024 }}>
           <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
             {/* Left: SVG animation (desktop only) */}
-            <KeyToBuildingAnimation parallaxOffset={offset} />
+            <PeepsSignup />
 
             {/* Right: text + form */}
             <div ref={beat3.ref} className="w-full md:w-[60%] order-2">

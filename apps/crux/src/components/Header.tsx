@@ -14,7 +14,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-crux-border">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0F0F0F]/60 border-b border-white/10">
       <div className="mx-auto max-w-[1100px] px-4 sm:px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2">
@@ -71,7 +71,7 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-white border-b border-crux-border"
+            className="md:hidden overflow-hidden bg-[#0F0F0F]/90 border-b border-white/10"
           >
             <div className="px-4 py-4 space-y-3">
               {NAV_LINKS.map((link) => (

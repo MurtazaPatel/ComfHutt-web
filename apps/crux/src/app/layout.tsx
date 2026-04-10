@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   title: "CRUX — Property Intelligence Engine by ComfHutt",
   description:
     "Score any property in India. 20+ live data signals — legal, spatial, financial. Free.",
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({

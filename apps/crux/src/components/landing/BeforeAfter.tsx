@@ -41,7 +41,7 @@ export default function BeforeAfter() {
           blendSoftness={0.12}
           rotationAmount={280.0}
           noiseScale={1.8}
-          grainAmount={0.055}
+          grainAmount={0.043}
           grainScale={2.5}
           grainAnimated={false}
         />

@@ -83,7 +83,7 @@ export default function HeroSection() {
           blendSoftness={0.12}
           rotationAmount={280.0}
           noiseScale={1.8}
-          grainAmount={0.055}
+          grainAmount={0.043}
           grainScale={2.5}
           grainAnimated={false}
           contrast={1.6}
@@ -207,7 +207,7 @@ export default function HeroSection() {
             el.style.borderColor = "rgba(34,197,94,0.5)";
           }}
         >
-          Try CRUX Free →
+          Get Started 
         </button>
       </nav>
 
@@ -291,7 +291,7 @@ export default function HeroSection() {
             <span style={{ color: "rgba(255,255,255,0.75)" }}>
               broker never told you about
             </span>
-            . Takes 11 seconds. Free.
+            
           </p>
         </div>
 

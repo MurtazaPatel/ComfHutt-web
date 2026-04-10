@@ -1,0 +1,16 @@
+@keyframes peep-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes peep-wave {
+  0%, 100% { transform: rotate(0deg); transform-origin: bottom center; }
+  25% { transform: rotate(3deg); transform-origin: bottom center; }
+  75% { transform: rotate(-3deg); transform-origin: bottom center; }
+}
+@keyframes coin-rise {
+  0% { transform: translateY(0px); opacity: 1; }
+  100% { transform: translateY(-50px); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
