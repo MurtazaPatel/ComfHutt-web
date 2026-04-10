@@ -119,6 +119,10 @@
     @apply font-sans scroll-smooth;
     scroll-padding-top: 4rem; /* offset for sticky 64px header */
   }
+  /* Prevent tap flash on mobile */
+  a, button, input, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 /* ── Green glow pulse for chat input ── */
@@ -268,4 +272,35 @@
 .ticker-track:hover,
 .ticker-track:focus-within {
   animation-play-state: paused;
+}
+
+/* ── Mobile: shrink hero orbs to prevent overflow ── */
+@media (max-width: 768px) {
+  .hero-orb-1 {
+    width: 320px;
+    height: 320px;
+    top: -80px;
+    right: -80px;
+  }
+  .hero-orb-2 {
+    width: 260px;
+    height: 260px;
+    bottom: -60px;
+    left: -60px;
+  }
+}
+
+/* ── Reduced motion: simplify or disable animations ── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-glow-pulse,
+  .animate-marquee,
+  .hero-orb-1,
+  .hero-orb-2,
+  .anim {
+    animation: none !important;
+  }
+  .anim {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
