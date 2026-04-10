@@ -92,7 +92,7 @@ export default function ChatInput({
 
   const inputStyles = cn(
     "flex-1 outline-none bg-transparent font-medium",
-    size === "large" ? "text-base" : "text-sm",
+    "text-base",
     {
       "text-crux-text-primary placeholder-crux-text-muted":
         variant !== "dark",
@@ -126,7 +126,7 @@ export default function ChatInput({
           type="submit"
           disabled={!query.trim()}
           className={cn(
-            "shrink-0 flex items-center justify-center rounded-xl p-2.5 transition-all duration-200",
+            "shrink-0 flex items-center justify-center rounded-xl p-2.5 min-w-11 min-h-11 transition-all duration-200",
             query.trim()
               ? "bg-gradient-green text-white hover:opacity-90 cursor-pointer"
               : variant === "dark"
