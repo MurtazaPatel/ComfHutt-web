@@ -27,9 +27,7 @@ export default function BeforeAfter() {
       {/* Background */}
       <div
         className="absolute inset-0"
-        style={{
-          background: `linear-gradient(180deg, #0A0A1A 0%, #0D1510 50%, #0A0A1A 100%)`,
-        }}
+        style={{ background: "#F0FDF4" }}
       />
 
       {/* Content */}
@@ -44,7 +42,7 @@ export default function BeforeAfter() {
               fontSize: "clamp(36px, 6vw, 64px)",
               fontWeight: 700,
               letterSpacing: "-1.5px",
-              color: "#fff",
+              color: "#0F0F0F",
               lineHeight: 1.1,
             }}
           >
@@ -56,8 +54,8 @@ export default function BeforeAfter() {
         {/* Desktop */}
         <div className="hidden sm:grid" style={{ gridTemplateColumns: "1fr 1px 1fr", gap: "0 32px" }}>
           {/* Column headers */}
-          <p style={{ fontFamily: "monospace", fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "2px" }} className="uppercase mb-6">TODAY</p>
-          <div style={{ background: "rgba(34,197,94,0.3)" }} />
+          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#9CA3AF", letterSpacing: "2px" }} className="uppercase mb-6">TODAY</p>
+          <div style={{ background: "rgba(0,0,0,0.10)" }} />
           <p style={{ fontFamily: "monospace", fontSize: 11, color: "#22C55E", letterSpacing: "2px" }} className="uppercase mb-6">WITH CRUX</p>
 
           {/* Rows */}
@@ -67,7 +65,7 @@ export default function BeforeAfter() {
                 key={`l${i}`}
                 style={{
                   fontSize: 16,
-                  color: "rgba(255,255,255,0.3)",
+                  color: "#9CA3AF",
                   paddingBottom: 20,
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(8px)",
@@ -76,12 +74,12 @@ export default function BeforeAfter() {
               >
                 {left}
               </div>
-              <div key={`d${i}`} style={{ background: "rgba(34,197,94,0.3)" }} />
+              <div key={`d${i}`} style={{ background: "rgba(0,0,0,0.10)" }} />
               <div
                 key={`r${i}`}
                 style={{
                   fontSize: 16,
-                  color: "rgba(255,255,255,0.9)",
+                  color: "#111827",
                   paddingBottom: 20,
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(8px)",
@@ -96,13 +94,13 @@ export default function BeforeAfter() {
 
         {/* Mobile */}
         <div className="sm:hidden">
-          <p style={{ fontFamily: "monospace", fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "2px" }} className="uppercase mb-4">TODAY</p>
+          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#9CA3AF", letterSpacing: "2px" }} className="uppercase mb-4">TODAY</p>
           {PAIRS.map(([left], i) => (
             <div
               key={i}
               style={{
                 fontSize: 14,
-                color: "rgba(255,255,255,0.3)",
+                color: "#9CA3AF",
                 paddingBottom: 14,
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(8px)",
@@ -121,7 +119,7 @@ export default function BeforeAfter() {
               key={i}
               style={{
                 fontSize: 16,
-                color: "rgba(255,255,255,0.9)",
+                color: "#111827",
                 paddingBottom: 14,
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(8px)",

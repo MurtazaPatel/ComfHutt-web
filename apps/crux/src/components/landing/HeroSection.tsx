@@ -1,4 +1,4 @@
-const sources = [
+const dataSources = [
   "MCA21",
   "eCourts",
   "CPCB AQI",
@@ -10,6 +10,26 @@ const sources = [
   "RBI",
   "RERA",
 ];
+
+const trustSignals = [
+  "23 data signals",
+  "< 90s per report",
+  "Methodology is public",
+  "12 Indian cities",
+  "No signup required",
+  "Free forever",
+];
+
+// Interleave data sources and trust signals
+const tickerItems: { label: string; type: "data-source" | "trust-signal" }[] =
+  [];
+const maxLen = Math.max(dataSources.length, trustSignals.length);
+for (let i = 0; i < maxLen; i++) {
+  if (i < dataSources.length)
+    tickerItems.push({ label: dataSources[i], type: "data-source" });
+  if (i < trustSignals.length)
+    tickerItems.push({ label: trustSignals[i], type: "trust-signal" });
+}
 
 export default function HeroSection() {
   return (
@@ -90,25 +110,21 @@ export default function HeroSection() {
           Most buyers never check it.
         </h1>
 
-        {/* Subtitle */}
+        {/* Subtitle — trimmed text, font reduced by 2px */}
         <p
-          className="anim mt-6 text-center text-gray-500 max-w-[540px] mx-auto leading-relaxed"
+          className="anim mt-5 text-center text-gray-500 max-w-[540px] mx-auto leading-relaxed"
           style={{
-            fontSize: "clamp(16px, 1.6vw, 19px)",
+            fontSize: "clamp(14px, 1.6vw, 17px)",
             animationDelay: "0.25s",
           }}
         >
-          Type any address. We check for court cases, builder fraud,
-          encumbrances, flood risk, and 17 more things your{" "}
-          <span className="text-gray-700 font-medium">
-            broker never told you about
-          </span>
-          .
+          Type any address. Court cases, builder fraud, flood risk, and 17 more
+          things your broker never told you.
         </p>
 
         {/* Chat input */}
         <div
-          className="anim mt-10 w-full max-w-[580px] mx-auto px-4"
+          className="anim mt-8 w-full max-w-[580px] mx-auto px-4"
           style={{ animationDelay: "0.35s" }}
         >
           <div className="relative flex items-center w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] focus-within:border-[#22C55E]/50 focus-within:shadow-[0_0_0_3px_rgba(34,197,94,0.08),0_4px_16px_rgba(0,0,0,0.06)]">
@@ -159,7 +175,7 @@ export default function HeroSection() {
 
         {/* Trust nudge */}
         <p
-          className="anim mt-4 text-[13px] text-gray-400 text-center tracking-wide"
+          className="anim mt-3 text-[13px] text-gray-400 text-center tracking-wide"
           style={{ animationDelay: "0.45s" }}
         >
           Free
@@ -169,22 +185,95 @@ export default function HeroSection() {
           Score any property in India
         </p>
 
-        {/* Data source strip */}
+        {/* 3-step flow */}
         <div
-          className="anim mt-8 flex items-center justify-center gap-x-3 gap-y-2 flex-wrap px-4 max-w-2xl mx-auto"
-          style={{ animationDelay: "0.55s" }}
+          className="anim mt-2 flex items-center justify-center gap-2"
+          style={{ animationDelay: "0.48s" }}
         >
-          <span className="text-[11px] text-gray-300 uppercase tracking-[0.15em] font-medium whitespace-nowrap">
-            Verified from
-          </span>
-          {sources.map((src) => (
-            <span
-              key={src}
-              className="text-[11px] text-gray-400 font-medium px-2.5 py-1 rounded-md border border-gray-100 hover:text-gray-600 hover:border-gray-200 transition-colors duration-200 whitespace-nowrap"
-            >
-              {src}
-            </span>
-          ))}
+          <span className="text-[12px] text-gray-400 font-medium">Paste address</span>
+          <svg className="hidden sm:block w-3.5 h-3.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+          <span className="sm:hidden text-[12px] text-gray-300">→</span>
+          <span className="text-[12px] text-gray-400 font-medium">Get scored</span>
+          <svg className="hidden sm:block w-3.5 h-3.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+          <span className="sm:hidden text-[12px] text-gray-300">→</span>
+          <span className="text-[12px] text-[#22C55E] font-semibold">See full report</span>
+        </div>
+
+        {/* Marquee ticker */}
+        <div
+          className="anim w-full"
+          style={{
+            animationDelay: "0.52s",
+            marginTop: 24,
+            marginBottom: 24,
+            overflow: "hidden",
+            maskImage:
+              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+            padding: "16px 0",
+          }}
+        >
+          <style>{`
+            .ticker-track {
+              display: flex;
+              gap: 10px;
+              width: max-content;
+              animation: ticker-scroll 35s linear infinite;
+            }
+            .ticker-track-wrapper:hover .ticker-track {
+              animation-play-state: paused;
+            }
+            @keyframes ticker-scroll {
+              from { transform: translateX(0); }
+              to   { transform: translateX(-50%); }
+            }
+            .ticker-pill {
+              display: inline-flex;
+              align-items: center;
+              white-space: nowrap;
+              padding: 6px 14px;
+              background: #FFFFFF;
+              border: 1px solid rgba(0, 0, 0, 0.10);
+              border-radius: 999px;
+              font-size: 12px;
+              font-weight: 500;
+              color: #374151;
+              letter-spacing: 0.01em;
+              flex-shrink: 0;
+            }
+            @media (max-width: 640px) {
+              .ticker-pill { font-size: 11px; }
+            }
+            .ticker-pill.data-source::before {
+              content: '';
+              display: inline-block;
+              width: 5px;
+              height: 5px;
+              border-radius: 50%;
+              background: #22C55E;
+              margin-right: 7px;
+              flex-shrink: 0;
+            }
+          `}</style>
+          <div className="ticker-track-wrapper">
+            <div className="ticker-track">
+              {tickerItems.map((item, i) => (
+                <span key={`a-${i}`} className={`ticker-pill ${item.type}`}>
+                  {item.label}
+                </span>
+              ))}
+              {tickerItems.map((item, i) => (
+                <span key={`b-${i}`} className={`ticker-pill ${item.type}`}>
+                  {item.label}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -285,7 +374,7 @@ export default function HeroSection() {
 
           {/* Bottom fade-out */}
           <div
-            className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+            className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
             style={{
               background: "linear-gradient(to bottom, transparent 0%, #FFFFFF 100%)",
             }}

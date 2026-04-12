@@ -48,7 +48,7 @@ export default function PeepsGrowth() {
         width="auto"
         height="auto"
         className="w-28 sm:w-44"
-        style={{ animation: "peep-float 4s ease-in-out infinite" }}
+        style={{ animation: "peep-float 4s ease-in-out infinite", filter: "invert(8%) sepia(5%) saturate(200%) hue-rotate(180deg) brightness(96%)" }}
       />
     </div>
   );

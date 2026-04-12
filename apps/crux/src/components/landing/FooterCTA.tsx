@@ -102,7 +102,8 @@ export default function FooterCTA() {
       {/* ── Light footer ── */}
       <div
         style={{
-          background: "#F9FAFB",
+          background: "#FFFFFF",
+          borderTop: "1px solid rgba(0, 0, 0, 0.08)",
           paddingTop: "4rem",
           paddingBottom: 0,
           overflow: "hidden",
@@ -137,9 +138,9 @@ export default function FooterCTA() {
                 <span
                   style={{
                     fontSize: 18,
-                    fontWeight: 800,
+                    fontWeight: 700,
                     letterSpacing: "-0.03em",
-                    color: "#22C55E",
+                    color: "#0F0F0F",
                   }}
                 >
                   CRUX
@@ -147,14 +148,25 @@ export default function FooterCTA() {
               </div>
 
               {/* Copyright */}
-              <p style={{ fontSize: 12, color: "#9CA3AF", lineHeight: 1.6, maxWidth: 220 }}>
+              <p style={{ fontSize: 12, color: "#6B7280", lineHeight: 1.6, maxWidth: 220 }}>
                 © 2026 ComfHutt Technologies Pvt. Ltd.
               </p>
 
               {/* A ComfHutt Product */}
-              <p style={{ fontSize: 11, color: "#D1D5DB", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                A ComfHutt Product
-              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9CA3AF" }}>
+                  A
+                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/comfhutt-logo.svg"
+                  alt="ComfHutt"
+                  style={{ height: 14, width: "auto", opacity: 0.45, display: "inline-block", verticalAlign: "middle" }}
+                />
+                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9CA3AF" }}>
+                  PRODUCT
+                </span>
+              </div>
             </div>
 
             {/* ── Right: three link columns ── */}
@@ -173,14 +185,14 @@ export default function FooterCTA() {
                         href={href}
                         style={{
                           fontSize: 13,
-                          color: "#6B7280",
+                          color: "#374151",
                           textDecoration: "none",
                           transition: "color 0.2s ease",
                           display: "inline-block",
                           padding: "6px 0",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = "#22C55E")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = "#0F0F0F"; e.currentTarget.style.textDecoration = "underline"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = "#374151"; e.currentTarget.style.textDecoration = "none"; }}
                       >
                         {label}
                       </a>
@@ -209,10 +221,12 @@ export default function FooterCTA() {
               fontSize: "clamp(8rem, 20vw, 18rem)",
               fontWeight: 900,
               letterSpacing: "-0.04em",
-              color: "#22C55E",
-              opacity: 0.07,
               display: "block",
               whiteSpace: "nowrap",
+              background: "linear-gradient(to right, rgba(15,15,15,0.12) 0%, rgba(15,15,15,0.06) 40%, rgba(15,15,15,0.02) 70%, transparent 100%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}
           >
             CRUX

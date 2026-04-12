@@ -14,7 +14,7 @@ export default function PeepsShield() {
           aria-hidden="true"
           className="sm:w-9 sm:h-9"
         >
-          <circle cx="18" cy="18" r="17" stroke="#22C55E" strokeWidth="2" fill="none"/>
+          <circle cx="18" cy="18" r="17" stroke="#22C55E" strokeWidth="2" fill="rgba(34,197,94,0.15)"/>
           <path d="M10 18L15.5 23.5L26 13" stroke="#22C55E" strokeWidth="2.5"
                 strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -31,7 +31,7 @@ export default function PeepsShield() {
         width="auto"
         height="auto"
         className="w-25 sm:w-35 h-auto self-end"
-        style={{ animation: "peep-float 3s ease-in-out infinite" }}
+        style={{ animation: "peep-float 3s ease-in-out infinite", filter: "invert(8%) sepia(5%) saturate(200%) hue-rotate(180deg) brightness(96%)" }}
       />
 
       {/* Right peep */}
@@ -45,7 +45,7 @@ export default function PeepsShield() {
         width="auto"
         height="auto"
         className="w-25 sm:w-35 h-auto self-end"
-        style={{ animation: "peep-float 3s ease-in-out infinite 0.5s" }}
+        style={{ animation: "peep-float 3s ease-in-out infinite 0.5s", filter: "invert(8%) sepia(5%) saturate(200%) hue-rotate(180deg) brightness(96%)" }}
       />
     </div>
   );

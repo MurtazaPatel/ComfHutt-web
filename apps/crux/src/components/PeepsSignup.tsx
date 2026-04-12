@@ -16,6 +16,7 @@ export default function PeepsSignup() {
           width="auto"
           height="auto"
           className="w-20 sm:w-36 h-auto"
+          style={{ filter: "invert(8%) sepia(5%) saturate(200%) hue-rotate(180deg) brightness(96%)" }}
         />
         {/* Phone near hand */}
         <div className="absolute bottom-[38%] right-[-8px] sm:right-[-10px]">
@@ -64,7 +65,7 @@ export default function PeepsSignup() {
         width="auto"
         height="auto"
         className="hidden sm:block w-28 sm:w-32 shrink-0 h-auto self-end"
-        style={{ animation: "peep-float 3.5s ease-in-out infinite 0.8s" }}
+        style={{ animation: "peep-float 3.5s ease-in-out infinite 0.8s", filter: "invert(8%) sepia(5%) saturate(200%) hue-rotate(180deg) brightness(96%)" }}
       />
     </div>
   );

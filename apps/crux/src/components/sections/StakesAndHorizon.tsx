@@ -86,9 +86,9 @@ export default function StakesAndHorizon() {
   };
 
   return (
-    <section ref={sectionRef} style={{ background: "#111318" }}>
+    <section ref={sectionRef} style={{ background: "#FFFFFF" }}>
       {/* ── BEAT 1: THE STAKES ─────────────────────────────────────────────── */}
-      <div className="py-16 md:py-30" style={{ background: "#111318" }}>
+      <div className="py-16 md:py-30" style={{ background: "#FFFFFF" }}>
         <div
           className="mx-auto px-4"
           style={{ maxWidth: 1024 }}
@@ -116,7 +116,7 @@ export default function StakesAndHorizon() {
               <h2
                 style={{
                   fontSize: "clamp(32px, 5vw, 52px)",
-                  color: "#FFFFFF",
+                  color: "#0F0F0F",
                   fontWeight: 800,
                   lineHeight: 1.1,
                   marginBottom: 20,
@@ -130,7 +130,7 @@ export default function StakesAndHorizon() {
               <p
                 style={{
                   fontSize: 18,
-                  color: "#888888",
+                  color: "#374151",
                   lineHeight: 1.6,
                   marginBottom: 16,
                   ...entranceStyle(beat1.inView, 280),
@@ -144,7 +144,7 @@ export default function StakesAndHorizon() {
               <p
                 style={{
                   fontSize: 15,
-                  color: "#555555",
+                  color: "#6B7280",
                   fontStyle: "italic",
                   ...entranceStyle(beat1.inView, 420),
                 }}
@@ -167,14 +167,13 @@ export default function StakesAndHorizon() {
       </div>
 
       {/* ── BEAT 2: THE TURN ───────────────────────────────────────────────── */}
-      <div className="pb-12 md:pb-20" style={{ background: "#111318" }}>
+      <div className="pb-12 md:pb-20" style={{ background: "#F0FDF4" }}>
         {/* Divider */}
         <div
           style={{
             width: 200,
             height: 1,
-            background: "#22C55E",
-            opacity: 0.3,
+            background: "rgba(0,0,0,0.08)",
             margin: "0 auto 48px",
           }}
         />
@@ -190,7 +189,7 @@ export default function StakesAndHorizon() {
           <p
             style={{
               fontSize: "clamp(24px, 3.5vw, 36px)",
-              color: "#FFFFFF",
+              color: "#0F0F0F",
               fontWeight: 700,
               textAlign: "center",
               maxWidth: 600,
@@ -215,9 +214,7 @@ export default function StakesAndHorizon() {
       {/* ── BEAT 3: THE HORIZON ────────────────────────────────────────────── */}
       <div
         className="py-16 md:py-30"
-        style={{
-          background: "linear-gradient(to bottom, #0F0F0F 0%, #0A0A1A 100%)",
-        }}
+        style={{ background: "#FFFFFF" }}
       >
         <div className="mx-auto px-4" style={{ maxWidth: 1024 }}>
           <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
@@ -246,7 +243,7 @@ export default function StakesAndHorizon() {
                 <h2
                   style={{
                     fontSize: "clamp(28px, 4vw, 44px)",
-                    color: "#FFFFFF",
+                    color: "#0F0F0F",
                     fontWeight: 800,
                     lineHeight: 1.1,
                     margin: 0,
@@ -257,7 +254,7 @@ export default function StakesAndHorizon() {
                 <h2
                   style={{
                     fontSize: "clamp(28px, 4vw, 44px)",
-                    color: "#FFFFFF",
+                    color: "#0F0F0F",
                     fontWeight: 800,
                     lineHeight: 1.1,
                     margin: 0,
@@ -282,7 +279,7 @@ export default function StakesAndHorizon() {
               <p
                 style={{
                   fontSize: 17,
-                  color: "#888888",
+                  color: "#374151",
                   lineHeight: 1.7,
                   marginBottom: 16,
                   ...entranceStyle(beat3.inView, 280),
@@ -299,7 +296,7 @@ export default function StakesAndHorizon() {
               <p
                 style={{
                   fontSize: 14,
-                  color: "#555555",
+                  color: "#6B7280",
                   fontStyle: "italic",
                   marginBottom: 40,
                   ...entranceStyle(beat3.inView, 340),
@@ -317,10 +314,10 @@ export default function StakesAndHorizon() {
                     <span style={{ fontSize: 32, color: "#22C55E", display: "block", marginBottom: 12 }}>
                       ✓
                     </span>
-                    <p style={{ fontSize: 18, fontWeight: 600, color: "#FFFFFF", margin: 0 }}>
+                    <p style={{ fontSize: 18, fontWeight: 600, color: "#0F0F0F", margin: 0 }}>
                       You&apos;re in.
                     </p>
-                    <p style={{ fontSize: 14, color: "#666666", marginTop: 8 }}>
+                    <p style={{ fontSize: 14, color: "#374151", marginTop: 8 }}>
                       Founding Investors get first access, 3% discount, and a
                       front-row seat to Property #001.
                     </p>
@@ -330,11 +327,11 @@ export default function StakesAndHorizon() {
                     {/* Social nudge */}
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
                       <div style={{ display: "flex" }}>
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#22C55E", border: "2px solid #0A0A1A", flexShrink: 0 }} />
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#16a34a", border: "2px solid #0A0A1A", marginLeft: -8, flexShrink: 0 }} />
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#15803d", border: "2px solid #0A0A1A", marginLeft: -8, flexShrink: 0 }} />
+                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#22C55E", border: "2px solid #FFFFFF", flexShrink: 0 }} />
+                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#16a34a", border: "2px solid #FFFFFF", marginLeft: -8, flexShrink: 0 }} />
+                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#15803d", border: "2px solid #FFFFFF", marginLeft: -8, flexShrink: 0 }} />
                       </div>
-                      <span style={{ fontSize: 13, color: "#666666" }}>
+                      <span style={{ fontSize: 13, color: "#374151" }}>
                         214 people are already on the list.
                       </span>
                     </div>
@@ -351,11 +348,11 @@ export default function StakesAndHorizon() {
                           placeholder="your@email.com"
                           style={{
                             flex: 1,
-                            background: "#111111",
-                            border: `1px solid ${emailError ? "#EF4444" : "#2a2a2a"}`,
+                            background: "#FFFFFF",
+                            border: `1.5px solid ${emailError ? "#EF4444" : "rgba(0,0,0,0.15)"}`,
                             borderRadius: 8,
                             padding: "14px 18px",
-                            color: "#FFFFFF",
+                            color: "#0F0F0F",
                             fontSize: 16,
                             outline: "none",
                             transition: "border-color 200ms ease",
@@ -366,14 +363,14 @@ export default function StakesAndHorizon() {
                           }}
                           onBlur={(e) => {
                             if (!emailError)
-                              e.currentTarget.style.borderColor = "#2a2a2a";
+                              e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)";
                           }}
                         />
                         <button
                           type="submit"
                           style={{
                             background: "#22C55E",
-                            color: "#0F0F0F",
+                            color: "#FFFFFF",
                             fontWeight: 700,
                             borderRadius: 8,
                             padding: "14px 24px",
@@ -381,6 +378,7 @@ export default function StakesAndHorizon() {
                             border: "none",
                             cursor: "pointer",
                             whiteSpace: "nowrap",
+                            boxShadow: "0 2px 8px rgba(34,197,94,0.25)",
                             transition: "opacity 200ms ease, transform 200ms ease",
                           }}
                           onMouseEnter={(e) => {
@@ -421,12 +419,12 @@ function Pill({ label }: { label: string }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        border: `1px solid ${hovered ? "#22C55E" : "#2a2a2a"}`,
+        border: `1px solid ${hovered ? "#22C55E" : "rgba(0,0,0,0.10)"}`,
         borderRadius: 999,
         padding: "12px 20px",
-        background: "transparent",
+        background: "#FFFFFF",
         fontSize: 13,
-        color: hovered ? "#22C55E" : "#AAAAAA",
+        color: hovered ? "#22C55E" : "#374151",
         fontWeight: 500,
         transition: "border-color 200ms ease, color 200ms ease",
         cursor: "default",
