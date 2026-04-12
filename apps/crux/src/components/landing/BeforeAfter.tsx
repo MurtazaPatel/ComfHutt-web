@@ -1,8 +1,6 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import Grainient from "@/components/Grainient";
-
 const PAIRS = [
   ["Broker's word of mouth", "20+ verified government data signals"],
   ["Newspaper classifieds & site visits", "AI-powered instant property analysis"],
@@ -27,25 +25,12 @@ export default function BeforeAfter() {
   return (
     <section ref={sectionRef} className="relative overflow-hidden py-16 px-4 sm:py-20 sm:px-5">
       {/* Background */}
-      <div className="absolute inset-0">
-        <Grainient
-          color1="#0A0A1A"
-          color2="#22C55E"
-          color3="#052e16"
-          timeSpeed={0.18}
-          warpStrength={1.2}
-          warpFrequency={4.0}
-          warpSpeed={1.5}
-          warpAmplitude={60.0}
-          blendAngle={25.0}
-          blendSoftness={0.12}
-          rotationAmount={280.0}
-          noiseScale={1.8}
-          grainAmount={0.043}
-          grainScale={2.5}
-          grainAnimated={false}
-        />
-      </div>
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(180deg, #0A0A1A 0%, #0D1510 50%, #0A0A1A 100%)`,
+        }}
+      />
 
       {/* Content */}
       <div className="relative z-10 max-w-3xl mx-auto">

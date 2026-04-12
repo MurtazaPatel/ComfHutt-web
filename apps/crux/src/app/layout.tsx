@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CRUX — Property Intelligence Engine by ComfHutt",
+  title: "CRUX — AI Property Intelligence by ComfHutt",
   description:
     "Score any property in India. 20+ live data signals — legal, spatial, financial. Free.",
   icons: {
@@ -52,7 +52,7 @@ export default function RootLayout({
       </head>
       <body
         className="min-h-full flex flex-col font-sans"
-        style={{ background: '#0A0A1A' }}
+        style={{ background: '#FFFFFF' }}
       >
         {children}
         <Analytics />
