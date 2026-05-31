@@ -119,8 +119,7 @@ function CategoryCard({
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      className="group bg-white rounded-xl border border-[#E5E7EB] p-6 flex flex-col gap-3
-                 hover:shadow-md hover:border-[#22C55E4D] hover:-translate-y-0.5 transition-all duration-200 cursor-default"
+      className="group bg-white rounded-xl border border-[#E5E7EB] p-6 flex flex-col gap-3 hover:shadow-md hover:border-[#22C55E4D] hover:-translate-y-0.5 transition-all duration-200 cursor-default"
     >
       <div className="flex items-center gap-2.5">
         <Icon size={20} className="text-[#22C55E]" strokeWidth={1.75} />
@@ -208,8 +207,7 @@ export default function ScoreBreakdown() {
             initial={{ opacity: 0, y: 24 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="lg:col-span-3 bg-white rounded-2xl border border-[#E5E7EB] shadow-sm
-                       p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 md:gap-12"
+            className="lg:col-span-3 bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 md:gap-12"
           >
             <ScoreRing score={94} inView={isInView} />
 

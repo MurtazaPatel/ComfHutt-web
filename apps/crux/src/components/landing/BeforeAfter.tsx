@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, Fragment } from "react";
 const PAIRS = [
   ["Broker's word of mouth", "20+ verified government data signals"],
   ["Newspaper classifieds & site visits", "AI-powered instant property analysis"],
@@ -60,7 +60,7 @@ export default function BeforeAfter() {
 
           {/* Rows */}
           {PAIRS.map(([left, right], i) => (
-            <>
+            <Fragment key={i}>
               <div
                 key={`l${i}`}
                 style={{
@@ -88,7 +88,7 @@ export default function BeforeAfter() {
               >
                 <span style={{ color: "#22C55E", marginRight: 8 }}>✦</span>{right}
               </div>
-            </>
+            </Fragment>
           ))}
         </div>
 

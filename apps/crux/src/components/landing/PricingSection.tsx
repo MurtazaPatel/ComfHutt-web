@@ -24,7 +24,7 @@ const PRO_FEATURES = [
 
 export default function PricingSection() {
   const { ref, isInView } = useSectionInView(0.15);
-  const freePrice = useCountUp(0, 500, isInView);
+  const freePrice = 0;
   const proPrice = useCountUp(199, 1200, isInView);
 
   return (

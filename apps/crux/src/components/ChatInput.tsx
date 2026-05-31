@@ -48,8 +48,6 @@ export default function ChatInput({
         typingTimeout = setTimeout(() => {
           if (!placeholder) {
             setPlaceholderIndex((prev) => (prev + 1) % PLACEHOLDERS.length);
-            setDisplayedPlaceholder("");
-            charIndex = 0;
           }
         }, 3000);
       }

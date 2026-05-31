@@ -61,21 +61,30 @@ export default function HeroSection() {
 
           {/* Center links */}
           <div className="hidden md:flex items-center gap-8">
-            {["How It Works", "Features", "Pricing"].map((label) => (
-              <a
-                key={label}
-                href="#"
-                className="text-[13px] text-gray-500 hover:text-[#0A0A1A] transition-colors duration-200 font-medium no-underline"
-              >
-                {label}
-              </a>
-            ))}
+            <a
+              href="#how-it-works"
+              className="text-[13px] text-gray-500 hover:text-[#0A0A1A] transition-colors duration-200 font-medium no-underline"
+            >
+              How It Works
+            </a>
+            <a
+              href="#features"
+              className="text-[13px] text-gray-500 hover:text-[#0A0A1A] transition-colors duration-200 font-medium no-underline"
+            >
+              Features
+            </a>
+            <a
+              href="#pricing"
+              className="text-[13px] text-gray-500 hover:text-[#0A0A1A] transition-colors duration-200 font-medium no-underline"
+            >
+              Pricing
+            </a>
           </div>
 
           {/* CTA */}
           <a
-            href="#"
-            className="text-[13px] font-semibold text-[#22C55E] hover:text-[#1ea34d] transition-colors duration-200 no-underline"
+            href="/signin"
+            className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full bg-[#22C55E] text-white text-[12px] font-semibold hover:brightness-105 transition-all duration-200 no-underline"
           >
             Get Started →
           </a>
@@ -218,48 +227,6 @@ export default function HeroSection() {
             padding: "16px 0",
           }}
         >
-          <style>{`
-            .ticker-track {
-              display: flex;
-              gap: 10px;
-              width: max-content;
-              animation: ticker-scroll 35s linear infinite;
-            }
-            .ticker-track-wrapper:hover .ticker-track {
-              animation-play-state: paused;
-            }
-            @keyframes ticker-scroll {
-              from { transform: translateX(0); }
-              to   { transform: translateX(-50%); }
-            }
-            .ticker-pill {
-              display: inline-flex;
-              align-items: center;
-              white-space: nowrap;
-              padding: 6px 14px;
-              background: #FFFFFF;
-              border: 1px solid rgba(0, 0, 0, 0.10);
-              border-radius: 999px;
-              font-size: 12px;
-              font-weight: 500;
-              color: #374151;
-              letter-spacing: 0.01em;
-              flex-shrink: 0;
-            }
-            @media (max-width: 640px) {
-              .ticker-pill { font-size: 11px; }
-            }
-            .ticker-pill.data-source::before {
-              content: '';
-              display: inline-block;
-              width: 5px;
-              height: 5px;
-              border-radius: 50%;
-              background: #22C55E;
-              margin-right: 7px;
-              flex-shrink: 0;
-            }
-          `}</style>
           <div className="ticker-track-wrapper">
             <div className="ticker-track">
               {tickerItems.map((item, i) => (
