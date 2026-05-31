@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
 const PLACEHOLDERS = [
@@ -33,6 +34,7 @@ export default function ChatInput({
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
     const currentPlaceholder = placeholder || PLACEHOLDERS[placeholderIndex];
@@ -63,6 +65,13 @@ export default function ChatInput({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
+
+    if (!isSignedIn) {
+      router.push(
+        `/signin?redirect=${encodeURIComponent(`/dashboard?q=${encodeURIComponent(query.trim())}`)}`
+      );
+      return;
+    }
 
     if (onSubmit) {
       onSubmit(query);

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Analytics } from '@vercel/analytics/react';
@@ -54,7 +55,9 @@ export default function RootLayout({
         className="min-h-full flex flex-col font-sans"
         style={{ background: '#FFFFFF' }}
       >
-        {children}
+        <ClerkProvider>
+          {children}
+        </ClerkProvider>
         <Analytics />
         <SpeedInsights />
       </body>
