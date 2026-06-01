@@ -35,9 +35,16 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
             cy={dims / 2}
             r={radius}
             fill="none"
-            stroke="#E5E7EB"
+            stroke="#f3f4f6"
             strokeWidth="4"
           />
+          {/* Subtle Glow Filter */}
+          <defs>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
           {/* Progress ring */}
           <circle
             cx={dims / 2}
@@ -49,6 +56,7 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
+            filter="url(#glow)"
             style={{
               transition: "stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
@@ -57,11 +65,10 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
         {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className="font-semibold text-[#0d0d0d] leading-none"
+            className="font-bold text-gray-900 leading-none tracking-tighter"
             style={{
               fontSize: textSize,
               fontFamily: "var(--font-inter, Inter, sans-serif)",
-              fontWeight: 600,
             }}
           >
             {score}
@@ -77,7 +84,7 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
 
       {grade && (
         <span
-          className="text-[14px] font-medium text-crux-text-primary"
+          className="text-[14px] font-semibold text-gray-900 tracking-tight"
           style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
         >
           {grade}
@@ -86,11 +93,12 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
 
       {percentile !== undefined && (
         <span
-          className="inline-flex items-center px-[10px] py-[4px] text-[12px] font-medium rounded-full"
+          className="inline-flex items-center px-[10px] py-[4px] text-[12px] font-semibold tracking-wide rounded-full"
           style={{
-            backgroundColor: "#F0FDF4",
-            color: "#16A34A",
+            backgroundColor: "rgba(34, 197, 94, 0.1)",
+            color: "#15803d",
             borderRadius: "9999px",
+            boxShadow: "inset 0 0 0 1px rgba(34, 197, 94, 0.2)",
           }}
         >
           Top {percentile}% in area

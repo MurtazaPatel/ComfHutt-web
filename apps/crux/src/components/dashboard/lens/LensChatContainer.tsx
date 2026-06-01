@@ -19,6 +19,7 @@ export function LensChatContainer({ propertyId, propertyName }: LensChatContaine
     isLoading,
     error,
     messages,
+    activeMessage,
     sendMessage,
     isStreaming,
     abort,
@@ -44,7 +45,7 @@ export function LensChatContainer({ propertyId, propertyName }: LensChatContaine
     }
   }, [searchParams, sendMessage]);
 
-  if (isLoading) {
+  if (isLoading && !messages.length) {
     return (
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-center flex-1">
@@ -87,7 +88,7 @@ export function LensChatContainer({ propertyId, propertyName }: LensChatContaine
       </div>
 
       {/* Messages */}
-      <MessageList messages={messages} isLoading={false} />
+      <MessageList messages={messages} activeMessage={activeMessage} isLoading={isLoading} isStreaming={isStreaming} />
 
       {/* Input */}
       <PromptInputBar

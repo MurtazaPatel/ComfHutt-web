@@ -88,17 +88,37 @@ export function useRecentProperties(limit: number = 10) {
   useEffect(() => {
     if (!isLoaded) return;
     fetchRecent();
-  }, [fetchRecent, isLoaded]);
+
+    const handleSync = (e: Event) => {
+      const ce = e as CustomEvent;
+      if (ce.detail?.action === 'refresh') {
+        fetchRecent();
+      } else if (ce.detail?.action === 'add') {
+        const property = ce.detail.property as PropertySummary;
+        setProperties((prev) => {
+          const exists = prev.find((p) => p.id === property.id);
+          const updated = exists
+            ? prev.map((p) => (p.id === property.id ? property : p))
+            : [property, ...prev];
+          return updated.slice(0, limit);
+        });
+      }
+    };
+
+    window.addEventListener('crux-search-sync', handleSync);
+    return () => window.removeEventListener('crux-search-sync', handleSync);
+  }, [fetchRecent, isLoaded, limit]);
 
   const addProperty = useCallback((property: PropertySummary) => {
-    setProperties((prev) => {
-      const exists = prev.find((p) => p.id === property.id);
-      const updated = exists
-        ? prev.map((p) => (p.id === property.id ? property : p))
-        : [property, ...prev];
-      return updated.slice(0, limit);
-    });
-  }, [limit]);
+    // Dispatch globally so all hooks sync this optimistic addition
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("crux-search-sync", {
+          detail: { action: "add", property },
+        })
+      );
+    }
+  }, []);
 
   return { properties, isLoading, error, addProperty, refetch: fetchRecent };
 }

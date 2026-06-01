@@ -37,7 +37,7 @@ export default function PropertyDetailPage() {
   const propertyId = params.id as string;
   const apiFetch = useApiFetch();
 
-  const { score, isLoading, error, recompute } = usePropertyScore(propertyId);
+  const { score, isLoading, error, isComputing, progressMessages, recompute } = usePropertyScore(propertyId);
 
   const [property, setProperty] = useState<PropertyRecord | null>(null);
   const [propertyLoading, setPropertyLoading] = useState(true);
@@ -56,8 +56,59 @@ export default function PropertyDetailPage() {
       .finally(() => setPropertyLoading(false));
   }, [propertyId]);
 
-  const displayAddress =
-    property?.address_normalized || property?.address_raw || propertyId;
+  const rawAddress = property?.address_normalized || property?.address_raw || propertyId;
+  const isFallbackAddress = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawAddress);
+  const displayAddress = isFallbackAddress ? "Property Intelligence Report" : rawAddress;
+
+  // Computing state — showing live progress
+  if (isComputing) {
+    return (
+      <div className="max-w-[960px] mx-auto px-6 py-10">
+        <div className="mb-4 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl p-5">
+          <h1 className="text-[18px] font-semibold text-crux-text-primary truncate">
+            {displayAddress}
+          </h1>
+          {property?.city && (
+            <p className="text-[13px] text-crux-text-secondary mt-0.5">{property.city}{property.state ? `, ${property.state}` : ""}</p>
+          )}
+        </div>
+        <div className="flex flex-col items-center justify-center py-24 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" style={{ backgroundSize: "200% 100%" }} />
+          
+          <div className="w-16 h-16 rounded-full bg-crux-green-tint flex items-center justify-center mb-6 relative z-10">
+            <Loader2 className="w-8 h-8 text-crux-green animate-spin" />
+          </div>
+          <h2 className="text-xl font-semibold text-crux-text-primary mb-6 relative z-10 animate-pulse bg-gradient-to-r from-gray-900 via-gray-600 to-gray-900 bg-clip-text text-transparent">
+            CRUX AI is analyzing this property...
+          </h2>
+          
+          <div className="flex flex-col gap-3 w-full max-w-[420px] text-left relative z-10">
+            {progressMessages.map((msg, idx) => {
+              const isLast = idx === progressMessages.length - 1;
+              return (
+                <div key={idx} className={`flex items-start gap-3 transition-opacity duration-300 ${isLast ? 'opacity-100' : 'opacity-50'}`}>
+                  {isLast ? (
+                    <Loader2 size={16} className="text-crux-green animate-spin mt-0.5 flex-shrink-0" />
+                  ) : (
+                    <div className="w-4 h-4 rounded-full bg-crux-green/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                      <div className="w-2 h-2 rounded-full bg-crux-green" />
+                    </div>
+                  )}
+                  <p className={`text-[14px] ${isLast ? 'text-gray-800 font-medium' : 'text-gray-500'}`}>{msg}</p>
+                </div>
+              );
+            })}
+            {progressMessages.length === 0 && (
+              <div className="flex items-center gap-3">
+                <Loader2 size={16} className="text-crux-green animate-spin flex-shrink-0" />
+                <p className="text-[14px] text-gray-800 font-medium">Initializing...</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Loading skeleton
   if (isLoading || propertyLoading) {
@@ -77,8 +128,8 @@ export default function PropertyDetailPage() {
     );
   }
 
-  // Score not yet computed — show prompt to compute
-  if (!score && !isLoading && !error) {
+  // Error state (no score to display)
+  if (error && !score && !isComputing) {
     return (
       <div className="max-w-[960px] mx-auto px-6 py-10">
         <button
@@ -89,7 +140,41 @@ export default function PropertyDetailPage() {
           <ArrowLeft size={16} />
           Back
         </button>
-        <div className="mb-4 bg-white border border-[#ededed] rounded-2xl p-5">
+        <div className="flex flex-col items-center justify-center py-20 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl">
+          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+            </svg>
+          </div>
+          <h1 className="text-xl font-semibold text-crux-text-primary mb-2">
+            Could not load property
+          </h1>
+          <p className="text-sm text-crux-text-secondary mb-4">{error}</p>
+          <button
+            type="button"
+            onClick={() => recompute()}
+            className="px-4 py-2 text-sm font-medium bg-crux-green text-white rounded-xl hover:bg-crux-green-mid transition-colors"
+          >
+            Compute Score
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Score not yet computed — show prompt to compute
+  if (!score && !isLoading && !error && !isComputing) {
+    return (
+      <div className="max-w-[960px] mx-auto px-6 py-10">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-[14px] text-crux-text-secondary hover:text-crux-text-primary mb-6 transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back
+        </button>
+        <div className="mb-4 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl p-5">
           <h1 className="text-[18px] font-semibold text-crux-text-primary truncate">
             {displayAddress}
           </h1>
@@ -97,7 +182,7 @@ export default function PropertyDetailPage() {
             <p className="text-[13px] text-crux-text-secondary mt-0.5">{property.city}{property.state ? `, ${property.state}` : ""}</p>
           )}
         </div>
-        <div className="flex flex-col items-center justify-center py-24 text-center bg-white border border-[#ededed] rounded-2xl">
+        <div className="flex flex-col items-center justify-center py-24 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl">
           <div className="w-16 h-16 rounded-full bg-crux-green-tint flex items-center justify-center mb-6">
             <RefreshCw className="w-6 h-6 text-crux-green" />
           </div>
@@ -136,7 +221,7 @@ export default function PropertyDetailPage() {
           <ArrowLeft size={16} />
           Back
         </button>
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-white border border-[#ededed] rounded-2xl">
+        <div className="flex flex-col items-center justify-center py-20 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl">
           <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
             <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
@@ -208,15 +293,18 @@ export default function PropertyDetailPage() {
 
       {/* Property header */}
       <div
-        className="bg-white border border-[#ededed] mb-6"
+        className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 mb-6"
         style={{ borderRadius: "16px", padding: "24px" }}
       >
-        <h1
-          className="text-[24px] font-semibold text-crux-text-primary mb-1 leading-tight"
+          <h1
+          className="text-[24px] font-semibold text-gray-900 mb-1 leading-tight tracking-tight"
           style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
         >
           {displayAddress}
         </h1>
+        {isFallbackAddress && (
+          <p className="text-[11px] font-mono text-gray-400 mb-2 uppercase tracking-wider">ID: {propertyId}</p>
+        )}
         {property?.city && (
           <p
             className="text-[13px] text-crux-text-muted mb-1"
@@ -247,7 +335,7 @@ export default function PropertyDetailPage() {
         {/* Left: Score + Breakdown */}
         <div className="lg:col-span-2 space-y-6">
           <div
-            className="bg-white border border-[#ededed]"
+            className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
             style={{ borderRadius: "16px", padding: "24px" }}
           >
             <div className="flex flex-col sm:flex-row items-start gap-8">
@@ -284,7 +372,7 @@ export default function PropertyDetailPage() {
 
           {/* Data Sources */}
           <div
-            className="bg-white border border-[#ededed]"
+            className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
             style={{ borderRadius: "16px", padding: "24px" }}
           >
             <h3
@@ -297,7 +385,7 @@ export default function PropertyDetailPage() {
               {(score?.data_sources_used ?? DATA_SOURCES).map((source) => (
                 <span
                   key={source}
-                  className="inline-flex items-center px-3 py-1.5 text-[12px] font-medium text-crux-text-secondary bg-gray-50 border border-[#e5e5e5] rounded-full"
+                  className="inline-flex items-center px-3 py-1.5 text-[12px] font-medium text-gray-600 bg-white shadow-sm ring-1 ring-black/5 rounded-full"
                 >
                   {source}
                 </span>
@@ -309,11 +397,11 @@ export default function PropertyDetailPage() {
         {/* Right: Actions */}
         <div>
           <div
-            className="bg-white border border-[#ededed]"
+            className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
             style={{ borderRadius: "16px", overflow: "hidden" }}
           >
             <div
-              className="px-4 py-3 border-b border-[#ededed]"
+              className="px-4 py-3 border-b border-black/5"
               style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
             >
               <h3 className="text-[14px] font-semibold text-crux-text-primary">Actions</h3>

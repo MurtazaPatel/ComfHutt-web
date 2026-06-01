@@ -48,13 +48,20 @@ export function useLensSession(propertyId: string) {
   const [error, setError] = useState<string | null>(null);
   const { isLoaded } = useAuth();
   const sessionRef = useRef<{ id: string; createdAt: number } | null>(null);
+  const [activeMessage, setActiveMessage] = useState<LensMessage | null>(null);
   const currentAssistantRef = useRef<LensMessage | null>(null);
+
+  // Sync ref to state for UI updates
+  const syncActiveMessage = () => {
+    setActiveMessage(currentAssistantRef.current ? { ...currentAssistantRef.current } : null);
+  };
 
   const createNewSession = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     resetStream();
     currentAssistantRef.current = null;
+    syncActiveMessage();
     try {
       const data = await apiFetch<SessionResponse>("/crux/lens/session", {
         method: "POST",
@@ -106,6 +113,7 @@ export function useLensSession(propertyId: string) {
           setMessages((prev) => [...prev, currentAssistantRef.current!].slice(-MAX_MESSAGES));
         }
         currentAssistantRef.current = null;
+        syncActiveMessage();
         continue;
       }
 
@@ -119,6 +127,7 @@ export function useLensSession(propertyId: string) {
           };
         }
         currentAssistantRef.current.content += sseChunk.delta;
+        syncActiveMessage();
       }
 
       if (sseChunk.module_result) {
@@ -134,6 +143,7 @@ export function useLensSession(propertyId: string) {
           currentAssistantRef.current.toolResults = [];
         }
         currentAssistantRef.current.toolResults.push(sseChunk.module_result);
+        syncActiveMessage();
       }
     }
   }, [chunks]);
@@ -178,6 +188,7 @@ export function useLensSession(propertyId: string) {
       setMessages((prev) => [...prev, userMsg].slice(-MAX_MESSAGES));
       setError(null);
       currentAssistantRef.current = null;
+      syncActiveMessage();
 
       try {
         await startStream(`/crux/lens/${activeSessionId}/message`, {
@@ -195,6 +206,7 @@ export function useLensSession(propertyId: string) {
     isLoading,
     error: error || streamError,
     messages,
+    activeMessage,
     sendMessage,
     isStreaming,
     abort: abortStream,

@@ -68,17 +68,17 @@ export function PropertyActions({ propertyId, onRecompute, isRecomputing }: Prop
             disabled={item.isLoading}
             className={cn(
               "flex items-center justify-between w-full h-12 px-4",
-              "text-left text-[14px] font-medium text-crux-text-primary",
-              "hover:bg-[#f5f5f5] transition-colors duration-150",
+              "text-left text-[14px] font-medium text-gray-800 tracking-tight",
+              "hover:bg-gray-50/80 active:bg-gray-100 transition-colors duration-200",
               "disabled:opacity-60 disabled:cursor-not-allowed"
             )}
             style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
           >
             <span className="flex items-center gap-3">
-              <item.icon size={16} className={cn("text-crux-text-secondary", item.isLoading && "animate-spin")} strokeWidth={1.5} />
+              <item.icon size={16} className={cn("text-gray-500", item.isLoading && "animate-spin")} strokeWidth={1.5} />
               {item.label}
             </span>
-            <ChevronRight size={14} className="text-crux-text-muted" />
+            <ChevronRight size={14} className="text-gray-400" />
           </button>
         ))}
       </div>

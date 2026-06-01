@@ -55,28 +55,28 @@ export function CategoryBreakdown({
           >
             <div className="flex items-center justify-between mb-1">
               <span
-                className="text-[13px] font-medium text-crux-text-primary"
+                className="text-[13px] font-medium text-gray-900 tracking-tight"
                 style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
               >
                 {entry.label}
               </span>
               <div className="flex items-center gap-2">
                 <span
-                  className="text-[13px] font-semibold"
+                  className="text-[14px] font-semibold tracking-tight"
                   style={{ color: barColor(entry.score) }}
                 >
                   {entry.score}
                 </span>
                 <span
-                  className="text-[11px] text-crux-text-muted bg-gray-50 px-[6px] py-[1px] rounded-full"
+                  className="text-[11px] font-medium text-gray-500 bg-gray-50/80 px-[6px] py-[1px] rounded-full ring-1 ring-black/5"
                 >
                   {entry.weight}%
                 </span>
               </div>
             </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mt-1 shadow-inner">
               <div
-                className="h-full rounded-full transition-all duration-500"
+                className="h-full rounded-full transition-all duration-700 ease-out"
                 style={{
                   width: `${entry.score}%`,
                   backgroundColor: barColor(entry.score),
@@ -85,16 +85,21 @@ export function CategoryBreakdown({
             </div>
           </button>
 
-          {expandedKey === entry.key && (
-            <div className="mt-1 ml-1 p-2 bg-gray-50 rounded-lg border border-gray-100 text-[12px] text-crux-text-secondary leading-relaxed">
-              Weighted at {entry.weight}% of total score.
+          <div
+            className={cn(
+              "overflow-hidden transition-all duration-300 ease-in-out",
+              expandedKey === entry.key ? "max-h-20 opacity-100 mt-2" : "max-h-0 opacity-0"
+            )}
+          >
+            <div className="ml-1 p-2 bg-gray-50/80 rounded-lg border border-black/5 shadow-sm text-[12px] text-gray-600 leading-relaxed">
+              <span className="font-medium text-gray-700">Weight: {entry.weight}%</span> — 
               {entry.score >= 70
-                ? " ✓ This category performs well."
+                ? " This category performs well and indicates high confidence."
                 : entry.score >= 40
-                ? " ⚠ This category needs attention."
-                : " ✗ Significant risk in this category."}
+                ? " This category needs attention and poses moderate risk."
+                : " Significant risk detected in this category."}
             </div>
-          )}
+          </div>
         </div>
       ))}
     </div>
