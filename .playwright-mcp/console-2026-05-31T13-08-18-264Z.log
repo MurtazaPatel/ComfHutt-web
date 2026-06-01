@@ -1,0 +1,52 @@
+[    1090ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    1165ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    1248ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    1248ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/signin color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/signin, sv: 0.1.3, sdkn: @vercel/analytics/react, sdkv: 1.6.1, ts: 1780232899511} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    1256ms] [LOG] %c[Vercel Speed Insights]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    1284ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    1504ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    1758ms] [LOG] [Fast Refresh] done in 574ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[    2341ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://happy-kitten-76.clerk.accounts.dev/v1/environment?__clerk_api_version=2025-11-10&_clerk_js_version=6.12.1&_method=PATCH&__clerk_db_jwt=dvb_3ES8PqnZY9DjdN1n9p2x4xAUZHo:0
+[    2353ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://happy-kitten-76.clerk.accounts.dev/v1/client?__clerk_api_version=2025-11-10&_clerk_js_version=6.12.1&__clerk_db_jwt=dvb_3ES8PqnZY9DjdN1n9p2x4xAUZHo:0
+[    4131ms] [ERROR] Access to fetch at 'https://clerk-telemetry.com/v1/event' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:3000/signin:0
+[    4133ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://clerk-telemetry.com/v1/event:0
+[   41159ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   46926ms] [LOG] [Fast Refresh] done in 3759ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   47656ms] [WARNING] [HMR] Invalid message: {"isTrusted":true}
+TypeError: Cannot convert undefined or null to object
+    at Object.keys (<anonymous>)
+    at extractModulesFromTurbopackMessage (http://localhost:3000/_next/static/chunks/103f_next_dist_client_11k4.dd._.js:13631:39)
+    at TurbopackHmr.onTurbopackMessage (http://localhost:3000/_next/static/chunks/103f_next_dist_client_11k4.dd._.js:13578:32)
+    at processMessage (http://localhost:3000/_next/static/chunks/103f_next_dist_client_11k4.dd._.js:13936:30)
+    at WebSocket.handleMessage (http://localhost:3000/_next/static/chunks/103f_next_dist_client_11k4.dd._.js:13335:52) @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   48386ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   49400ms] [LOG] [Fast Refresh] done in 1114ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   49855ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   49992ms] [LOG] [Fast Refresh] done in 237ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   50402ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   50849ms] [LOG] [Fast Refresh] done in 547ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   51716ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   51999ms] [LOG] [Fast Refresh] done in 384ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   52370ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   52675ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/signin:0
+[   52996ms] [LOG] [Fast Refresh] done in 733ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   53104ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   53442ms] [LOG] [Fast Refresh] done in 439ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   54393ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/signin/SignIn_clerk_catchall_check_1780232950416:0
+[   54503ms] Error: 
+Clerk: The <SignIn/> component is not configured correctly. The most likely reasons for this error are:
+
+1. The "/signin" route is not a catch-all route.
+It is recommended to convert this route to a catch-all route, eg: "/signin/[[...rest]]/page.tsx". Alternatively, you can update the <SignIn/> component to use hash-based routing by setting the "routing" prop to "hash".
+
+2. The <SignIn/> component is mounted in a catch-all route, but all routes under "/signin" are protected by the middleware.
+To resolve this, ensure that the middleware does not protect the catch-all route or any of its children. If you are using the "createRouteMatcher" helper, consider adding "(.*)" to the end of the route pattern, eg: "/signin(.*)". For more information, see: https://clerk.com/docs/reference/nextjs/clerk-middleware#create-route-matcher
+
+    at useEnforceCatchAllRoute.useEffect.error (http://localhost:3000/_next/static/chunks/0mvz_%40clerk_nextjs_dist_esm_0wuhbe-._.js:106:27)
+    at useEnforceCatchAllRoute.useEffect.check (http://localhost:3000/_next/static/chunks/0mvz_%40clerk_nextjs_dist_esm_0wuhbe-._.js:136:29)
+[   54652ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   55624ms] [LOG] [Fast Refresh] done in 1072ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   55806ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   61652ms] [LOG] [Fast Refresh] done in 5945ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   66010ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431
+[   66429ms] [LOG] [Fast Refresh] done in 528ms @ http://localhost:3000/_next/static/chunks/103f_next_dist_053_-jm._.js:2431

@@ -1,0 +1,144 @@
+"use client";
+
+import { useState } from "react";
+import { Printer, Share2 } from "lucide-react";
+import { ReportSection } from "./ReportSection";
+import { RiskFlags } from "./RiskFlags";
+import { PositiveSignals } from "./PositiveSignals";
+
+interface ReportViewerProps {
+  propertyId: string;
+  address?: string;
+}
+
+export function ReportViewer({ propertyId, address }: ReportViewerProps) {
+  return (
+    <div className="max-w-[800px] mx-auto">
+      {/* Report header */}
+      <div
+        className="bg-white border border-[#ededed] mb-6"
+        style={{ borderRadius: "16px", padding: "32px" }}
+      >
+        <h1
+          className="text-[28px] font-semibold text-crux-text-primary mb-2"
+          style={{
+            fontFamily: "var(--font-inter, Inter, sans-serif)",
+            lineHeight: 1.2,
+            letterSpacing: "-0.005em",
+          }}
+        >
+          CRUX Report
+        </h1>
+        <p
+          className="text-[16px] text-crux-text-primary mb-1"
+          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        >
+          {address || `Property ${propertyId}`}
+        </p>
+        <p
+          className="text-[13px] text-crux-text-secondary"
+          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        >
+          Generated {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+          {" · "}
+          Intent: Balanced
+        </p>
+
+        <div className="border-t border-[#e5e5e5] mt-6 pt-6">
+          <h2
+            className="text-[16px] font-semibold text-crux-text-primary mb-2"
+            style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+          >
+            Summary
+          </h2>
+          <p
+            className="text-[15px] text-crux-text-secondary leading-relaxed"
+            style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+          >
+            This property receives a composite CRUX score reflecting analysis across legal, spatial,
+            financial, and structural dimensions. The score is computed from 20+ live data signals
+            aggregated from government and commercial databases.
+          </p>
+        </div>
+      </div>
+
+      {/* Collapsible sections */}
+      <div
+        className="bg-white border border-[#ededed] mb-6"
+        style={{ borderRadius: "16px", padding: "16px 24px" }}
+      >
+        <ReportSection title="Legal &amp; Compliance" defaultOpen>
+          <p className="text-[14px] text-crux-text-secondary leading-relaxed">
+            RERA registration active. 2 pending civil suits in Ahmedabad District Court.
+            All statutory dues cleared as per MCA21 filings. Property tax paid through 2026.
+          </p>
+        </ReportSection>
+
+        <ReportSection title="Location Quality">
+          <p className="text-[14px] text-crux-text-secondary leading-relaxed">
+            AQI 88 (Moderate). Metro station within 500m. 3 supermarkets within 1km radius.
+            School zone: CBSE-affiliated school at 800m. Hospital within 2km.
+          </p>
+        </ReportSection>
+
+        <ReportSection title="Market Valuation">
+          <p className="text-[14px] text-crux-text-secondary leading-relaxed">
+            Current market rate: ₹4,200/sqft. YoY appreciation: 8.2%. Comparable transactions
+            in this micro-market range from ₹3,900–₹4,500/sqft over the last quarter.
+          </p>
+        </ReportSection>
+
+        <ReportSection title="Developer Track Record">
+          <p className="text-[14px] text-crux-text-secondary leading-relaxed">
+            Developer has completed 14 projects across Gujarat. Average delivery delay:
+            4.2 months. RERA complaint rate: 1.2 per 100 units. Financial health: Strong
+            (based on MCA21 filings).
+          </p>
+        </ReportSection>
+      </div>
+
+      {/* Risk Flags */}
+      <div
+        className="bg-white border border-[#ededed] mb-6"
+        style={{ borderRadius: "16px", padding: "24px" }}
+      >
+        <h3
+          className="text-[16px] font-semibold text-[#EF4444] mb-3"
+          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        >
+          ▲ Risk Flags
+        </h3>
+        <RiskFlags />
+      </div>
+
+      {/* Positive Signals */}
+      <div
+        className="bg-white border border-[#ededed] mb-6"
+        style={{ borderRadius: "16px", padding: "24px" }}
+      >
+        <h3
+          className="text-[16px] font-semibold text-crux-green mb-3"
+          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        >
+          Positive Signals
+        </h3>
+        <PositiveSignals />
+      </div>
+
+      {/* Disclaimer */}
+      <div
+        className="border-t border-[#e5e5e5] pt-6 pb-8"
+      >
+        <p
+          className="text-[12px] text-[#9b9b9b] leading-relaxed text-center"
+          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        >
+          This report is generated by AI and may contain inaccuracies. It is not a substitute for
+          professional legal, financial, or real estate advice. Always seek independent
+          verification before making property decisions. CRUX scores are indicative and based on
+          publicly available data sources.
+        </p>
+      </div>
+    </div>
+  );
+}

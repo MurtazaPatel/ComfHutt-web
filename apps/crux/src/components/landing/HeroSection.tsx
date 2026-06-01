@@ -127,8 +127,7 @@ export default function HeroSection() {
             animationDelay: "0.25s",
           }}
         >
-          Type any address. Court cases, builder fraud, flood risk, and 17 more
-          things your broker never told you.
+          Type any address. See court cases, builder fraud, flood risk — everything your broker hides.
         </p>
 
         {/* Chat input */}

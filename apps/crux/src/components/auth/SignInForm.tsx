@@ -2,7 +2,6 @@
 
 import { useSignIn } from "@clerk/nextjs/legacy";
 import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -15,7 +14,6 @@ import Link from "next/link";
 export default function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useAuth();
-  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,9 +25,9 @@ export default function SignInForm() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     }
-  }, [isLoaded, isSignedIn, router]);
+  }, [isLoaded, isSignedIn]);
 
   if (!isLoaded) {
     return (
@@ -56,9 +54,13 @@ export default function SignInForm() {
         password,
       });
 
-      if (result.status === "complete" && result.createdSessionId) {
-        await setActive({ session: result.createdSessionId });
-        router.push("/dashboard");
+      if (result.status === "complete") {
+        const sessionId = result.createdSessionId ?? signIn.createdSessionId;
+        if (sessionId) {
+          await setActive({ session: sessionId });
+        }
+        // Full page navigation ensures session cookie is set
+        window.location.href = "/dashboard";
       } else {
         setBanner({
           message:

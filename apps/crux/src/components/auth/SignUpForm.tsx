@@ -2,7 +2,6 @@
 
 import { useSignUp } from "@clerk/nextjs/legacy";
 import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2, ArrowLeft } from "lucide-react";
@@ -17,7 +16,6 @@ type Screen = "form" | "verify-email";
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const { isSignedIn } = useAuth();
-  const router = useRouter();
 
   const [screen, setScreen] = useState<Screen>("form");
   const [name, setName] = useState("");
@@ -33,9 +31,9 @@ export default function SignUpForm() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     }
-  }, [isLoaded, isSignedIn, router]);
+  }, [isLoaded, isSignedIn]);
 
   const calculateStrength = (pwd: string) => {
     let score = 0;
@@ -81,20 +79,15 @@ export default function SignUpForm() {
         lastName: name.trim().split(" ").slice(1).join(" ") || undefined,
       });
 
-      if (result.status === "complete" && result.createdSessionId) {
-        await setActive({ session: result.createdSessionId });
-        router.push("/dashboard");
-      } else if (result.status === "complete") {
-        if (signUp.createdSessionId) {
-          await setActive({ session: signUp.createdSessionId });
-          router.push("/dashboard");
-        } else {
-          router.push("/signin?registered=true");
+      if (result.status === "complete") {
+        const sessionId = result.createdSessionId ?? signUp.createdSessionId;
+        if (sessionId) {
+          await setActive({ session: sessionId });
         }
-      } else if (result.status === "missing_requirements") {
-        await handleEmailVerification();
+        // Use full page navigation so the session cookie is set
+        window.location.href = "/dashboard";
       } else {
-        router.push("/signin?registered=true");
+        await handleEmailVerification();
       }
     } catch (err: unknown) {
       const error = err as { errors?: { message: string }[] };
@@ -153,27 +146,26 @@ export default function SignUpForm() {
 
       if (sessionId) {
         await setActive({ session: sessionId });
-        router.push("/dashboard");
+        // Full page navigation ensures session cookie is set before middleware runs
+        window.location.href = "/dashboard";
         return;
       }
 
-      if (
-        verifyResult.status === "complete" ||
-        signUp.status === "complete"
-      ) {
-        if (signUp.createdSessionId) {
-          await setActive({ session: signUp.createdSessionId });
-          router.push("/dashboard");
-          return;
-        }
+      if (verifyResult.status === "complete" || signUp.status === "complete") {
+        window.location.href = "/dashboard";
+        return;
       }
 
-      router.push("/signin?verified=true");
+      window.location.href = "/dashboard";
     } catch (err: unknown) {
       if (signUp.createdSessionId) {
-        await setActive({ session: signUp.createdSessionId });
-        router.push("/dashboard");
-        return;
+        try {
+          await setActive({ session: signUp.createdSessionId });
+          window.location.href = "/dashboard";
+          return;
+        } catch {
+          // Fall through
+        }
       }
 
       const error = err as { errors?: { message: string }[] };

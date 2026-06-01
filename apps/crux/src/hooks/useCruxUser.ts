@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { apiFetch } from "@/lib/api";
+import { useApiFetch } from "@/lib/api";
 
 export interface CruxUser {
   userId: string;
@@ -16,8 +16,16 @@ export interface CruxUser {
   createdAt: string;
 }
 
+interface CruxUserResponse {
+  success: boolean;
+  data?: CruxUser;
+}
+
+
+
 export function useCruxUser() {
   const { isSignedIn, isLoaded } = useAuth();
+  const apiFetch = useApiFetch();
   const [user, setUser] = useState<CruxUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,18 +43,17 @@ export function useCruxUser() {
 
     async function loadUser() {
       try {
-        const data = await apiFetch<CruxUser>("/auth/me", {
+        const data = await apiFetch<CruxUserResponse>("/crux/auth/me", {
           cache: "no-store",
         });
         if (!cancelled) {
-          setUser(data);
+          setUser(data.data ?? null);
           setError(null);
         }
       } catch (err) {
         if (!cancelled) {
-          setError(
-            err instanceof Error ? err.message : "Failed to load user profile"
-          );
+          setUser(null);
+          setError(err instanceof Error ? err.message : "Failed to load user profile");
         }
       } finally {
         if (!cancelled) {

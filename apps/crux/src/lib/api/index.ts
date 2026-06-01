@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
@@ -7,6 +8,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 interface FetchOptions extends Omit<RequestInit, "headers"> {
   headers?: Record<string, string>;
   skipAuth?: boolean;
+  getToken?: () => Promise<string | null>;
 }
 
 class ApiError extends Error {
@@ -21,32 +23,37 @@ class ApiError extends Error {
   }
 }
 
-async function getToken(): Promise<string | null> {
-  const clerk = (window as any).__clerk_frontend_api;
-  if (clerk?.session) {
-    return clerk.session.getToken();
+async function getBrowserToken(): Promise<string | null> {
+  try {
+    const clerk = (window as any).Clerk;
+    if (clerk?.session) {
+      return await clerk.session.getToken();
+    }
+    return null;
+  } catch {
+    return null;
   }
-  return null;
 }
 
 async function refreshAndRetry(
   url: string,
   options: FetchOptions,
 ): Promise<Response> {
-  const clerk = (window as any).__clerk_frontend_api;
-  if (clerk?.session) {
-    try {
+  try {
+    const clerk = (window as any).Clerk;
+    if (clerk?.session) {
       const freshToken = await clerk.session.getToken({ skipCache: true });
       const retryHeaders: Record<string, string> = {
         ...options.headers,
         Authorization: `Bearer ${freshToken}`,
       };
       return fetch(url, { ...options, headers: retryHeaders });
-    } catch {
-      throw new ApiError(401, "SESSION_EXPIRED", "Session expired. Please sign in again.");
     }
+    throw new ApiError(401, "SESSION_EXPIRED", "Session expired. Please sign in again.");
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError(401, "UNAUTHORIZED", "Authentication required.");
   }
-  throw new ApiError(401, "UNAUTHORIZED", "Authentication required.");
 }
 
 async function delay(ms: number): Promise<void> {
@@ -87,7 +94,7 @@ export async function apiFetch<T = unknown>(
   path: string,
   options: FetchOptions = {},
 ): Promise<T> {
-  const { skipAuth = false, headers: customHeaders = {}, ...rest } = options;
+  const { skipAuth = false, headers: customHeaders = {}, getToken, ...rest } = options;
 
   const url = `${API_URL}${path}`;
   const headers: Record<string, string> = {
@@ -96,7 +103,8 @@ export async function apiFetch<T = unknown>(
   };
 
   if (!skipAuth) {
-    const token = await getToken();
+    const resolveToken = getToken ?? getBrowserToken;
+    const token = await resolveToken();
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
@@ -116,11 +124,14 @@ export async function apiFetch<T = unknown>(
     }
 
     const message =
-      (body.message as string) ||
-      (body.error as string) ||
+      (typeof body.message === "string" ? body.message : undefined) ||
+      (typeof body.error === "string" ? body.error : undefined) ||
+      (typeof body.error === "object" && body.error !== null ? (body.error as any).message : undefined) ||
       `Request failed with status ${response.status}`;
     const code =
-      (body.error as string) || response.statusText || "UNKNOWN_ERROR";
+      (typeof body.error === "string" ? body.error : undefined) ||
+      (typeof body.error === "object" && body.error !== null ? (body.error as any).code : undefined) ||
+      response.statusText || "UNKNOWN_ERROR";
 
     throw new ApiError(response.status, code, message);
   }
@@ -129,75 +140,17 @@ export async function apiFetch<T = unknown>(
   return data as T;
 }
 
+export function useApiFetch() {
+  const { getToken } = useAuth();
+
+  return function api<T = unknown>(path: string, options: FetchOptions = {}): Promise<T> {
+    return apiFetch<T>(path, { ...options, getToken });
+  };
+}
+
 export function useCruxApi() {
-  const { getToken: clerkGetToken } = useAuth();
-
-  async function cruxFetch<T = unknown>(
-    path: string,
-    options: FetchOptions = {},
-  ): Promise<T> {
-    const { skipAuth = false, headers: customHeaders = {}, ...rest } = options;
-
-    const url = `${API_URL}${path}`;
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      ...customHeaders,
-    };
-
-    if (!skipAuth) {
-      const token = await clerkGetToken();
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-    }
-
-    const response = await fetchWithRetry(url, {
-      ...rest,
-      headers,
-    });
-
-    if (!response.ok) {
-      let body: Record<string, unknown> = {};
-      try {
-        body = await response.json();
-      } catch {
-        // Response may not be JSON
-      }
-
-      if (response.status === 401) {
-        const freshToken = await clerkGetToken({ skipCache: true });
-        if (freshToken) {
-          const retryHeaders: Record<string, string> = {
-            "Content-Type": "application/json",
-            ...customHeaders,
-            Authorization: `Bearer ${freshToken}`,
-          };
-          const retryResp = await fetch(url, {
-            ...rest,
-            headers: retryHeaders,
-          });
-          if (retryResp.ok) {
-            const retryData = await retryResp.json();
-            return retryData as T;
-          }
-        }
-      }
-
-      const message =
-        (body.message as string) ||
-        (body.error as string) ||
-        `Request failed with status ${response.status}`;
-      const code =
-        (body.error as string) || response.statusText || "UNKNOWN_ERROR";
-
-      throw new ApiError(response.status, code, message);
-    }
-
-    const data = await response.json();
-    return data as T;
-  }
-
-  return { api: cruxFetch };
+  const api = useApiFetch();
+  return { api };
 }
 
 export { ApiError };
