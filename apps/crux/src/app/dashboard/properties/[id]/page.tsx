@@ -247,12 +247,11 @@ export default function PropertyDetailPage() {
   
   // Reconstruct weights mapping
   const currentWeights: Record<string, number> = {
-    location_intelligence: 0.30,
-    developer_reliability: 0.20,
-    legal_compliance: 0.20,
-    market_valuation: 0.15,
-    structural_physical: 0.10,
-    risk_composite: 0.05,
+    cpsm_legal_authenticity: 0.20,
+    cpsm_technical_compliance: 0.20,
+    cpsm_infrastructure_resilience: 0.20,
+    cpsm_spatial_ergonomics: 0.20,
+    cpsm_market_dynamics: 0.20,
   };
 
   if (score && Array.isArray(score.weight_adjustments)) {

@@ -11,12 +11,11 @@ interface CategoryItem {
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
-  location_intelligence: "Location Intelligence",
-  developer_reliability: "Developer Reliability",
-  legal_compliance: "Legal Compliance",
-  market_valuation: "Market Valuation",
-  structural_physical: "Structural & Physical",
-  risk_composite: "Risk Composite",
+  cpsm_legal_authenticity: "Legal Authenticity",
+  cpsm_technical_compliance: "Technical Compliance",
+  cpsm_infrastructure_resilience: "Infrastructure Resilience",
+  cpsm_spatial_ergonomics: "Spatial Ergonomics",
+  cpsm_market_dynamics: "Market Dynamics",
 };
 
 export function CategoryBreakdown({

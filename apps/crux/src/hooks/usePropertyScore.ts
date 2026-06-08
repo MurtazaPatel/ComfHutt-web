@@ -57,13 +57,13 @@ export function usePropertyScore(propertyId: string, intent?: string) {
       
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
       const path = forceRecompute 
-        ? `/crux/score/${propertyId}/compute?${qs}`
+        ? `/crux/score/${propertyId}/stream?force=true&${qs}`
         : `/crux/score/${propertyId}/stream?${qs}`;
       const endpoint = `${apiUrl}${path}`;
 
       // Use standard fetch to read stream
       const response = await fetch(endpoint, {
-        method: forceRecompute ? "POST" : "GET",
+        method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
           "Accept": "text/event-stream"
@@ -81,21 +81,7 @@ export function usePropertyScore(propertyId: string, intent?: string) {
         throw new Error("Failed to fetch score");
       }
 
-      if (forceRecompute) {
-        // If it's a direct recompute and not streaming
-        // We can just switch to stream endpoint if recompute also streams, but currently /compute is json
-        // Wait, if /compute doesn't stream, we can just hit /stream directly if we want to force recompute?
-        // Actually, the new plan is that /stream auto-starts computation if it's missing.
-        // So we can just use /stream for everything, and for recompute maybe we just hit the backend to delete cache and then hit /stream?
-        // Let's just handle standard JSON for /compute right now, or just read json.
-        const contentType = response.headers.get("content-type") || "";
-        if (contentType.includes("application/json")) {
-          const json = await response.json();
-          if (json.success) setScore(json.data);
-          setIsLoading(false);
-          return;
-        }
-      }
+
 
       setIsComputing(true);
       const reader = response.body?.getReader();
