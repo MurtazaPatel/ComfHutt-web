@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 
 export interface CruxScore {
@@ -37,15 +37,22 @@ export function usePropertyScore(propertyId: string, intent?: string) {
   const [isComputing, setIsComputing] = useState(false);
   const [progressMessages, setProgressMessages] = useState<string[]>([]);
   const { isLoaded, getToken } = useAuth();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const fetchScoreStream = useCallback(async (fetchIntent?: string, forceRecompute = false) => {
     if (!propertyId) return;
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     setIsLoading(true);
     setError(null);
-    if (forceRecompute) {
-      setProgressMessages([]);
-      setScore(null);
-    }
+    setProgressMessages([]);
+    setScore(null);
+    setIsComputing(false);
     
     try {
       const token = await getToken();
@@ -67,7 +74,8 @@ export function usePropertyScore(propertyId: string, intent?: string) {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Accept": "text/event-stream"
-        }
+        },
+        signal: abortController.signal
       });
 
       if (!response.ok) {
@@ -129,12 +137,23 @@ export function usePropertyScore(propertyId: string, intent?: string) {
       }
       setIsLoading(false);
     } catch (err) {
+      if ((err as Error).name === "AbortError") {
+        return; // Ignore aborts
+      }
       setError(err instanceof Error ? err.message : "Failed to load property score");
       setScore(null);
       setIsLoading(false);
       setIsComputing(false);
     }
   }, [propertyId, intent, getToken]);
+
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (isLoaded) {

@@ -45,6 +45,7 @@ export default function PropertyDetailPage() {
   // Fetch property metadata (address) separately
   useEffect(() => {
     if (!propertyId) return;
+    setProperty(null);
     setPropertyLoading(true);
     apiFetch<{ success: boolean; data?: PropertyRecord }>(`/crux/property/${propertyId}`)
       .then((res) => {

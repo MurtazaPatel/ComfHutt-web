@@ -82,8 +82,14 @@ export function useLensSession(propertyId: string) {
   }, [propertyId, resetStream]);
 
   useEffect(() => {
-    // Lazily create session only on first message, do not create eagerly on mount
-  }, [isLoaded]);
+    // Reset session when propertyId changes
+    setSessionId(null);
+    setMessages([]);
+    setError(null);
+    currentAssistantRef.current = null;
+    syncActiveMessage();
+    resetStream();
+  }, [propertyId, resetStream]);
 
   // Auto-expire
   useEffect(() => {
