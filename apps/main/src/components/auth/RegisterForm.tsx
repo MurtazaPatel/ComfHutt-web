@@ -69,6 +69,7 @@ export const RegisterForm = () => {
           <div className="group">
             <label className="text-xs font-medium text-white/60 uppercase tracking-wider mb-1.5 block group-focus-within:text-white transition-colors">Name</label>
             <input
+              id="name"
               {...form.register("name")}
               disabled={isPending}
               placeholder="John Doe"
@@ -85,6 +86,7 @@ export const RegisterForm = () => {
           <div className="group">
             <label className="text-xs font-medium text-white/60 uppercase tracking-wider mb-1.5 block group-focus-within:text-white transition-colors">Email</label>
             <input
+              id="email"
               {...form.register("email")}
               disabled={isPending}
               placeholder="john.doe@example.com"
@@ -101,6 +103,7 @@ export const RegisterForm = () => {
           <div className="group">
             <label className="text-xs font-medium text-white/60 uppercase tracking-wider mb-1.5 block group-focus-within:text-white transition-colors">Password</label>
             <input
+              id="password"
               {...form.register("password")}
               disabled={isPending}
               placeholder="******"

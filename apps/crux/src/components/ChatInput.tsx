@@ -112,6 +112,8 @@ export default function ChatInput({
       <div className={containerStyles}>
         <input
           ref={inputRef}
+          id="chat-query"
+          name="chat-query"
           type="text"
           value={query}
           onChange={(e) => {

@@ -43,22 +43,25 @@ export function MessageList({ messages, activeMessage, isLoading, isStreaming }:
       className="flex flex-col py-6 gap-6 max-w-[768px] mx-auto w-full flex-1 overflow-y-auto"
       style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
     >
-      {messages.map((msg) => (
-        <div key={msg.id}>
-          {msg.role === "user" ? (
-            <UserMessage content={msg.content} />
-          ) : msg.role === "assistant" ? (
-            <>
-              <AIMessage content={msg.content} />
-              {msg.toolResults?.map((tr, i) => (
-                <div key={i} className="pl-[46px]">
-                  <ToolResultCard result={tr} />
-                </div>
-              ))}
-            </>
-          ) : null}
-        </div>
-      ))}
+      {messages.map((msg, index) => {
+        if (!msg) return null;
+        return (
+          <div key={msg.id || index}>
+            {msg.role === "user" ? (
+              <UserMessage content={msg.content} />
+            ) : msg.role === "assistant" ? (
+              <>
+                <AIMessage content={msg.content} />
+                {msg.toolResults?.map((tr, i) => (
+                  <div key={i} className="pl-[46px]">
+                    <ToolResultCard result={tr} />
+                  </div>
+                ))}
+              </>
+            ) : null}
+          </div>
+        );
+      })}
 
       {/* Render active streaming message if available */}
       {activeMessage && (

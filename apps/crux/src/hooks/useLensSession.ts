@@ -102,12 +102,21 @@ export function useLensSession(propertyId: string) {
     return () => clearInterval(interval);
   }, [sessionId, createNewSession]);
 
+  const processedChunksRef = useRef(0);
+
   // Process SSE chunks into messages
   useEffect(() => {
-    if (chunks.length === 0) return;
+    if (chunks.length === 0) {
+      processedChunksRef.current = 0;
+      return;
+    }
 
-    for (const chunk of chunks) {
+    let hasUpdates = false;
+
+    for (let i = processedChunksRef.current; i < chunks.length; i++) {
+      const chunk = chunks[i];
       const sseChunk = chunk as unknown as SseChunk;
+      hasUpdates = true;
 
       if (sseChunk.error) {
         setError(sseChunk.error);
@@ -116,10 +125,10 @@ export function useLensSession(propertyId: string) {
 
       if (sseChunk.done) {
         if (currentAssistantRef.current && currentAssistantRef.current.content.trim()) {
-          setMessages((prev) => [...prev, currentAssistantRef.current!].slice(-MAX_MESSAGES));
+          const finalMsg = currentAssistantRef.current;
+          setMessages((prev) => [...prev, finalMsg].slice(-MAX_MESSAGES));
         }
         currentAssistantRef.current = null;
-        syncActiveMessage();
         continue;
       }
 
@@ -133,7 +142,6 @@ export function useLensSession(propertyId: string) {
           };
         }
         currentAssistantRef.current.content += sseChunk.delta;
-        syncActiveMessage();
       }
 
       if (sseChunk.module_result) {
@@ -149,8 +157,13 @@ export function useLensSession(propertyId: string) {
           currentAssistantRef.current.toolResults = [];
         }
         currentAssistantRef.current.toolResults.push(sseChunk.module_result);
-        syncActiveMessage();
       }
+    }
+    
+    processedChunksRef.current = chunks.length;
+
+    if (hasUpdates) {
+      syncActiveMessage();
     }
   }, [chunks]);
 

@@ -93,6 +93,7 @@ export const LoginForm = () => {
               <label className="text-xs font-medium text-white/60 uppercase tracking-wider group-focus-within:text-white transition-colors">Password</label>
             </div>
             <input
+              id="password"
               {...form.register("password")}
               disabled={isPending}
               placeholder="******"

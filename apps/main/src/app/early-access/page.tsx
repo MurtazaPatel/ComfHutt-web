@@ -94,6 +94,8 @@ export default function EarlyAccessPage() {
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
+                  id="email"
+                  name="email"
                   type="email"
                   inputMode="email"
                   placeholder="Email Address"
@@ -106,6 +108,8 @@ export default function EarlyAccessPage() {
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
+                  id="name"
+                  name="name"
                   type="text"
                   placeholder="Your Name (Optional)"
                   value={formData.name}

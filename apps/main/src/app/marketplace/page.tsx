@@ -208,6 +208,8 @@ export default function MarketplacePage() {
                 <Search className="w-4 h-4 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
               </div>
               <input 
+                id="search-location"
+                name="location"
                 type="text"
                 placeholder="Search location..."
                 className="w-full py-3 pl-10 pr-4 bg-gray-50/50 border-none rounded-xl focus:ring-2 focus:ring-emerald-100 transition-all outline-none text-sm font-medium text-gray-900 placeholder:text-gray-400"
@@ -228,6 +230,8 @@ export default function MarketplacePage() {
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-gray-400">Min Price</label>
                     <input 
+                      id="min-budget"
+                      name="minBudget"
                       type="number" 
                       placeholder="₹5,000"
                       className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs"
@@ -238,6 +242,8 @@ export default function MarketplacePage() {
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold uppercase text-gray-400">Max Price</label>
                     <input 
+                      id="max-budget"
+                      name="maxBudget"
                       type="number" 
                       placeholder="₹50,000"
                       className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs"

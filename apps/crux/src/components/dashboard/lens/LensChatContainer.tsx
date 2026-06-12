@@ -7,6 +7,7 @@ import { useLensSession } from "@/hooks/useLensSession";
 import { MessageList } from "./MessageList";
 import { PromptInputBar } from "./PromptInputBar";
 import { Loader2 } from "lucide-react";
+import { LensChatSkeleton } from "./LensChatSkeleton";
 
 interface LensChatContainerProps {
   propertyId: string;
@@ -47,9 +48,20 @@ export function LensChatContainer({ propertyId, propertyName }: LensChatContaine
 
   if (isLoading && !messages.length) {
     return (
-      <div className="flex flex-col h-full">
-        <div className="flex items-center justify-center flex-1">
-          <Loader2 className="w-6 h-6 animate-spin text-crux-green" />
+      <div className="flex flex-col h-full bg-white">
+        {/* Top bar skeleton */}
+        <div className="flex items-center justify-between flex-shrink-0 px-5 py-3 border-b border-[#e5e5e5] bg-white/80 sticky top-0 z-10">
+          <div className="h-4 w-16 bg-gray-100 rounded animate-pulse" />
+          <div className="h-4 w-32 bg-gray-100 rounded animate-pulse" />
+          <div className="h-6 w-24 bg-gray-100 rounded-xl animate-pulse" />
+        </div>
+        
+        {/* Messages Skeleton */}
+        <LensChatSkeleton />
+        
+        {/* Input bar skeleton */}
+        <div className="sticky bottom-0 pb-6 px-6 pt-4 bg-gradient-to-t from-white via-white to-transparent">
+          <div className="max-w-[768px] mx-auto h-[48px] rounded-2xl bg-gray-50 border border-[#e5e5e5] animate-pulse" />
         </div>
       </div>
     );
