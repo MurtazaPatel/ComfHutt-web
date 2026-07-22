@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import PeepsShield from "@/components/PeepsShield";
-import PeepsGrowth from "@/components/PeepsGrowth";
-import PeepsSignup from "@/components/PeepsSignup";
+import { motion } from "framer-motion";
 
 // ─── Scroll entrance hook ────────────────────────────────────────────────────
 function useScrollEntrance(threshold = 0.2) {
@@ -47,12 +45,121 @@ function useParallax() {
   return { sectionRef, offset };
 }
 
+// ─── Abstract Visualizations ──────────────────────────────────────────────────
+
+function RiskStackVisual({ inView }: { inView: boolean }) {
+  return (
+    <div className="relative w-full aspect-square max-w-[400px] mx-auto flex items-center justify-center">
+      <motion.div 
+        className="absolute inset-0 bg-[var(--color-crux-green)] opacity-[0.03] rounded-full blur-3xl"
+        animate={{ scale: inView ? [1, 1.1, 1] : 1 }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {[0, 1, 2].map((i) => (
+        <motion.div
+          key={i}
+          className="absolute w-64 h-80 rounded-2xl border border-border bg-white shadow-[var(--shadow-premium-lg)] flex flex-col justify-between p-6"
+          initial={{ opacity: 0, y: 100, rotate: 0, scale: 0.8 }}
+          animate={inView ? { 
+            opacity: 1 - i * 0.2, 
+            y: i * -20, 
+            rotate: i === 0 ? -4 : i === 1 ? 4 : -2,
+            scale: 1 - i * 0.05,
+            zIndex: 10 - i
+          } : {}}
+          transition={{ duration: 0.9, delay: 0.1 + i * 0.15, type: "spring", stiffness: 90 }}
+        >
+           <div className="space-y-5">
+             <div className="w-10 h-10 rounded-full bg-[var(--color-crux-bg-secondary)]" />
+             <div className="space-y-2">
+                <div className="w-full h-2 rounded-full bg-[var(--color-crux-bg-secondary)]" />
+                <div className="w-4/5 h-2 rounded-full bg-[var(--color-crux-bg-secondary)]" />
+                <div className="w-2/3 h-2 rounded-full bg-[var(--color-crux-bg-secondary)]" />
+             </div>
+           </div>
+           {i === 0 && (
+             <motion.div 
+               className="self-end w-12 h-12 rounded-full border border-border shadow-sm flex items-center justify-center bg-[var(--color-crux-bg-primary)]"
+               initial={{ scale: 0 }}
+               animate={inView ? { scale: 1 } : {}}
+               transition={{ delay: 1.2, type: "spring" }}
+             >
+               <div className="w-4 h-4 bg-red-400 rounded-full opacity-80" />
+             </motion.div>
+           )}
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
+
+
+function UnlockUIVisual({ inView }: { inView: boolean }) {
+  return (
+    <div className="relative w-full aspect-square max-w-[450px] mx-auto flex items-center justify-center p-8">
+      <motion.div
+        className="relative w-full bg-white rounded-[24px] border border-border p-6 shadow-[var(--shadow-premium-lg)]"
+        initial={{ opacity: 0, y: 50, rotateY: 20, rotateX: 10 }}
+        animate={inView ? { opacity: 1, y: 0, rotateY: 0, rotateX: 0 } : {}}
+        transition={{ duration: 1, type: "spring", stiffness: 80, damping: 20 }}
+        style={{ perspective: 1000 }}
+      >
+        <div className="w-full h-48 bg-[var(--color-crux-bg-secondary)] rounded-[16px] mb-8 overflow-hidden relative border border-border">
+          <div className="absolute bottom-0 left-[15%] w-[10%] h-[60%] bg-[var(--color-crux-border)] opacity-50 rounded-t-md" />
+          <div className="absolute bottom-0 left-[35%] w-[20%] h-[80%] bg-[var(--color-crux-border)] opacity-70 rounded-t-md" />
+          <div className="absolute bottom-0 right-[20%] w-[15%] h-[40%] bg-[var(--color-crux-border)] opacity-30 rounded-t-md" />
+          <motion.div 
+            className="absolute top-0 left-0 w-full h-[2px] bg-[var(--color-crux-green)] shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+            animate={{ y: [0, 192, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+        
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-semibold mb-2">Verified Asset #001</div>
+            <div className="text-[22px] font-bold text-foreground tracking-tight">ComfHutt Prime</div>
+          </div>
+          <div className="text-right">
+            <div className="text-[12px] text-muted-foreground mb-1 font-medium">Fractional Entry</div>
+            <div className="text-[20px] font-bold text-[var(--color-crux-green)]">₹10,000</div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+           <div className="flex justify-between items-center pt-4 border-t border-border">
+             <span className="text-[13px] text-muted-foreground font-medium">Legal Clarity</span>
+             <span className="text-[13px] font-semibold text-foreground">100% Cleared</span>
+           </div>
+           <div className="flex justify-between items-center pt-2">
+             <span className="text-[13px] text-muted-foreground font-medium">Estimated Yield</span>
+             <span className="text-[13px] font-bold text-[var(--color-crux-green-dark)]">8.4% Net</span>
+           </div>
+        </div>
+
+        <motion.div
+          className="absolute -right-6 -top-6 bg-white rounded-full p-4 border border-[var(--color-crux-green-mid)] shadow-[var(--shadow-premium-md)]"
+          initial={{ scale: 0 }}
+          animate={inView ? { scale: 1 } : {}}
+          transition={{ type: "spring", delay: 0.8 }}
+        >
+          <div className="absolute inset-0 bg-[var(--color-crux-green)] opacity-10 rounded-full animate-ping" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-crux-green)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </motion.div>
+      </motion.div>
+    </div>
+  )
+}
+
 // ─── Entrance line styles ─────────────────────────────────────────────────────
 function entranceStyle(inView: boolean, delay: number): React.CSSProperties {
   return {
     opacity: inView ? 1 : 0,
     transform: inView ? "translateY(0)" : "translateY(24px)",
-    transition: `opacity 0.55s ease ${delay}ms, transform 0.55s ease ${delay}ms`,
+    transition: `opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
   };
 }
 
@@ -61,15 +168,11 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function StakesAndHorizon() {
-  const { sectionRef, offset } = useParallax();
+  const { sectionRef } = useParallax();
 
-  // Beat 1 entrance
   const beat1 = useScrollEntrance(0.2);
-
-  // Beat 3 entrance
   const beat3 = useScrollEntrance(0.2);
 
-  // Waitlist form
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -77,261 +180,119 @@ export default function StakesAndHorizon() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!EMAIL_RE.test(email)) {
-      setEmailError("Enter a valid email");
+      setEmailError("Enter a valid email address");
       return;
     }
     setEmailError("");
-    console.log(email);
     setSubmitted(true);
   };
 
   return (
-    <section ref={sectionRef} style={{ background: "#FFFFFF" }}>
+    <section ref={sectionRef} className="bg-[var(--color-crux-bg-primary)] overflow-hidden">
       {/* ── BEAT 1: THE STAKES ─────────────────────────────────────────────── */}
-      <div className="py-16 md:py-30" style={{ background: "#FFFFFF" }}>
-        <div
-          className="mx-auto px-4"
-          style={{ maxWidth: 1024 }}
-        >
-          {/* Two columns: 60/40 */}
-          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-            {/* Left: text */}
-            <div ref={beat1.ref} className="w-full md:w-[60%] order-2 md:order-1">
-              {/* Eyebrow */}
+      <div className="py-24 md:py-40">
+        <div className="mx-auto px-6 max-w-[1200px]">
+          <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
+            <div ref={beat1.ref} className="w-full md:w-1/2 order-2 md:order-1">
               <p
-                style={{
-                  fontSize: 11,
-                  letterSpacing: "0.2em",
-                  color: "#22C55E",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  marginBottom: 24,
-                  ...entranceStyle(beat1.inView, 0),
-                }}
+                className="text-[11px] uppercase tracking-[0.25em] text-[var(--color-crux-green)] font-bold mb-6"
+                style={entranceStyle(beat1.inView, 0)}
               >
                 The Reality
               </p>
-
-              {/* Headline */}
               <h2
-                style={{
-                  fontSize: "clamp(32px, 5vw, 52px)",
-                  color: "#0F0F0F",
-                  fontWeight: 800,
-                  lineHeight: 1.1,
-                  marginBottom: 20,
-                  ...entranceStyle(beat1.inView, 120),
-                }}
+                className="text-[36px] md:text-[56px] text-foreground font-extrabold leading-[1.05] tracking-tight mb-8"
+                style={entranceStyle(beat1.inView, 100)}
               >
                 The average Indian family spends 18 years saving for property.
               </h2>
-
-              {/* Body */}
               <p
-                style={{
-                  fontSize: 18,
-                  color: "#374151",
-                  lineHeight: 1.6,
-                  marginBottom: 16,
-                  ...entranceStyle(beat1.inView, 280),
-                }}
+                className="text-[18px] md:text-[20px] text-muted-foreground leading-relaxed font-medium mb-6"
+                style={entranceStyle(beat1.inView, 200)}
               >
                 1 in 3 end up in a legal dispute, a fraudulent developer, or a
                 locality that was never what it seemed.
               </p>
-
-              {/* Closing */}
               <p
-                style={{
-                  fontSize: 15,
-                  color: "#6B7280",
-                  fontStyle: "italic",
-                  ...entranceStyle(beat1.inView, 420),
-                }}
+                className="text-[15px] text-muted-foreground italic"
+                style={entranceStyle(beat1.inView, 300)}
               >
                 Not because they didn&apos;t try. Because they had no way to know.
               </p>
             </div>
-
-            {/* Right: Hourglass icon */}
-            <div
-              className="w-full md:w-[40%] flex justify-center order-1 md:order-2"
-              style={{
-                transform: `translateY(calc(${offset}px * 0.08))`,
-              }}
-            >
-              <PeepsShield />
+            <div className="w-full md:w-1/2 order-1 md:order-2">
+              <RiskStackVisual inView={beat1.inView} />
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── BEAT 2: THE TURN ───────────────────────────────────────────────── */}
-      <div className="pb-12 md:pb-20" style={{ background: "#F0FDF4" }}>
-        {/* Divider */}
-        <div
-          style={{
-            width: 200,
-            height: 1,
-            background: "rgba(0,0,0,0.08)",
-            margin: "0 auto 48px",
-          }}
-        />
-
-        {/* Content centered */}
-        <div className="flex flex-col items-center px-4">
-          {/* Rising bars icon */}
-          <div style={{ marginBottom: 8 }}>
-            <PeepsGrowth />
-          </div>
-
-          {/* Statement */}
-          <p
-            style={{
-              fontSize: "clamp(24px, 3.5vw, 36px)",
-              color: "#0F0F0F",
-              fontWeight: 700,
-              textAlign: "center",
-              maxWidth: 600,
-              margin: "32px auto",
-            }}
-          >
-            CRUX exists so that number never applies to you.
-          </p>
-
-          {/* Pills */}
-          <div
-            className="flex flex-wrap justify-center"
-            style={{ gap: 12 }}
-          >
-            {["23 data signals", "< 90 second analysis", "Methodology is public"].map(
-              (label) => <Pill key={label} label={label} />
-            )}
           </div>
         </div>
       </div>
 
       {/* ── BEAT 3: THE HORIZON ────────────────────────────────────────────── */}
-      <div
-        className="py-16 md:py-30"
-        style={{ background: "#FFFFFF" }}
-      >
-        <div className="mx-auto px-4" style={{ maxWidth: 1024 }}>
-          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-            {/* Left: SVG animation (desktop only) */}
-            <PeepsSignup />
+      <div className="py-24 md:py-40 bg-[var(--color-crux-bg-primary)]">
+        <div className="mx-auto px-6 max-w-[1200px]">
+          <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
+            <div className="w-full md:w-1/2 hidden md:block">
+              <UnlockUIVisual inView={beat3.inView} />
+            </div>
 
-            {/* Right: text + form */}
-            <div ref={beat3.ref} className="w-full md:w-[60%] order-2">
-              {/* Eyebrow */}
+            <div ref={beat3.ref} className="w-full md:w-1/2">
               <p
-                style={{
-                  fontSize: 11,
-                  letterSpacing: "0.2em",
-                  color: "#22C55E",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  marginBottom: 24,
-                  ...entranceStyle(beat3.inView, 0),
-                }}
+                className="text-[11px] uppercase tracking-[0.25em] text-[var(--color-crux-green)] font-bold mb-6"
+                style={entranceStyle(beat3.inView, 0)}
               >
                 You&apos;ve done the hard part
               </p>
 
-              {/* Headline — three separate elements for independent line 3 colour */}
-              <div style={{ marginBottom: 20, ...entranceStyle(beat3.inView, 120) }}>
-                <h2
-                  style={{
-                    fontSize: "clamp(28px, 4vw, 44px)",
-                    color: "#0F0F0F",
-                    fontWeight: 800,
-                    lineHeight: 1.1,
-                    margin: 0,
-                  }}
-                >
-                  Most people spend years waiting
+              <div className="mb-8" style={entranceStyle(beat3.inView, 100)}>
+                <h2 className="text-[36px] md:text-[52px] text-foreground font-extrabold leading-[1.05] tracking-tight">
+                  Most people spend years waiting to feel ready.
                 </h2>
-                <h2
-                  style={{
-                    fontSize: "clamp(28px, 4vw, 44px)",
-                    color: "#0F0F0F",
-                    fontWeight: 800,
-                    lineHeight: 1.1,
-                    margin: 0,
-                  }}
-                >
-                  to feel ready.
-                </h2>
-                <h2
-                  style={{
-                    fontSize: "clamp(28px, 4vw, 44px)",
-                    color: "#22C55E",
-                    fontWeight: 800,
-                    lineHeight: 1.1,
-                    margin: 0,
-                  }}
-                >
+                <h2 className="text-[36px] md:text-[52px] text-[var(--color-crux-green)] font-extrabold leading-[1.05] tracking-tight mt-2">
                   You just skipped the line.
                 </h2>
               </div>
 
-              {/* Subheadline */}
               <p
-                style={{
-                  fontSize: 17,
-                  color: "#374151",
-                  lineHeight: 1.7,
-                  marginBottom: 16,
-                  ...entranceStyle(beat3.inView, 280),
-                }}
+                className="text-[18px] text-muted-foreground leading-[1.6] mb-6 font-medium"
+                style={entranceStyle(beat3.inView, 200)}
               >
                 CRUX told you which properties are worth your attention.
                 <br />
-                ComfHutt Invest will let you own a piece of them —
-                <br />
-                legally, directly, from ₹10,000.
+                ComfHutt Invest will let you own a piece of them — legally, directly, from ₹10,000.
               </p>
 
-              {/* Bridge line */}
               <p
-                style={{
-                  fontSize: 14,
-                  color: "#6B7280",
-                  fontStyle: "italic",
-                  marginBottom: 40,
-                  ...entranceStyle(beat3.inView, 340),
-                }}
+                className="text-[14px] text-muted-foreground italic mb-12"
+                style={entranceStyle(beat3.inView, 300)}
               >
                 No pooling. No fund manager taking a cut.
                 <br />
                 Your name. Your demat account. Your property.
               </p>
 
-              {/* Form + social nudge */}
-              <div style={entranceStyle(beat3.inView, 420)}>
+              <div style={entranceStyle(beat3.inView, 400)}>
                 {submitted ? (
-                  <div>
-                    <span style={{ fontSize: 32, color: "#22C55E", display: "block", marginBottom: 12 }}>
+                  <div className="bg-white p-8 rounded-2xl border border-border shadow-[var(--shadow-premium-md)]">
+                    <span className="text-[40px] text-[var(--color-crux-green)] block mb-4">
                       ✓
                     </span>
-                    <p style={{ fontSize: 18, fontWeight: 600, color: "#0F0F0F", margin: 0 }}>
-                      You&apos;re in.
+                    <p className="text-[20px] font-bold text-foreground mb-2">
+                      You&apos;re on the list.
                     </p>
-                    <p style={{ fontSize: 14, color: "#374151", marginTop: 8 }}>
-                      Founding Investors get first access, 3% discount, and a
-                      front-row seat to Property #001.
+                    <p className="text-[15px] text-muted-foreground leading-relaxed">
+                      Founding Investors get first access, a 3% discount, and a
+                      front-row seat to Property #001. We&apos;ll be in touch soon.
                     </p>
                   </div>
                 ) : (
                   <>
-                    {/* Social nudge */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                      <div style={{ display: "flex" }}>
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#22C55E", border: "2px solid #FFFFFF", flexShrink: 0 }} />
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#16a34a", border: "2px solid #FFFFFF", marginLeft: -8, flexShrink: 0 }} />
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#15803d", border: "2px solid #FFFFFF", marginLeft: -8, flexShrink: 0 }} />
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex -space-x-2">
+                        <div className="w-8 h-8 rounded-full bg-[var(--color-crux-green)] border-2 border-white shadow-sm" />
+                        <div className="w-8 h-8 rounded-full bg-[var(--color-crux-green-mid)] border-2 border-white shadow-sm" />
+                        <div className="w-8 h-8 rounded-full bg-[var(--color-crux-green-dark)] border-2 border-white shadow-sm" />
                       </div>
-                      <span style={{ fontSize: 13, color: "#374151" }}>
+                      <span className="text-[13px] font-medium text-muted-foreground">
                         214 people are already on the list.
                       </span>
                     </div>
@@ -346,55 +307,17 @@ export default function StakesAndHorizon() {
                             if (emailError) setEmailError("");
                           }}
                           placeholder="your@email.com"
-                          style={{
-                            flex: 1,
-                            background: "#FFFFFF",
-                            border: `1.5px solid ${emailError ? "#EF4444" : "rgba(0,0,0,0.15)"}`,
-                            borderRadius: 8,
-                            padding: "14px 18px",
-                            color: "#0F0F0F",
-                            fontSize: 16,
-                            outline: "none",
-                            transition: "border-color 200ms ease",
-                          }}
-                          onFocus={(e) => {
-                            if (!emailError)
-                              e.currentTarget.style.borderColor = "#22C55E";
-                          }}
-                          onBlur={(e) => {
-                            if (!emailError)
-                              e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)";
-                          }}
+                          className="flex-1 bg-white border border-border rounded-xl px-5 py-4 text-[16px] text-foreground outline-none transition-all duration-300 focus:border-[var(--color-crux-green)] focus:shadow-[var(--shadow-premium-glow)]"
                         />
                         <button
                           type="submit"
-                          style={{
-                            background: "#22C55E",
-                            color: "#FFFFFF",
-                            fontWeight: 700,
-                            borderRadius: 8,
-                            padding: "14px 24px",
-                            fontSize: 15,
-                            border: "none",
-                            cursor: "pointer",
-                            whiteSpace: "nowrap",
-                            boxShadow: "0 2px 8px rgba(34,197,94,0.25)",
-                            transition: "opacity 200ms ease, transform 200ms ease",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.opacity = "0.9";
-                            e.currentTarget.style.transform = "translateY(-1px)";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.opacity = "1";
-                            e.currentTarget.style.transform = "translateY(0)";
-                          }}
+                          className="bg-[var(--color-crux-green)] text-white font-bold rounded-xl px-8 py-4 text-[15px] shadow-[var(--shadow-premium-md)] hover:shadow-[var(--shadow-premium-lg)] hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
                         >
                           Claim your spot →
                         </button>
                       </div>
                       {emailError && (
-                        <p style={{ color: "#EF4444", fontSize: 13, marginTop: 8 }}>
+                        <p className="text-red-500 text-[13px] font-medium mt-3 ml-1">
                           {emailError}
                         </p>
                       )}
@@ -410,27 +333,4 @@ export default function StakesAndHorizon() {
   );
 }
 
-// ─── Pill sub-component ───────────────────────────────────────────────────────
-function Pill({ label }: { label: string }) {
-  const [hovered, setHovered] = useState(false);
 
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        border: `1px solid ${hovered ? "#22C55E" : "rgba(0,0,0,0.10)"}`,
-        borderRadius: 999,
-        padding: "12px 20px",
-        background: "#FFFFFF",
-        fontSize: 13,
-        color: hovered ? "#22C55E" : "#374151",
-        fontWeight: 500,
-        transition: "border-color 200ms ease, color 200ms ease",
-        cursor: "default",
-      }}
-    >
-      {label}
-    </div>
-  );
-}

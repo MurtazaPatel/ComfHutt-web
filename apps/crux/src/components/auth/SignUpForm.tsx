@@ -44,6 +44,59 @@ export default function SignUpForm() {
     return score;
   };
 
+  type SignUpResource = Awaited<ReturnType<NonNullable<typeof signUp>["create"]>>;
+
+  // Drives a sign-up attempt to a real conclusion instead of blindly navigating
+  // to /dashboard (which, when the sign-up isn't actually complete, was bounced
+  // straight back to /signin by the auth middleware and left no user in Clerk).
+  const completeSignUp = async (attempt: SignUpResource): Promise<void> => {
+    let current = attempt;
+
+    // If the Clerk instance requires a username, satisfy it automatically. CRUX
+    // identifies users by email, so a derived username is invisible to them — but
+    // without it the sign-up can never reach "complete". Only fires when Clerk
+    // explicitly asks for it, so it's a no-op on instances that don't use usernames.
+    if (
+      current.status !== "complete" &&
+      current.missingFields?.includes("username")
+    ) {
+      const base =
+        email.trim().split("@")[0].replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20) ||
+        "crux";
+      const username = `${base}_${Math.random().toString(36).slice(2, 7)}`;
+      current = await current.update({ username });
+    }
+
+    if (current.status === "complete") {
+      const sessionId = current.createdSessionId;
+      if (sessionId && setActive) {
+        await setActive({ session: sessionId });
+      }
+      // Full page navigation ensures the session cookie is written before the
+      // middleware runs on /dashboard.
+      window.location.href = "/dashboard";
+      return;
+    }
+
+    // Still not complete — surface exactly what Clerk is waiting on rather than
+    // silently redirecting into a protected route the user isn't allowed into yet.
+    const pending = [
+      ...(current.missingFields ?? []),
+      ...(current.unverifiedFields ?? []),
+    ].filter((field) => field !== "email_address");
+
+    setBanner({
+      message: pending.length
+        ? `Almost there — your account still needs: ${pending.join(
+            ", "
+          )}. Try “Continue with Google”, or contact support.`
+        : `We couldn't finish creating your account (status: ${
+            current.status ?? "unknown"
+          }). Please try again or use “Continue with Google”.`,
+      variant: "error",
+    });
+  };
+
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -80,12 +133,8 @@ export default function SignUpForm() {
       });
 
       if (result.status === "complete") {
-        const sessionId = result.createdSessionId ?? signUp.createdSessionId;
-        if (sessionId) {
-          await setActive({ session: sessionId });
-        }
-        // Use full page navigation so the session cookie is set
-        window.location.href = "/dashboard";
+        // Rare, but possible if the instance doesn't require email verification.
+        await completeSignUp(result);
       } else {
         await handleEmailVerification();
       }
@@ -137,37 +186,11 @@ export default function SignUpForm() {
     setIsSubmitting(true);
 
     try {
-      const verifyResult = await signUp.attemptEmailAddressVerification({
+      const attempt = await signUp.attemptEmailAddressVerification({
         code: code.trim(),
       });
-
-      const sessionId =
-        verifyResult.createdSessionId ?? signUp.createdSessionId;
-
-      if (sessionId) {
-        await setActive({ session: sessionId });
-        // Full page navigation ensures session cookie is set before middleware runs
-        window.location.href = "/dashboard";
-        return;
-      }
-
-      if (verifyResult.status === "complete" || signUp.status === "complete") {
-        window.location.href = "/dashboard";
-        return;
-      }
-
-      window.location.href = "/dashboard";
+      await completeSignUp(attempt);
     } catch (err: unknown) {
-      if (signUp.createdSessionId) {
-        try {
-          await setActive({ session: signUp.createdSessionId });
-          window.location.href = "/dashboard";
-          return;
-        } catch {
-          // Fall through
-        }
-      }
-
       const error = err as { errors?: { message: string }[] };
       setBanner({
         message:
@@ -337,7 +360,7 @@ export default function SignUpForm() {
                   className="flex-1 h-[2px] rounded-full transition-colors duration-200"
                   style={{
                     background:
-                      i <= passwordStrength ? "#22C55E" : "#E5E7EB",
+                      i <= passwordStrength ? "var(--color-crux-green)" : "var(--color-crux-border)",
                   }}
                 />
               ))}

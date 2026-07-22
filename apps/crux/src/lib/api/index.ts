@@ -113,6 +113,9 @@ export async function apiFetch<T = unknown>(
   const response = await fetchWithRetry(url, {
     ...rest,
     headers,
+    // Carries the anonymous scoring quota cookie cross-origin — safe because
+    // the backend's CORS config allowlists specific origins, not "*".
+    credentials: "include",
   });
 
   if (!response.ok) {

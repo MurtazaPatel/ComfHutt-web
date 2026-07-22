@@ -17,7 +17,7 @@ const PLACEHOLDER_DATA: CityTrend[] = [
 function TrendIndicator({ change }: { change: number }) {
   if (change > 0.5) {
     return (
-      <span className="inline-flex items-center gap-1 text-[#22C55E] font-medium text-sm">
+      <span className="inline-flex items-center gap-1 text-[var(--color-crux-green)] font-medium text-sm">
         ↑ {change.toFixed(1)}%
       </span>
     );
@@ -30,7 +30,7 @@ function TrendIndicator({ change }: { change: number }) {
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 text-[#9CA3AF] font-medium text-sm">
+    <span className="inline-flex items-center gap-1 text-[var(--color-crux-text-muted)] font-medium text-sm">
       → {change.toFixed(1)}%
     </span>
   );
@@ -48,7 +48,7 @@ export function MarketPulse() {
           fontSize: "20px",
           fontWeight: 600,
           lineHeight: 1.3,
-          color: "#111827",
+          color: "var(--color-crux-text-primary)",
         }}
       >
         Market Pulse
@@ -65,7 +65,7 @@ export function MarketPulse() {
             </span>
             <div className="flex items-center gap-2">
               <TrendIndicator change={item.change} />
-              <span className="w-[6px] h-[6px] rounded-full bg-[#E5E7EB] flex-shrink-0" />
+              <span className="w-[6px] h-[6px] rounded-full bg-[var(--color-crux-border)] flex-shrink-0" />
             </div>
           </div>
         ))}

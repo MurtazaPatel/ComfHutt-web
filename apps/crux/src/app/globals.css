@@ -6,33 +6,38 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ── CRUX Brand Tokens ── */
+/* ── CRUX Premium Light Tokens ── */
 @theme inline {
-  --color-crux-green: #22C55E;
-  --color-crux-green-mid: #16A34A;
-  --color-crux-green-dark: #15803D;
-  --color-crux-green-deeper: #166534;
-  --color-crux-green-deep: #14532D;
-  --color-crux-green-darkest: #052E16;
-  --color-crux-green-tint: #F0FDF4;
+  --color-crux-green: #10B981; /* A more vibrant, premium emerald */
+  --color-crux-green-mid: #059669;
+  --color-crux-green-dark: #047857;
+  --color-crux-green-deeper: #065F46;
+  --color-crux-green-deep: #064E3B;
+  --color-crux-green-darkest: #022C22;
+  --color-crux-green-tint: #ECFDF5;
 
-  --color-crux-bg-primary: #FFFFFF;
-  --color-crux-bg-secondary: #F9FAFB;
-  --color-crux-bg-accent: #F0FDF4;
-  --color-crux-surface-dark: #0A0A0A;
-  --color-crux-surface-dark-card: #141414;
+  --color-crux-bg-primary: #FAFAFA; /* Soft off-white for main background */
+  --color-crux-bg-secondary: #F3F4F6; /* Slightly darker for distinct sections */
+  --color-crux-bg-accent: #ECFDF5;
+  --color-crux-surface-dark: #0A0A0B;
+  --color-crux-surface-dark-card: #141415;
 
-  --color-crux-text-primary: #111827;
-  --color-crux-text-secondary: #6B7280;
-  --color-crux-text-muted: #9CA3AF;
-  --color-crux-text-light: #F3F4F6;
+  --color-crux-text-primary: #09090B; /* Almost black for high contrast */
+  --color-crux-text-secondary: #52525B; /* Premium gray */
+  --color-crux-text-muted: #A1A1AA;
+  --color-crux-text-light: #F4F4F5;
 
-  --color-crux-border: #E5E7EB;
-  --color-crux-border-dark: #1F2937;
+  --color-crux-border: #E4E4E7; /* Soft silver border */
+  --color-crux-border-dark: #27272A;
 
   --font-heading: var(--font-inter);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
+
+  --shadow-premium-sm: 0 2px 8px -2px rgba(9, 9, 11, 0.05), 0 1px 2px -1px rgba(9, 9, 11, 0.02);
+  --shadow-premium-md: 0 4px 16px -4px rgba(9, 9, 11, 0.05), 0 2px 4px -2px rgba(9, 9, 11, 0.02);
+  --shadow-premium-lg: 0 12px 32px -4px rgba(9, 9, 11, 0.06), 0 4px 8px -2px rgba(9, 9, 11, 0.03);
+  --shadow-premium-glow: 0 0 0 1px rgba(16, 185, 129, 0.1), 0 4px 24px -4px rgba(16, 185, 129, 0.15);
 }
 
 /* ── Base ── */

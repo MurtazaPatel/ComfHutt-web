@@ -17,7 +17,7 @@ export default function TrustOrigin() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="flex justify-center mb-8"
         >
-          <Quote size={48} color="#E5E7EB" strokeWidth={2} />
+          <Quote size={48} color="var(--color-crux-border)" strokeWidth={2} />
         </motion.div>
 
         {/* Quote text */}
@@ -26,7 +26,7 @@ export default function TrustOrigin() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-          className="text-2xl font-medium text-[#111827] italic leading-[1.6] tracking-[-0.2px]"
+          className="text-2xl font-medium text-[var(--color-crux-text-primary)] italic leading-[1.6] tracking-[-0.2px]"
           style={{ fontFamily: "Inter, sans-serif" }}
         >
           "We built CRUX because every Indian deserves the same property
@@ -40,7 +40,7 @@ export default function TrustOrigin() {
           whileInView={{ opacity: 1, scaleX: 1 }}
           viewport={VP}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.25 }}
-          className="mx-auto mt-10 mb-8 h-px bg-[#E5E7EB]"
+          className="mx-auto mt-10 mb-8 h-px bg-[var(--color-crux-border)]"
           style={{ width: 64 }}
         />
 
@@ -50,7 +50,7 @@ export default function TrustOrigin() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.35 }}
-          className="text-base text-[#6B7280]"
+          className="text-base text-[var(--color-crux-text-secondary)]"
           style={{ fontFamily: "Inter, sans-serif" }}
         >
           Built in India. For Indian real estate.

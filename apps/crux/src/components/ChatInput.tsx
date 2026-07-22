@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
+import { track } from "@vercel/analytics";
 import { cn } from "@/lib/utils";
+import { useApiFetch } from "@/lib/api";
 
 const PLACEHOLDERS = [
   "Enter any address in India...",
@@ -32,9 +34,14 @@ export default function ChatInput({
   const [displayedPlaceholder, setDisplayedPlaceholder] = useState("");
   const [isTyping, setIsTyping] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { isSignedIn } = useAuth();
+  const apiFetch = useApiFetch();
+  // ChatInput can render more than once on a page (hero + footer) — ids must be unique.
+  const inputId = useId();
 
   useEffect(() => {
     const currentPlaceholder = placeholder || PLACEHOLDERS[placeholderIndex];
@@ -62,26 +69,54 @@ export default function ChatInput({
     return () => clearTimeout(typingTimeout);
   }, [isTyping, placeholderIndex, query, placeholder]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!query.trim()) return;
+    const trimmed = query.trim();
+    if (!trimmed || isSubmitting) return;
 
-    if (!isSignedIn) {
-      router.push(
-        `/signin?redirect=${encodeURIComponent(`/dashboard?q=${encodeURIComponent(query.trim())}`)}`
-      );
+    if (onSubmit) {
+      onSubmit(trimmed);
+      setQuery("");
+      setDisplayedPlaceholder("");
+      setPlaceholderIndex(0);
       return;
     }
 
-    if (onSubmit) {
-      onSubmit(query);
-    } else {
-      router.push(`/chat?q=${encodeURIComponent(query)}`);
-    }
+    setIsSubmitting(true);
+    setError(null);
+    track("anonymous_score_started", { signedIn: Boolean(isSignedIn) });
 
-    setQuery("");
-    setDisplayedPlaceholder("");
-    setPlaceholderIndex(0);
+    try {
+      const resp = await apiFetch<{ success: boolean; data?: { id: string } }>(
+        "/crux/property",
+        { method: "POST", body: JSON.stringify({ address: trimmed }), skipAuth: !isSignedIn }
+      );
+
+      if (!resp.success || !resp.data) {
+        throw new Error("Failed to create property record");
+      }
+
+      setQuery("");
+      setDisplayedPlaceholder("");
+      setPlaceholderIndex(0);
+
+      router.push(
+        isSignedIn
+          ? `/dashboard/properties/${resp.data.id}`
+          : `/score/${resp.data.id}`
+      );
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      if (msg.includes("geocode") || msg.includes("find") || msg.includes("not found")) {
+        setError("Could not find this address. Try a more specific one.");
+      } else if (msg.includes("rate") || msg.includes("429")) {
+        setError("Too many requests. Try again in a few minutes.");
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const containerStyles = cn(
@@ -112,13 +147,15 @@ export default function ChatInput({
       <div className={containerStyles}>
         <input
           ref={inputRef}
-          id="chat-query"
-          name="chat-query"
+          id={inputId}
+          name={inputId}
           type="text"
           value={query}
+          disabled={isSubmitting}
           onChange={(e) => {
             setQuery(e.target.value);
             setIsTyping(false);
+            if (error) setError(null);
           }}
           onFocus={() => {
             setIsFocused(true);
@@ -133,10 +170,10 @@ export default function ChatInput({
         />
         <button
           type="submit"
-          disabled={!query.trim()}
+          disabled={!query.trim() || isSubmitting}
           className={cn(
             "shrink-0 flex items-center justify-center rounded-xl p-2.5 min-w-11 min-h-11 transition-all duration-200",
-            query.trim()
+            query.trim() && !isSubmitting
               ? "bg-gradient-green text-white hover:opacity-90 cursor-pointer"
               : variant === "dark"
                 ? "bg-gray-700 text-gray-500 cursor-not-allowed"
@@ -144,9 +181,12 @@ export default function ChatInput({
           )}
           aria-label="Submit query"
         >
-          <ArrowRight size={18} />
+          {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={18} />}
         </button>
       </div>
+      {error && (
+        <p className="mt-2 text-xs text-red-500 text-center">{error}</p>
+      )}
     </form>
   );
 }

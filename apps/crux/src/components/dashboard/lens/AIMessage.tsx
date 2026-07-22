@@ -17,7 +17,7 @@ export function AIMessage({ content }: AIMessageProps) {
           width: "30px",
           height: "30px",
           borderRadius: "2px",
-          background: "#22C55E",
+          background: "var(--color-crux-green)",
         }}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -30,13 +30,13 @@ export function AIMessage({ content }: AIMessageProps) {
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p
-          className="text-[14px] font-semibold text-[#111827] mb-1"
+          className="text-[14px] font-semibold text-[var(--color-crux-text-primary)] mb-1"
           style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
         >
           CRUX Lens
         </p>
         <div
-          className="text-[15px] leading-[1.65] text-[#111827] break-words"
+          className="text-[15px] leading-[1.65] text-[var(--color-crux-text-primary)] break-words"
           style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
         >
           <ReactMarkdown

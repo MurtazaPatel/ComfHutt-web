@@ -42,10 +42,10 @@ export default function FooterCTA() {
       {/* ── CTA section ── */}
       <div className="py-16 sm:py-32 px-4">
         <motion.div
-          className="mx-auto max-w-2xl rounded-3xl p-6 sm:p-12 text-center border border-[#22C55E33]"
+          className="mx-auto max-w-2xl rounded-3xl p-6 sm:p-12 text-center border border-[var(--color-crux-green)33]"
           style={{
             background:
-              "linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 50%, #F0FDF4 100%)",
+              "linear-gradient(135deg, var(--color-crux-bg-accent) 0%, var(--color-crux-bg-primary) 50%, var(--color-crux-bg-accent) 100%)",
           }}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -102,7 +102,7 @@ export default function FooterCTA() {
       {/* ── Light footer ── */}
       <div
         style={{
-          background: "#FFFFFF",
+          background: "var(--color-crux-bg-primary)",
           borderTop: "1px solid rgba(0, 0, 0, 0.08)",
           paddingTop: "4rem",
           paddingBottom: 0,
@@ -148,13 +148,13 @@ export default function FooterCTA() {
               </div>
 
               {/* Copyright */}
-              <p style={{ fontSize: 12, color: "#6B7280", lineHeight: 1.6, maxWidth: 220 }}>
+              <p style={{ fontSize: 12, color: "var(--color-crux-text-secondary)", lineHeight: 1.6, maxWidth: 220 }}>
                 © 2026 ComfHutt Technologies Pvt. Ltd.
               </p>
 
               {/* A ComfHutt Product */}
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
-                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9CA3AF" }}>
+                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-crux-text-muted)" }}>
                   A
                 </span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -163,7 +163,7 @@ export default function FooterCTA() {
                   alt="ComfHutt"
                   style={{ height: 14, width: "auto", opacity: 0.45, display: "inline-block", verticalAlign: "middle" }}
                 />
-                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9CA3AF" }}>
+                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-crux-text-muted)" }}>
                   PRODUCT
                 </span>
               </div>

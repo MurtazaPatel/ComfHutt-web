@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Design mockups — reference only, never shipped
+crux-landing-mockup.html
+apps/crux/public/crux-redesign.html
+
 # Dependencies
 node_modules/
 .pnp
@@ -52,3 +56,4 @@ package-lock.json
 # Preserved inner git history (apps/main was formerly comfhutt-next)
 apps/main/.git_old/
 .gstack/
+

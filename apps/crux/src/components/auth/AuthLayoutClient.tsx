@@ -85,7 +85,7 @@ export default function AuthLayoutClient({
             <p
               className="text-crux-text-primary leading-[1.15]"
               style={{
-                fontFamily: "'Instrument Serif', serif",
+                fontFamily: "var(--font-instrument-serif), serif",
                 fontSize: "clamp(28px, 3.2vw, 42px)",
                 fontStyle: "italic",
               }}

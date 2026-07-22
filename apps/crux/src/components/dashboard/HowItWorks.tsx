@@ -19,7 +19,7 @@ export function HowItWorks() {
           fontSize: "20px",
           fontWeight: 600,
           lineHeight: 1.3,
-          color: "#111827",
+          color: "var(--color-crux-text-primary)",
         }}
       >
         How CRUX Works

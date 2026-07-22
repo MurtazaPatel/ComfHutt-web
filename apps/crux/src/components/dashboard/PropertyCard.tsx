@@ -15,7 +15,7 @@ function MiniScoreGauge({ score }: { score: number }) {
   const offset = circumference - (score / 100) * circumference;
 
   const color =
-    score < 30 ? "#EF4444" : score <= 55 ? "#F59E0B" : "#22C55E";
+    score < 30 ? "#EF4444" : score <= 55 ? "#F59E0B" : "var(--color-crux-green)";
 
   return (
     <div className="relative w-[56px] h-[56px] flex-shrink-0">
@@ -25,7 +25,7 @@ function MiniScoreGauge({ score }: { score: number }) {
           cy="28"
           r={radius}
           fill="none"
-          stroke="#E5E7EB"
+          stroke="var(--color-crux-border)"
           strokeWidth="3"
         />
         <circle
@@ -89,8 +89,8 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <span
             className="inline-flex items-center px-[10px] py-[4px] text-[12px] font-medium rounded-full"
             style={{
-              backgroundColor: "#F0FDF4",
-              color: "#16A34A",
+              backgroundColor: "var(--color-crux-bg-accent)",
+              color: "var(--color-crux-green-mid)",
               borderRadius: "9999px",
             }}
           >

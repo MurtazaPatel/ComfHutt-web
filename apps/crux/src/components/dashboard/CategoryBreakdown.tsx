@@ -40,7 +40,7 @@ export function CategoryBreakdown({
   const barColor = (score: number) => {
     if (score < 30) return "#EF4444";
     if (score <= 55) return "#F59E0B";
-    return "#22C55E";
+    return "var(--color-crux-green)";
   };
 
   return (

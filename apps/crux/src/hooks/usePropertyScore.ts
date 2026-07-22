@@ -30,12 +30,18 @@ export interface CruxScore {
 
 
 
+export interface AnonQuotaExceeded {
+  reportCount: number;
+  maxReports: number;
+}
+
 export function usePropertyScore(propertyId: string, intent?: string) {
   const [score, setScore] = useState<CruxScore | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isComputing, setIsComputing] = useState(false);
   const [progressMessages, setProgressMessages] = useState<string[]>([]);
+  const [quotaExceeded, setQuotaExceeded] = useState<AnonQuotaExceeded | null>(null);
   const { isLoaded, getToken } = useAuth();
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -50,33 +56,47 @@ export function usePropertyScore(propertyId: string, intent?: string) {
 
     setIsLoading(true);
     setError(null);
+    setQuotaExceeded(null);
     setProgressMessages([]);
     setScore(null);
     setIsComputing(false);
-    
+
     try {
-      const token = await getToken();
+      const token = await getToken().catch(() => null);
       const params = new URLSearchParams();
       params.set("intent", fetchIntent || intent || "balanced");
       params.set("lifecycle", "delivered");
       params.set("macro_cycle", "growth");
       const qs = params.toString();
-      
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
-      const path = forceRecompute 
+      const path = forceRecompute
         ? `/crux/score/${propertyId}/stream?force=true&${qs}`
         : `/crux/score/${propertyId}/stream?${qs}`;
       const endpoint = `${apiUrl}${path}`;
 
-      // Use standard fetch to read stream
+      // Use standard fetch to read stream. No token for anonymous visitors —
+      // the anon quota cookie (set via credentials: 'include') carries auth
+      // instead of a Bearer header.
+      const headers: Record<string, string> = { "Accept": "text/event-stream" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const response = await fetch(endpoint, {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Accept": "text/event-stream"
-        },
+        headers,
+        credentials: "include",
         signal: abortController.signal
       });
+
+      if (response.status === 402) {
+        const body = await response.json().catch(() => null);
+        setQuotaExceeded({
+          reportCount: body?.data?.reportCount ?? 3,
+          maxReports: body?.data?.maxReports ?? 3,
+        });
+        setIsLoading(false);
+        return;
+      }
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -169,5 +189,5 @@ export function usePropertyScore(propertyId: string, intent?: string) {
     fetchScoreStream(newIntent, false);
   }, [fetchScoreStream]);
 
-  return { score, isLoading, error, isComputing, progressMessages, recompute, setIntent: setIntentFn };
+  return { score, isLoading, error, isComputing, progressMessages, quotaExceeded, recompute, setIntent: setIntentFn };
 }

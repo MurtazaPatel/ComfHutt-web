@@ -27,7 +27,7 @@ function ScoreResult({ data }: { data: Record<string, unknown> }) {
         </span>
         <span
           className={`inline-flex items-center px-[6px] py-[1px] text-[10px] font-medium rounded-full ${degraded ? 'bg-amber-50 text-amber-600' : ''}`}
-          style={degraded ? {} : { backgroundColor: "#F0FDF4", color: "#16A34A" }}
+          style={degraded ? {} : { backgroundColor: "var(--color-crux-bg-accent)", color: "var(--color-crux-green-mid)" }}
         >
           {degraded ? "Degraded" : "Fresh"}
         </span>
@@ -137,7 +137,7 @@ function ComingSoonResult({ type }: { type: string }) {
     >
       <div className="flex items-center gap-2 mb-2">
         <span
-          className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#9CA3AF]"
+          className="text-[11px] font-medium uppercase tracking-[0.04em] text-[var(--color-crux-text-muted)]"
           style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
         >
           {type}

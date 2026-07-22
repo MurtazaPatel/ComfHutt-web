@@ -13,7 +13,7 @@ const PLACEHOLDER_RISKS: RiskFlag[] = [
 ];
 
 function SeverityTriangle({ severity }: { severity: RiskFlag["severity"] }) {
-  const color = severity === "high" ? "#EF4444" : severity === "medium" ? "#F59E0B" : "#9CA3AF";
+  const color = severity === "high" ? "#EF4444" : severity === "medium" ? "#F59E0B" : "var(--color-crux-text-muted)";
   return (
     <span className="flex-shrink-0" style={{ color }}>
       ▲

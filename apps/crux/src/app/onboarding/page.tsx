@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { useCruxUser } from "@/hooks/useCruxUser";
 import { useApiFetch } from "@/lib/api";
-import { Loader2, ArrowRight, Check } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const QUESTIONS = [
@@ -70,6 +70,15 @@ export default function OnboardingPage() {
     }
   }, [isLoaded, userLoading, isSignedIn, user, router]);
 
+  // Backfill anonymous pre-signup score history (if any) into the new account.
+  // Fire-and-forget — the backend no-ops silently if there's nothing to migrate.
+  useEffect(() => {
+    if (isLoaded && !userLoading && isSignedIn && user?.isNewUser) {
+      apiFetch("/crux/auth/migrate-anon", { method: "POST" }).catch(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoaded, userLoading, isSignedIn, user?.isNewUser]);
+
   if (!isLoaded || userLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -119,10 +128,10 @@ export default function OnboardingPage() {
         }),
       });
       // Force a full refresh to ensure all global state picks up the non-new user
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } catch {
       // Even if it fails, we fall back to dashboard but they might be redirected back
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     }
   };
 

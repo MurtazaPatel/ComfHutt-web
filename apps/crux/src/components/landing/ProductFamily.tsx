@@ -117,7 +117,7 @@ function LeftPanel({
             style={{
               width: 20,
               height: 2,
-              background: "#22C55E",
+              background: "var(--color-crux-green)",
               borderRadius: 2,
               flexShrink: 0,
             }}
@@ -126,7 +126,7 @@ function LeftPanel({
             style={{
               fontSize: 11,
               letterSpacing: "0.18em",
-              color: "#22C55E",
+              color: "var(--color-crux-green)",
               fontWeight: 700,
               textTransform: "uppercase",
             }}
@@ -141,7 +141,7 @@ function LeftPanel({
             style={{
               fontSize: "clamp(28px, 3.5vw, 48px)",
               fontWeight: 800,
-              color: "#111827",
+              color: "var(--color-crux-text-primary)",
               lineHeight: 1.1,
               margin: "0 0 10px",
             }}
@@ -151,7 +151,7 @@ function LeftPanel({
           <p
             style={{
               fontSize: "clamp(15px, 1.3vw, 18px)",
-              color: "#22C55E",
+              color: "var(--color-crux-green)",
               fontStyle: "italic",
               fontWeight: 500,
               margin: 0,
@@ -165,7 +165,7 @@ function LeftPanel({
         <p
           style={{
             fontSize: 15,
-            color: "#6B7280",
+            color: "var(--color-crux-text-secondary)",
             lineHeight: 1.75,
             margin: 0,
             maxWidth: 380,
@@ -180,8 +180,8 @@ function LeftPanel({
             <span
               key={pill}
               style={{
-                background: "#F0FDF4",
-                color: "#16A34A",
+                background: "var(--color-crux-bg-accent)",
+                color: "var(--color-crux-green-mid)",
                 border: "1px solid #D1FAE5",
                 borderRadius: 999,
                 padding: "5px 14px",
@@ -228,7 +228,7 @@ function ProgressDots({
             animate={{
               width: 8,
               height: i === active ? 24 : 8,
-              background: i === active ? "#22C55E" : "#D1D5DB",
+              background: i === active ? "var(--color-crux-green)" : "#D1D5DB",
             }}
             style={{ borderRadius: 4, flexShrink: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
@@ -257,7 +257,7 @@ function ProgressDots({
           animate={{
             width: i === active ? 28 : 8,
             height: 8,
-            background: i === active ? "#22C55E" : "#D1D5DB",
+            background: i === active ? "var(--color-crux-green)" : "#D1D5DB",
           }}
           style={{ borderRadius: 4, flexShrink: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
@@ -281,10 +281,10 @@ function WidgetCard({
   return (
     <div
       style={{
-        background: "#FFFFFF",
-        border: "1px solid #E5E7EB",
+        background: "var(--color-crux-bg-primary)",
+        border: "1px solid var(--color-crux-border)",
         borderRadius: 24,
-        boxShadow: "0 8px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)",
+        boxShadow: "var(--shadow-premium-lg)",
         width: "100%",
         maxWidth: isMobile ? "100%" : 460,
         padding: isMobile ? "24px 20px" : "28px 28px",
@@ -357,9 +357,9 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
                 x2="100%"
                 y2="100%"
               >
-                <stop offset="0%" stopColor="#22C55E" />
-                <stop offset="60%" stopColor="#16A34A" />
-                <stop offset="100%" stopColor="#15803D" />
+                <stop offset="0%" stopColor="var(--color-crux-green)" />
+                <stop offset="60%" stopColor="var(--color-crux-green-mid)" />
+                <stop offset="100%" stopColor="var(--color-crux-green-dark)" />
               </linearGradient>
             </defs>
             {/* Track */}
@@ -367,7 +367,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
               cx="100"
               cy="100"
               r={r}
-              stroke="#F3F4F6"
+              stroke="var(--color-crux-bg-secondary)"
               strokeWidth="13"
               fill="none"
             />
@@ -408,7 +408,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
               style={{
                 fontSize: isMobile ? 30 : 34,
                 fontWeight: 800,
-                color: "#111827",
+                color: "var(--color-crux-text-primary)",
                 lineHeight: 1,
               }}
             >
@@ -417,7 +417,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
             <span
               style={{
                 fontSize: 9,
-                color: "#9CA3AF",
+                color: "var(--color-crux-text-muted)",
                 fontWeight: 500,
                 letterSpacing: "0.06em",
               }}
@@ -428,13 +428,13 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
         </div>
 
         <div>
-          <p style={{ fontSize: 12, color: "#9CA3AF", margin: "0 0 3px" }}>
+          <p style={{ fontSize: 12, color: "var(--color-crux-text-muted)", margin: "0 0 3px" }}>
             CRUX Score
           </p>
           <p
             style={{
               fontSize: 14,
-              color: "#111827",
+              color: "var(--color-crux-text-primary)",
               fontWeight: 700,
               margin: "0 0 4px",
             }}
@@ -443,8 +443,8 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
           </p>
           <span
             style={{
-              background: "#F0FDF4",
-              color: "#16A34A",
+              background: "var(--color-crux-bg-accent)",
+              color: "var(--color-crux-green-mid)",
               border: "1px solid #DCFCE7",
               borderRadius: 999,
               padding: "3px 10px",
@@ -462,7 +462,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
         <p
           style={{
             fontSize: 11,
-            color: "#9CA3AF",
+            color: "var(--color-crux-text-muted)",
             textTransform: "uppercase",
             letterSpacing: "0.1em",
             margin: 0,
@@ -479,7 +479,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
             <span
               style={{
                 fontSize: 11,
-                color: "#6B7280",
+                color: "var(--color-crux-text-secondary)",
                 width: 68,
                 flexShrink: 0,
               }}
@@ -490,7 +490,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
               style={{
                 flex: 1,
                 height: 5,
-                background: "#F3F4F6",
+                background: "var(--color-crux-bg-secondary)",
                 borderRadius: 3,
                 overflow: "hidden",
               }}
@@ -505,7 +505,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
                 }}
                 style={{
                   height: "100%",
-                  background: "linear-gradient(90deg, #22C55E, #16A34A)",
+                  background: "linear-gradient(90deg, var(--color-crux-green), var(--color-crux-green-mid))",
                   borderRadius: 3,
                 }}
               />
@@ -513,7 +513,7 @@ function ScoreWidget({ isMobile }: { isMobile: boolean }) {
             <span
               style={{
                 fontSize: 10,
-                color: "#9CA3AF",
+                color: "var(--color-crux-text-muted)",
                 width: 24,
                 textAlign: "right",
               }}
@@ -637,11 +637,11 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
     <div style={{ display: "flex", justifyContent: "flex-end" }}>
       <div
         style={{
-          background: "#F3F4F6",
+          background: "var(--color-crux-bg-secondary)",
           borderRadius: "16px 16px 4px 16px",
           padding: "10px 14px",
           fontSize: 13,
-          color: "#111827",
+          color: "var(--color-crux-text-primary)",
           maxWidth: "82%",
           minHeight: 20,
           lineHeight: 1.5,
@@ -654,7 +654,7 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
               display: "inline-block",
               width: 1,
               height: 13,
-              background: "#6B7280",
+              background: "var(--color-crux-text-secondary)",
               marginLeft: 2,
               verticalAlign: "text-bottom",
               animation: "pfCursorBlink 0.8s step-end infinite",
@@ -669,12 +669,12 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
     <div style={{ display: "flex", justifyContent: "flex-start" }}>
       <div
         style={{
-          background: "#F0FDF4",
+          background: "var(--color-crux-bg-accent)",
           border: "1px solid #DCFCE7",
           borderRadius: "16px 16px 16px 4px",
           padding: "10px 14px",
           fontSize: 13,
-          color: "#111827",
+          color: "var(--color-crux-text-primary)",
           maxWidth: "85%",
           lineHeight: 1.5,
         }}
@@ -688,7 +688,7 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
     <div style={{ display: "flex", justifyContent: "flex-start" }}>
       <div
         style={{
-          background: "#F0FDF4",
+          background: "var(--color-crux-bg-accent)",
           border: "1px solid #DCFCE7",
           borderRadius: "16px 16px 16px 4px",
           padding: "12px 16px",
@@ -704,7 +704,7 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
               width: 6,
               height: 6,
               borderRadius: "50%",
-              background: "#22C55E",
+              background: "var(--color-crux-green)",
               animation: `pfLensBounce 0.9s ease-in-out ${i * 0.18}s infinite`,
             }}
           />
@@ -733,7 +733,7 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
             width: 32,
             height: 32,
             borderRadius: 8,
-            background: "#F0FDF4",
+            background: "var(--color-crux-bg-accent)",
             border: "1px solid #DCFCE7",
             display: "flex",
             alignItems: "center",
@@ -747,10 +747,10 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
             viewBox="0 0 16 16"
             fill="none"
           >
-            <circle cx="8" cy="8" r="6.5" stroke="#22C55E" strokeWidth="1.5" />
+            <circle cx="8" cy="8" r="6.5" stroke="var(--color-crux-green)" strokeWidth="1.5" />
             <path
               d="M8 5v3.5M8 10.5v.5"
-              stroke="#22C55E"
+              stroke="var(--color-crux-green)"
               strokeWidth="1.5"
               strokeLinecap="round"
             />
@@ -758,11 +758,11 @@ function LensWidget({ isMobile }: { isMobile: boolean }) {
         </div>
         <div>
           <p
-            style={{ fontSize: 13, fontWeight: 600, color: "#111827", margin: 0 }}
+            style={{ fontSize: 13, fontWeight: 600, color: "var(--color-crux-text-primary)", margin: 0 }}
           >
             CRUX Lens
           </p>
-          <p style={{ fontSize: 11, color: "#22C55E", margin: 0, fontWeight: 500 }}>
+          <p style={{ fontSize: 11, color: "var(--color-crux-green)", margin: 0, fontWeight: 500 }}>
             ● Intelligence active
           </p>
         </div>
@@ -869,11 +869,11 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
         }}
       >
         <div>
-          <p style={{ fontSize: 11, color: "#9CA3AF", margin: "0 0 2px" }}>
+          <p style={{ fontSize: 11, color: "var(--color-crux-text-muted)", margin: "0 0 2px" }}>
             Price trajectory · Govandi, Mumbai
           </p>
           <p
-            style={{ fontSize: 14, fontWeight: 700, color: "#111827", margin: 0 }}
+            style={{ fontSize: 14, fontWeight: 700, color: "var(--color-crux-text-primary)", margin: 0 }}
           >
             Fair value vs. listed price
           </p>
@@ -883,12 +883,12 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
           animate={{ opacity: started ? 1 : 0, scale: started ? 1 : 0.85 }}
           transition={{ duration: 0.3, delay: 1.6 }}
           style={{
-            background: "#F0FDF4",
+            background: "var(--color-crux-bg-accent)",
             border: "1px solid #DCFCE7",
             borderRadius: 999,
             padding: "4px 12px",
             fontSize: 11,
-            color: "#16A34A",
+            color: "var(--color-crux-green-mid)",
             fontWeight: 600,
           }}
         >
@@ -910,8 +910,8 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
               x2="100%"
               y2="0%"
             >
-              <stop offset="0%" stopColor="#22C55E" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#16A34A" stopOpacity="1" />
+              <stop offset="0%" stopColor="var(--color-crux-green)" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="var(--color-crux-green-mid)" stopOpacity="1" />
             </linearGradient>
             <linearGradient
               id="pf-coneGrad"
@@ -920,8 +920,8 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
               x2="100%"
               y2="0%"
             >
-              <stop offset="0%" stopColor="#22C55E" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#22C55E" stopOpacity="0.04" />
+              <stop offset="0%" stopColor="var(--color-crux-green)" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="var(--color-crux-green)" stopOpacity="0.04" />
             </linearGradient>
           </defs>
 
@@ -933,7 +933,7 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
               y1={y}
               x2="380"
               y2={y}
-              stroke="#F3F4F6"
+              stroke="var(--color-crux-bg-secondary)"
               strokeWidth="1"
             />
           ))}
@@ -944,7 +944,7 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
             y1="0"
             x2="244"
             y2="130"
-            stroke="#E5E7EB"
+            stroke="var(--color-crux-border)"
             strokeWidth="1"
             strokeDasharray="4 3"
           />
@@ -961,7 +961,7 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
           {/* Projection lines */}
           <motion.path
             d={upperPath}
-            stroke="#22C55E"
+            stroke="var(--color-crux-green)"
             strokeWidth="1.5"
             fill="none"
             strokeDasharray="5 3"
@@ -974,7 +974,7 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
           />
           <motion.path
             d={lowerPath}
-            stroke="#22C55E"
+            stroke="var(--color-crux-green)"
             strokeWidth="1.5"
             fill="none"
             strokeDasharray="5 3"
@@ -1004,7 +1004,7 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
             cx="244"
             cy="54"
             r="4"
-            fill="#22C55E"
+            fill="var(--color-crux-green)"
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: started ? 1 : 0, opacity: started ? 1 : 0 }}
             transition={{ duration: 0.25, delay: 1.1 }}
@@ -1070,11 +1070,11 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
       <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
         {[
           {
-            color: "#22C55E",
+            color: "var(--color-crux-green)",
             dashed: false,
             label: "Historical",
           },
-          { color: "#22C55E", dashed: true, label: "Projected range" },
+          { color: "var(--color-crux-green)", dashed: true, label: "Projected range" },
           { color: "#EF4444", dot: true, label: "Listed price" },
         ].map(({ color, dashed, dot, label }) => (
           <div
@@ -1104,7 +1104,7 @@ function CastWidget({ isMobile }: { isMobile: boolean }) {
                 }}
               />
             )}
-            <span style={{ fontSize: 10, color: "#9CA3AF" }}>{label}</span>
+            <span style={{ fontSize: 10, color: "var(--color-crux-text-muted)" }}>{label}</span>
           </div>
         ))}
       </div>
@@ -1167,16 +1167,16 @@ function YieldWidget({ isMobile }: { isMobile: boolean }) {
         }}
       >
         <div>
-          <p style={{ fontSize: 11, color: "#9CA3AF", margin: "0 0 3px" }}>
+          <p style={{ fontSize: 11, color: "var(--color-crux-text-muted)", margin: "0 0 3px" }}>
             Expected monthly rental
           </p>
           <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
             <span
-              style={{ fontSize: 28, fontWeight: 800, color: "#111827", lineHeight: 1 }}
+              style={{ fontSize: 28, fontWeight: 800, color: "var(--color-crux-text-primary)", lineHeight: 1 }}
             >
               ₹{displayVal.toLocaleString("en-IN")}
             </span>
-            <span style={{ fontSize: 12, color: "#9CA3AF" }}>/mo</span>
+            <span style={{ fontSize: 12, color: "var(--color-crux-text-muted)" }}>/mo</span>
           </div>
         </div>
         <motion.div
@@ -1184,7 +1184,7 @@ function YieldWidget({ isMobile }: { isMobile: boolean }) {
           animate={{ opacity: showBadge ? 1 : 0, scale: showBadge ? 1 : 0.8 }}
           transition={{ duration: 0.3 }}
           style={{
-            background: "#F0FDF4",
+            background: "var(--color-crux-bg-accent)",
             border: "1px solid #DCFCE7",
             borderRadius: 12,
             padding: "8px 14px",
@@ -1194,7 +1194,7 @@ function YieldWidget({ isMobile }: { isMobile: boolean }) {
           <p
             style={{
               fontSize: 10,
-              color: "#22C55E",
+              color: "var(--color-crux-green)",
               margin: 0,
               fontWeight: 600,
               textTransform: "uppercase",
@@ -1206,7 +1206,7 @@ function YieldWidget({ isMobile }: { isMobile: boolean }) {
           <p
             style={{
               fontSize: 18,
-              color: "#16A34A",
+              color: "var(--color-crux-green-mid)",
               margin: 0,
               fontWeight: 800,
               lineHeight: 1.1,
@@ -1253,7 +1253,7 @@ function YieldWidget({ isMobile }: { isMobile: boolean }) {
                 style={{
                   width: "100%",
                   background: isLatest
-                    ? "linear-gradient(180deg, #22C55E, #16A34A)"
+                    ? "linear-gradient(180deg, var(--color-crux-green), var(--color-crux-green-mid))"
                     : "linear-gradient(180deg, #86EFAC, #4ADE80)",
                   borderRadius: "3px 3px 0 0",
                   minWidth: 6,
@@ -1289,13 +1289,13 @@ function YieldWidget({ isMobile }: { isMobile: boolean }) {
             style={{
               flex: 1,
               background: "#F9FAFB",
-              border: "1px solid #E5E7EB",
+              border: "1px solid var(--color-crux-border)",
               borderRadius: 10,
               padding: "8px 10px",
             }}
           >
             <div style={{ fontSize: 16, marginBottom: 3 }}>{sig.emoji}</div>
-            <div style={{ fontSize: 10, color: "#6B7280", lineHeight: 1.3 }}>
+            <div style={{ fontSize: 10, color: "var(--color-crux-text-secondary)", lineHeight: 1.3 }}>
               {sig.label}
             </div>
           </motion.div>
@@ -1319,8 +1319,8 @@ const WATCH_ALERTS = [
   },
   {
     id: "legal",
-    dot: "#22C55E",
-    bg: "#F0FDF4",
+    dot: "var(--color-crux-green)",
+    bg: "var(--color-crux-bg-accent)",
     border: "#DCFCE7",
     title: "Legal clear",
     body: "Quarterly court scan passed · No new filings",
@@ -1337,8 +1337,8 @@ const WATCH_ALERTS = [
   },
   {
     id: "rera",
-    dot: "#22C55E",
-    bg: "#F0FDF4",
+    dot: "var(--color-crux-green)",
+    bg: "var(--color-crux-bg-accent)",
     border: "#DCFCE7",
     title: "RERA valid",
     body: "Compliance check passed · Expires Dec 2029",
@@ -1369,7 +1369,7 @@ function WatchWidget({ isMobile }: { isMobile: boolean }) {
           justifyContent: "space-between",
         }}
       >
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#111827", margin: 0 }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--color-crux-text-primary)", margin: 0 }}>
           Property Alerts
         </p>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -1378,11 +1378,11 @@ function WatchWidget({ isMobile }: { isMobile: boolean }) {
               width: 8,
               height: 8,
               borderRadius: "50%",
-              background: "#22C55E",
+              background: "var(--color-crux-green)",
               boxShadow: "0 0 0 3px rgba(34,197,94,0.2)",
             }}
           />
-          <span style={{ fontSize: 11, color: "#22C55E", fontWeight: 500 }}>
+          <span style={{ fontSize: 11, color: "var(--color-crux-green)", fontWeight: 500 }}>
             Monitoring
           </span>
         </div>
@@ -1438,7 +1438,7 @@ function WatchWidget({ isMobile }: { isMobile: boolean }) {
                     style={{
                       fontSize: 12,
                       fontWeight: 600,
-                      color: "#111827",
+                      color: "var(--color-crux-text-primary)",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -1447,7 +1447,7 @@ function WatchWidget({ isMobile }: { isMobile: boolean }) {
                   <span
                     style={{
                       fontSize: 10,
-                      color: "#9CA3AF",
+                      color: "var(--color-crux-text-muted)",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -1457,7 +1457,7 @@ function WatchWidget({ isMobile }: { isMobile: boolean }) {
                 <p
                   style={{
                     fontSize: 11,
-                    color: "#6B7280",
+                    color: "var(--color-crux-text-secondary)",
                     margin: 0,
                     lineHeight: 1.4,
                   }}
@@ -1553,7 +1553,7 @@ export default function ProductFamily() {
           minHeight: "100vh",
           overflow: "hidden",
           background:
-            "linear-gradient(160deg, #F0FDF4 0%, #FAFFFE 45%, #FFFFFF 100%)",
+            "linear-gradient(160deg, var(--color-crux-bg-accent) 0%, #FAFFFE 45%, var(--color-crux-bg-primary) 100%)",
           display: "flex",
           flexDirection: "column",
         }}
@@ -1581,7 +1581,7 @@ export default function ProductFamily() {
               style={{
                 width: 22,
                 height: 2,
-                background: "#22C55E",
+                background: "var(--color-crux-green)",
                 borderRadius: 2,
               }}
             />
@@ -1589,7 +1589,7 @@ export default function ProductFamily() {
               style={{
                 fontSize: 10,
                 letterSpacing: "0.22em",
-                color: "#22C55E",
+                color: "var(--color-crux-green)",
                 fontWeight: 700,
                 textTransform: "uppercase",
               }}
@@ -1603,13 +1603,13 @@ export default function ProductFamily() {
                 ? "clamp(16px, 5vw, 22px)"
                 : "clamp(17px, 2vw, 24px)",
               fontWeight: 700,
-              color: "#111827",
+              color: "var(--color-crux-text-primary)",
               margin: 0,
               lineHeight: 1.3,
             }}
           >
             One engine.{" "}
-            <span style={{ color: "#22C55E" }}>Five dimensions</span>
+            <span style={{ color: "var(--color-crux-green)" }}>Five dimensions</span>
             {" "}of intelligence.
           </h2>
         </div>

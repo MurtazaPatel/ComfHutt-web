@@ -1,44 +1,56 @@
 "use client";
 
 import { useDashboardStats } from "@/hooks/useDashboardStats";
-import { cn } from "@/lib/utils";
+import { motion, Variants } from "framer-motion";
 
 interface StatItem {
   label: string;
   value: string | number;
 }
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
+};
+
 function StatCard({ label, value, isLoading }: { label: string; value: string | number; isLoading: boolean }) {
   if (isLoading) {
     return (
       <div
-        className="flex flex-col items-center gap-2 px-6 py-6 bg-white border border-[#ededed] animate-pulse"
-        style={{ borderRadius: "16px" }}
+        className="flex flex-col items-center gap-2 px-6 py-6 bg-[var(--color-crux-bg-primary)] border border-[var(--color-crux-border)] animate-pulse rounded-2xl"
       >
-        <div className="h-3 w-16 bg-gray-100 rounded-full" />
-        <div className="h-10 w-14 bg-gray-50 rounded" />
+        <div className="h-3 w-16 bg-[var(--color-crux-bg-secondary)] rounded-full" />
+        <div className="h-10 w-14 bg-[var(--color-crux-bg-secondary)] rounded" />
       </div>
     );
   }
 
   return (
-    <div
-      className="flex flex-col items-center gap-2 bg-white border border-[#ededed] transition-shadow duration-[220ms] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
+    <motion.div
+      variants={itemVariants}
+      className="flex flex-col items-center justify-center gap-2 bg-white border border-border shadow-sm transition-all duration-300 hover:shadow-[var(--shadow-premium-md)] hover:border-[var(--color-crux-green)] hover:-translate-y-1 relative overflow-hidden group cursor-default"
       style={{ borderRadius: "16px", padding: "24px" }}
     >
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--color-crux-green-tint)] opacity-0 group-hover:opacity-30 transition-opacity duration-300 pointer-events-none" />
       <span
-        className="text-[12px] font-medium text-[#6e6e6e] uppercase tracking-[0.04em]"
-        style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        className="text-[12px] font-medium text-muted-foreground uppercase tracking-[0.04em] relative z-10"
       >
         {label}
       </span>
       <span
-        className="text-[40px] font-semibold text-[#0d0d0d] leading-none"
-        style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        className="text-[40px] font-bold text-foreground leading-none relative z-10 transition-colors group-hover:text-[var(--color-crux-green-dark)]"
       >
         {value}
       </span>
-    </div>
+    </motion.div>
   );
 }
 
@@ -46,11 +58,16 @@ export function QuickStats() {
   const { stats, isLoading } = useDashboardStats();
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <motion.div
+      className="grid grid-cols-2 md:grid-cols-4 gap-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <StatCard label="Properties Analyzed" value={stats.propertiesAnalyzed} isLoading={isLoading} />
       <StatCard label="Avg Score" value={stats.avgScore} isLoading={isLoading} />
       <StatCard label="Risk Alerts" value={stats.riskAlerts} isLoading={isLoading} />
       <StatCard label="Reports Gen'd" value={stats.reportsGenerated} isLoading={isLoading} />
-    </div>
+    </motion.div>
   );
 }

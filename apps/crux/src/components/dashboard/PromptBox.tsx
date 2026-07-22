@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { MapPin, Loader2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { useApiFetch } from "@/lib/api";
 import { useRecentProperties } from "@/hooks/useRecentProperties";
 import { ExampleSearches } from "./ExampleSearches";
@@ -130,13 +131,18 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
   };
 
   return (
-    <div className="w-full max-w-[720px] mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+      className="w-full max-w-[720px] mx-auto"
+    >
       <div
         className={cn(
-          "relative border bg-white transition-all duration-[220ms]",
+          "relative border bg-white transition-all duration-[400ms]",
           isFocused
-            ? "border-crux-green shadow-[0_0_0_3px_rgba(34,197,94,0.12)]"
-            : "border-[#e5e5e5] hover:shadow-[0_4px_16px_rgba(13,13,13,0.06)]"
+            ? "border-[var(--color-crux-green-mid)] shadow-[var(--shadow-premium-glow)]"
+            : "border-border shadow-[var(--shadow-premium-md)] hover:shadow-[var(--shadow-premium-lg)]"
         )}
         style={{ borderRadius: "16px" }}
       >
@@ -179,7 +185,7 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
         </div>
 
         {/* Divider */}
-        <div className="border-t border-[#e5e5e5]" />
+        <div className="border-t border-border" />
 
         {/* Bottom row: examples + submit */}
         <div className="px-5 py-3 flex items-center justify-between flex-wrap gap-2">
@@ -191,12 +197,12 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
             disabled={isSubmitting || address.trim().length < 10}
             className={cn(
               "inline-flex items-center gap-2 px-[18px] py-[10px]",
-              "rounded-[12px] text-sm font-medium",
-              "transition-colors duration-150",
+              "rounded-[12px] text-sm font-semibold",
+              "transition-all duration-300",
               "disabled:opacity-50 disabled:cursor-not-allowed",
               address.trim().length >= 10
-                ? "bg-crux-green text-white hover:bg-crux-green-mid"
-                : "bg-gray-200 text-gray-400"
+                ? "bg-[var(--color-crux-green)] text-white hover:bg-[var(--color-crux-green-mid)] hover:shadow-[var(--shadow-premium-glow)] hover:-translate-y-0.5"
+                : "bg-[var(--color-crux-bg-secondary)] text-muted-foreground"
             )}
             style={{ whiteSpace: "nowrap" }}
           >
@@ -217,10 +223,10 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
 
       {/* Error */}
       {error && (
-        <p className="mt-2 ml-1 text-[13px] text-red-500 leading-relaxed">
+        <p className="mt-2 ml-1 text-[13px] text-red-500 leading-relaxed font-medium">
           {error}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }

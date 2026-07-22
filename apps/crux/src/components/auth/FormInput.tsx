@@ -64,7 +64,7 @@ export default function FormInput({
             isPassword ? "pr-12" : "",
             disabled && "cursor-not-allowed opacity-50",
           )}
-          style={{ caretColor: "#22C55E" }}
+          style={{ caretColor: "var(--color-crux-green)" }}
           aria-invalid={!!error}
           {...props}
         />

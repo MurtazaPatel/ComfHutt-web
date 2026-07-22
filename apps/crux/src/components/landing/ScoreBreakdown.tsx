@@ -62,9 +62,9 @@ function ScoreRing({ score, inView }: { score: number; inView: boolean }) {
       <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
         <defs>
           <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#22C55E" />
-            <stop offset="60%" stopColor="#16A34A" />
-            <stop offset="100%" stopColor="#15803D" />
+            <stop offset="0%" stopColor="var(--color-crux-green)" />
+            <stop offset="60%" stopColor="var(--color-crux-green-mid)" />
+            <stop offset="100%" stopColor="var(--color-crux-green-dark)" />
           </linearGradient>
         </defs>
         {/* Track ring */}
@@ -72,7 +72,7 @@ function ScoreRing({ score, inView }: { score: number; inView: boolean }) {
           cx="100"
           cy="100"
           r={r}
-          stroke="#F3F4F6"
+          stroke="var(--color-crux-bg-secondary)"
           strokeWidth="10"
           fill="none"
         />
@@ -93,12 +93,12 @@ function ScoreRing({ score, inView }: { score: number; inView: boolean }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span
-          className="text-[52px] font-extrabold text-[#111827] leading-none"
+          className="text-[52px] font-extrabold text-foreground leading-none"
           style={{ fontVariantNumeric: "tabular-nums" }}
         >
           {displayScore}
         </span>
-        <span className="text-[11px] font-semibold text-[#9CA3AF] mt-1.5 uppercase tracking-widest">
+        <span className="text-[11px] font-semibold text-muted-foreground mt-1.5 uppercase tracking-widest">
           CRUX Score
         </span>
       </div>
@@ -119,28 +119,28 @@ function CategoryCard({
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      className="group bg-white rounded-xl border border-[#E5E7EB] p-6 flex flex-col gap-3 hover:shadow-md hover:border-[#22C55E4D] hover:-translate-y-0.5 transition-all duration-200 cursor-default"
+      className="group bg-white rounded-xl border border-border p-6 flex flex-col gap-3 shadow-sm hover:shadow-[var(--shadow-premium-md)] hover:border-[var(--color-crux-green)] hover:-translate-y-1 transition-all duration-300 cursor-default"
     >
       <div className="flex items-center gap-2.5">
-        <Icon size={20} className="text-[#22C55E]" strokeWidth={1.75} />
-        <span className="text-[14px] font-semibold text-[#111827]">{name}</span>
+        <Icon size={20} className="text-[var(--color-crux-green)]" strokeWidth={1.75} />
+        <span className="text-[14px] font-semibold text-foreground">{name}</span>
       </div>
 
       <div
-        className="text-[36px] font-bold text-[#22C55E] leading-none"
+        className="text-[36px] font-bold text-[var(--color-crux-green)] leading-none"
         style={{ fontVariantNumeric: "tabular-nums" }}
       >
         {weight}%
       </div>
 
-      <p className="text-[13px] text-[#6B7280] leading-snug flex-1">
+      <p className="text-[13px] text-muted-foreground leading-snug flex-1">
         {description}
       </p>
 
       {/* Weight bar */}
-      <div className="h-[3px] w-full bg-[#F3F4F6] rounded-full overflow-hidden">
+      <div className="h-[3px] w-full bg-[var(--color-crux-bg-secondary)] rounded-full overflow-hidden mt-2">
         <motion.div
-          className="h-full rounded-full bg-[#22C55E]"
+          className="h-full rounded-full bg-[var(--color-crux-green)]"
           style={{ opacity: Math.max(0.35, weight / 100 + 0.35) }}
           initial={{ width: 0 }}
           animate={inView ? { width: `${weight}%` } : { width: 0 }}
@@ -158,7 +158,7 @@ export default function ScoreBreakdown() {
     <section
       id="how-it-works"
       ref={ref}
-      className="py-24 md:py-32 bg-white px-4"
+      className="py-24 md:py-32 bg-[var(--color-crux-bg-primary)] px-4"
     >
       <div className="mx-auto max-w-[1100px]">
         {/* Section header */}
@@ -170,11 +170,11 @@ export default function ScoreBreakdown() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <div className="w-6 h-px bg-[#22C55E]" />
-            <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#22C55E]">
+            <div className="w-6 h-px bg-[var(--color-crux-green)]" />
+            <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[var(--color-crux-green)]">
               THE ENGINE
             </p>
-            <div className="w-6 h-px bg-[#22C55E]" />
+            <div className="w-6 h-px bg-[var(--color-crux-green)]" />
           </motion.div>
 
           <motion.h2
@@ -182,7 +182,7 @@ export default function ScoreBreakdown() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-            className="text-[32px] md:text-[44px] font-bold text-[#111827] tracking-tight leading-tight"
+            className="text-[32px] md:text-[44px] font-bold text-foreground tracking-tight leading-tight"
           >
             One score. Six dimensions. 20+ signals.
           </motion.h2>
@@ -192,7 +192,7 @@ export default function ScoreBreakdown() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="mt-4 text-[17px] text-[#6B7280] max-w-2xl mx-auto leading-relaxed"
+            className="mt-4 text-[17px] text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
             Every property gets a composite credibility score built from six
             independent data categories. No single source can game it.
@@ -200,28 +200,28 @@ export default function ScoreBreakdown() {
         </div>
 
         {/* Bento grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* ── Score hero card (full width) ── */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="lg:col-span-3 bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 md:gap-12"
+            className="lg:col-span-3 bg-white rounded-2xl border border-border shadow-[var(--shadow-premium-md)] p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 md:gap-12 hover:shadow-[var(--shadow-premium-lg)] transition-shadow duration-500"
           >
             <ScoreRing score={94} inView={isInView} />
 
             {/* Vertical divider — desktop only */}
-            <div className="hidden md:block w-px self-stretch bg-[#F3F4F6]" />
+            <div className="hidden md:block w-px self-stretch bg-border" />
 
             <div className="flex-1 text-center md:text-left">
-              <p className="text-[11px] uppercase tracking-[0.18em] font-semibold text-[#22C55E] mb-2">
+              <p className="text-[11px] uppercase tracking-[0.18em] font-semibold text-[var(--color-crux-green)] mb-2">
                 Composite Credibility Index
               </p>
-              <h3 className="text-[20px] md:text-[22px] font-bold text-[#111827] leading-snug mb-3">
+              <h3 className="text-[20px] md:text-[22px] font-bold text-foreground leading-snug mb-3">
                 A single score that can&apos;t be gamed.
               </h3>
-              <p className="text-[15px] text-[#6B7280] leading-relaxed max-w-md mx-auto md:mx-0">
+              <p className="text-[15px] text-muted-foreground leading-relaxed max-w-md mx-auto md:mx-0">
                 Six independent data pipelines, each weighted by predictive
                 accuracy against 12 months of closed deal data. The final score
                 is a calibrated composite — not a simple average.
@@ -237,12 +237,12 @@ export default function ScoreBreakdown() {
               ].map(({ value, label }) => (
                 <div key={label} className="text-right">
                   <div
-                    className="text-[28px] font-extrabold text-[#111827] leading-none"
+                    className="text-[28px] font-extrabold text-foreground leading-none"
                     style={{ fontVariantNumeric: "tabular-nums" }}
                   >
                     {value}
                   </div>
-                  <div className="text-[12px] text-[#9CA3AF] mt-1">{label}</div>
+                  <div className="text-[12px] text-muted-foreground mt-1">{label}</div>
                 </div>
               ))}
             </div>

@@ -27,14 +27,14 @@ export default function BeforeAfter() {
       {/* Background */}
       <div
         className="absolute inset-0"
-        style={{ background: "#F0FDF4" }}
+        style={{ background: "var(--color-crux-bg-accent)" }}
       />
 
       {/* Content */}
       <div className="relative z-10 max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-14">
-          <p style={{ fontFamily: "monospace", fontSize: 10, color: "#22C55E", letterSpacing: "3px" }} className="uppercase mb-4">
+          <p style={{ fontFamily: "monospace", fontSize: 10, color: "var(--color-crux-green)", letterSpacing: "3px" }} className="uppercase mb-4">
             THE SHIFT
           </p>
           <h2
@@ -54,9 +54,9 @@ export default function BeforeAfter() {
         {/* Desktop */}
         <div className="hidden sm:grid" style={{ gridTemplateColumns: "1fr 1px 1fr", gap: "0 32px" }}>
           {/* Column headers */}
-          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#9CA3AF", letterSpacing: "2px" }} className="uppercase mb-6">TODAY</p>
+          <p style={{ fontFamily: "monospace", fontSize: 11, color: "var(--color-crux-text-muted)", letterSpacing: "2px" }} className="uppercase mb-6">TODAY</p>
           <div style={{ background: "rgba(0,0,0,0.10)" }} />
-          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#22C55E", letterSpacing: "2px" }} className="uppercase mb-6">WITH CRUX</p>
+          <p style={{ fontFamily: "monospace", fontSize: 11, color: "var(--color-crux-green)", letterSpacing: "2px" }} className="uppercase mb-6">WITH CRUX</p>
 
           {/* Rows */}
           {PAIRS.map(([left, right], i) => (
@@ -65,7 +65,7 @@ export default function BeforeAfter() {
                 key={`l${i}`}
                 style={{
                   fontSize: 16,
-                  color: "#9CA3AF",
+                  color: "var(--color-crux-text-muted)",
                   paddingBottom: 20,
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(8px)",
@@ -79,14 +79,14 @@ export default function BeforeAfter() {
                 key={`r${i}`}
                 style={{
                   fontSize: 16,
-                  color: "#111827",
+                  color: "var(--color-crux-text-primary)",
                   paddingBottom: 20,
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(8px)",
                   transition: `opacity 400ms ease-out ${i * 80}ms, transform 400ms ease-out ${i * 80}ms`,
                 }}
               >
-                <span style={{ color: "#22C55E", marginRight: 8 }}>✦</span>{right}
+                <span style={{ color: "var(--color-crux-green)", marginRight: 8 }}>✦</span>{right}
               </div>
             </Fragment>
           ))}
@@ -94,13 +94,13 @@ export default function BeforeAfter() {
 
         {/* Mobile */}
         <div className="sm:hidden">
-          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#9CA3AF", letterSpacing: "2px" }} className="uppercase mb-4">TODAY</p>
+          <p style={{ fontFamily: "monospace", fontSize: 11, color: "var(--color-crux-text-muted)", letterSpacing: "2px" }} className="uppercase mb-4">TODAY</p>
           {PAIRS.map(([left], i) => (
             <div
               key={i}
               style={{
                 fontSize: 14,
-                color: "#9CA3AF",
+                color: "var(--color-crux-text-muted)",
                 paddingBottom: 14,
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(8px)",
@@ -111,22 +111,22 @@ export default function BeforeAfter() {
             </div>
           ))}
 
-          <div style={{ color: "#22C55E", fontSize: 22, margin: "20px 0", textAlign: "center" }}>↓</div>
+          <div style={{ color: "var(--color-crux-green)", fontSize: 22, margin: "20px 0", textAlign: "center" }}>↓</div>
 
-          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#22C55E", letterSpacing: "2px" }} className="uppercase mb-4">WITH CRUX</p>
+          <p style={{ fontFamily: "monospace", fontSize: 11, color: "var(--color-crux-green)", letterSpacing: "2px" }} className="uppercase mb-4">WITH CRUX</p>
           {PAIRS.map(([, right], i) => (
             <div
               key={i}
               style={{
                 fontSize: 16,
-                color: "#111827",
+                color: "var(--color-crux-text-primary)",
                 paddingBottom: 14,
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(8px)",
                 transition: `opacity 400ms ease-out ${(i + 5) * 80}ms, transform 400ms ease-out ${(i + 5) * 80}ms`,
               }}
             >
-              <span style={{ color: "#22C55E", marginRight: 8 }}>✦</span>{right}
+              <span style={{ color: "var(--color-crux-green)", marginRight: 8 }}>✦</span>{right}
             </div>
           ))}
         </div>

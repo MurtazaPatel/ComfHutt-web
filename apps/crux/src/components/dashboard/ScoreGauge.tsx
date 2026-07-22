@@ -16,7 +16,7 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
   const offset = circumference - (Math.min(score, 100) / 100) * circumference;
 
   const color =
-    score < 30 ? "#EF4444" : score <= 55 ? "#F59E0B" : "#22C55E";
+    score < 30 ? "#EF4444" : score <= 55 ? "#F59E0B" : "var(--color-crux-green)";
 
   const textSize = size === "default" ? "40px" : "32px";
 
@@ -35,7 +35,7 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
             cy={dims / 2}
             r={radius}
             fill="none"
-            stroke="#f3f4f6"
+            stroke="var(--color-crux-bg-secondary)"
             strokeWidth="4"
           />
           {/* Subtle Glow Filter */}
@@ -96,7 +96,7 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
           className="inline-flex items-center px-[10px] py-[4px] text-[12px] font-semibold tracking-wide rounded-full"
           style={{
             backgroundColor: "rgba(34, 197, 94, 0.1)",
-            color: "#15803d",
+            color: "var(--color-crux-green-dark)",
             borderRadius: "9999px",
             boxShadow: "inset 0 0 0 1px rgba(34, 197, 94, 0.2)",
           }}
