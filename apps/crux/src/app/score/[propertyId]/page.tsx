@@ -10,6 +10,7 @@ import { usePropertyScore } from "@/hooks/usePropertyScore";
 import { apiFetch } from "@/lib/api";
 import { ScoreGauge } from "@/components/dashboard/ScoreGauge";
 import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
+import { CgmGradeSurface } from "@/components/dashboard/CgmGradeSurface";
 
 const DATA_SOURCES = ["MCA21", "eCourts", "RERA", "NHB RESIDEX", "NASA VIIRS"];
 
@@ -245,22 +246,28 @@ export default function AnonymousScorePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div
-              className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
-              style={{ borderRadius: "16px", padding: "24px" }}
-            >
-              <div className="flex flex-col sm:flex-row items-start gap-8">
-                <ScoreGauge score={scoreValue} grade={gradeFromScore(scoreValue)} percentile={percentileFromScore(scoreValue)} />
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-[16px] font-semibold text-crux-text-primary mb-4">Category Breakdown</h2>
-                  {score.score_breakdown ? (
-                    <CategoryBreakdown breakdown={score.score_breakdown} weights={currentWeights} />
-                  ) : (
-                    <p className="text-[13px] text-crux-text-muted">No breakdown data available.</p>
-                  )}
+            {/* CGM-1.0 grade surface when this row was produced by the CGM engine;
+                otherwise the legacy CPSM gauge + 5-pillar breakdown (same flag). */}
+            {score.module_scores && score.module_scores.length > 0 ? (
+              <CgmGradeSurface score={score} />
+            ) : (
+              <div
+                className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
+                style={{ borderRadius: "16px", padding: "24px" }}
+              >
+                <div className="flex flex-col sm:flex-row items-start gap-8">
+                  <ScoreGauge score={scoreValue} grade={gradeFromScore(scoreValue)} percentile={percentileFromScore(scoreValue)} />
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-[16px] font-semibold text-crux-text-primary mb-4">Category Breakdown</h2>
+                    {score.score_breakdown ? (
+                      <CategoryBreakdown breakdown={score.score_breakdown} weights={currentWeights} />
+                    ) : (
+                      <p className="text-[13px] text-crux-text-muted">No breakdown data available.</p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div
               className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"

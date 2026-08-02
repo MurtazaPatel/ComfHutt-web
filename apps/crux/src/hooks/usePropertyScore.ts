@@ -3,13 +3,23 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 
+// CGM-1.0 module verdict (spec §2). Present only when CGM_V1_ENABLED produced this row.
+export interface CgmModuleScore {
+  code: "L" | "D" | "T" | "F" | "C" | "X" | "P";
+  score: number;
+  confidence: number;
+  coverage: number;
+  verdict: string;
+  not_assessed: boolean;
+}
+
 export interface CruxScore {
   id: string;
   property_id: string;
   intent_profile: string;
   lifecycle_stage: string;
   macro_cycle: string;
-  score_composite: number;
+  score_composite: number | null; // null for a CGM NR outcome
   score_breakdown: Record<string, number>;
   data_sources_used: string[];
   confidence_score: number;
@@ -26,6 +36,18 @@ export interface CruxScore {
   }>;
   created_at: string;
   ttl_expires_at: string;
+
+  // ─── CGM-1.0 fields (present only on CGM rows; gates the new grade surface) ───
+  grade?: string | null;
+  cohort?: { level: string; id: string; n: number } | null;
+  cohort_percentile?: number | null;
+  module_scores?: CgmModuleScore[] | null;
+  gates_applied?: Array<{ gate_id: string; trigger_ref: string; cap: number }>;
+  legal_summary?: { cases_counted: number; cases_possible: number; coverage: number; verdict: string } | null;
+  vastu_overlay?: { verdict: string; factorsAnswered: number; factorsTotal: number; notes: string[] } | null;
+  price_assessed?: boolean;
+  not_rated_reason?: string | null;
+  provisional?: boolean;
 }
 
 

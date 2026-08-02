@@ -7,6 +7,7 @@ import { usePropertyScore } from "@/hooks/usePropertyScore";
 import { useApiFetch } from "@/lib/api";
 import { ScoreGauge } from "@/components/dashboard/ScoreGauge";
 import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
+import { CgmGradeSurface } from "@/components/dashboard/CgmGradeSurface";
 import { PropertyActions } from "@/components/dashboard/PropertyActions";
 
 const DATA_SOURCES = ["MCA21", "eCourts", "RERA", "NHB RESIDEX", "NASA VIIRS"];
@@ -334,6 +335,9 @@ export default function PropertyDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Score + Breakdown */}
         <div className="lg:col-span-2 space-y-6">
+          {score?.module_scores && score.module_scores.length > 0 ? (
+            <CgmGradeSurface score={score} />
+          ) : (
           <div
             className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
             style={{ borderRadius: "16px", padding: "24px" }}
@@ -369,6 +373,7 @@ export default function PropertyDetailPage() {
               </p>
             )}
           </div>
+          )}
 
           {/* Data Sources */}
           <div
