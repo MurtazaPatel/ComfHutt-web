@@ -1,0 +1,65 @@
+name: CI — Pull Request Check
+
+# Gates every PR into main for the crux app. Typecheck (tsc --noEmit) is the hard
+# gate — it type-checks the entire app (CgmGradeSurface, score pages, hooks) with no
+# env needed. Lint and next-build run as ADVISORY signals: lint has known pre-existing
+# issues, and next-build needs valid Clerk env (placeholders below give it a fair run
+# but a Clerk-env quirk must not block a merge). Promote build to a hard gate by adding
+# NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as a repo secret and dropping continue-on-error.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-web-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Typecheck (gate) · Lint + Build (advisory)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9.0.0"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies (workspace root)
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck — crux app (hard gate)
+        working-directory: apps/crux
+        run: npx tsc --noEmit
+
+      - name: Lint — crux app (advisory)
+        working-directory: apps/crux
+        continue-on-error: true
+        run: npx eslint .
+
+      - name: Build — crux app (advisory; needs Clerk env)
+        working-directory: apps/crux
+        continue-on-error: true
+        env:
+          NEXT_PUBLIC_API_URL: "http://localhost:8080"
+          NEXT_PUBLIC_USE_MOCKS: "true"
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_Y2xlcmsuZXhhbXBsZS5jb20k"
+          CLERK_SECRET_KEY: "sk_test_ci_placeholder"
+          NEXT_PUBLIC_CLERK_SIGN_IN_URL: "/signin"
+          NEXT_PUBLIC_CLERK_SIGN_UP_URL: "/signup"
+          NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: "/dashboard"
+          NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: "/onboarding"
+        run: npx next build
