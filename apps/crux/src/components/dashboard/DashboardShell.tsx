@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 import { useCruxUser } from "@/hooks/useCruxUser";
 import { Loader2, RefreshCw } from "lucide-react";
 import { Sidebar } from "./Sidebar";
+import { DashboardContentSkeleton } from "./DashboardContentSkeleton";
 import { cn } from "@/lib/utils";
 
 interface DashboardShellProps {
@@ -46,10 +47,17 @@ export function DashboardShell({ children, variant = "default" }: DashboardShell
     }
   }, [authLoaded, userLoading, isSignedIn, error, router]);
 
+  // While Clerk auth or the user profile (/crux/auth/me) is loading, render the shell
+  // chrome + a structured skeleton instead of a bare full-page spinner. This makes the
+  // dashboard feel instant and keeps its shape while the (sometimes slow, e.g. backend
+  // cold-start) profile request resolves. Child sections skeleton their own data too.
   if (!authLoaded || userLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+      <div className="flex min-h-screen bg-crux-bg-secondary">
+        {variant === "default" && <Sidebar />}
+        <main className={cn(variant === "default" ? "md:ml-[72px]" : "", "flex-1 min-w-0 pb-16 md:pb-0")}>
+          <DashboardContentSkeleton />
+        </main>
       </div>
     );
   }
