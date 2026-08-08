@@ -57,3 +57,6 @@ package-lock.json
 apps/main/.git_old/
 .gstack/
 
+
+# Claude Code local dirs (skills, worktrees) — never track (were broken submodules)
+.claude/
