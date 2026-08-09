@@ -20,7 +20,7 @@ export default function LensChatPage() {
     )
       .then((res) => {
         if (res.success && res.data) {
-          setPropertyName(res.data.address_raw || res.data.address_normalized);
+          setPropertyName(res.data.address_raw || res.data.address_normalized || undefined);
         }
       })
       .catch(() => {
