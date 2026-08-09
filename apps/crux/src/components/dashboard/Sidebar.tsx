@@ -40,10 +40,10 @@ export function Sidebar() {
           className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-crux-green hover:bg-crux-green-mid transition-colors duration-150"
           aria-label="CRUX Dashboard"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-            <path d="M2 17l10 5 10-5" />
-            <path d="M2 12l10 5 10-5" />
+          {/* ComfHutt house mark (matches the favicon) */}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
         </Link>
         <span className="ml-3 text-lg font-bold text-crux-text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
