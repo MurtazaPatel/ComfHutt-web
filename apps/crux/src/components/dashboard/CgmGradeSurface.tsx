@@ -7,9 +7,12 @@
 
 import type { CruxScore, CgmModuleScore } from "@/hooks/usePropertyScore";
 
+// Every module score is "higher = better" (100 = excellent). Labels must read
+// positively so a high score isn't misread as a negative — e.g. D:100 is EXCELLENT
+// delivery execution, not "100% risk". Keep all labels framed as strengths.
 const MODULE_LABEL: Record<string, string> = {
   L: "Legal Standing",
-  D: "Delivery Risk",
+  D: "Delivery Execution",
   T: "Developer Trust",
   F: "Financial Integrity",
   C: "Compliance",

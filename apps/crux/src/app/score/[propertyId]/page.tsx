@@ -89,7 +89,9 @@ export default function AnonymousScorePage() {
     }
   }, [quotaExceeded]);
 
-  const rawAddress = property?.address_normalized || property?.address_raw || propertyId;
+  // Show the user's original input (the project name they searched) as the title, not
+  // the geocoded address (which collapses to "City, State, PIN" and loses the name).
+  const rawAddress = property?.address_raw || property?.address_normalized || propertyId;
   const isFallbackAddress = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawAddress);
   const displayAddress = isFallbackAddress ? "Property Intelligence Report" : rawAddress;
 
