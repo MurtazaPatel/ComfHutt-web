@@ -2,9 +2,10 @@ name: CI — Pull Request Check
 
 # Gates every PR into main for the crux app. Typecheck (tsc --noEmit) is the hard
 # gate — it type-checks the entire app (CgmGradeSurface, score pages, hooks) with no
-# env needed. Lint and next-build run as ADVISORY signals: lint has known pre-existing
-# issues, and next-build needs valid Clerk env (placeholders below give it a fair run
-# but a Clerk-env quirk must not block a merge). Promote build to a hard gate by adding
+# env needed. Lint is now a HARD gate via scripts/lint-gate.mjs (crash = fail, new
+# errors = fail, known debt in .lint-baseline.json = allowed). next-build stays
+# ADVISORY: it needs valid Clerk env (placeholders below give it a fair run but a
+# Clerk-env quirk must not block a merge). Promote build to a hard gate by adding
 # NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as a repo secret and dropping continue-on-error.
 
 on:
@@ -45,10 +46,13 @@ jobs:
         working-directory: apps/crux
         run: npx tsc --noEmit
 
-      - name: Lint — crux app (advisory)
-        working-directory: apps/crux
-        continue-on-error: true
-        run: npx eslint .
+      # HARD GATE. Fails if ESLint crashes (the failure mode that hid for months:
+      # eslint-plugin-react caps at eslint ^9.7, so v10 threw before linting a
+      # single file and `continue-on-error` turned that into a green tick), or if
+      # the error count rises above .lint-baseline.json. Existing known debt is
+      # allowed through and printed; new errors are not.
+      - name: "Lint — crux app (hard gate: no crash, no new errors)"
+        run: node scripts/lint-gate.mjs apps/crux
 
       - name: Build — crux app (advisory; needs Clerk env)
         working-directory: apps/crux

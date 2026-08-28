@@ -74,8 +74,11 @@ export function useSSEStream() {
             if (!trimmed || trimmed.startsWith(":")) continue;
 
             if (trimmed.startsWith("data: ")) {
-              const data = trimmed.slice(6).trim();
-              if (data === "[DONE]") {
+              // Do NOT .trim() the payload. Deltas are raw model tokens and a token
+              // that is only whitespace (" ", "\n") is meaningful — trimming it away
+              // runs words together in the rendered answer.
+              const data = trimmed.slice(6);
+              if (data.trim() === "[DONE]") {
                 newChunks.push({ done: true });
                 continue;
               }
@@ -83,8 +86,10 @@ export function useSSEStream() {
                 const parsed = JSON.parse(data) as SSEDelta;
                 newChunks.push(parsed);
               } catch {
-                // Treat unparseable data as a delta token
-                newChunks.push({ delta: data });
+                // Unparseable frame: keep it as a literal token, but never push an
+                // empty one — an empty delta is falsy downstream and just churns
+                // renders for nothing.
+                if (data.length > 0) newChunks.push({ delta: data });
               }
             } else if (trimmed.startsWith("event: ")) {
               // Event type line — handled by the SSE parser
