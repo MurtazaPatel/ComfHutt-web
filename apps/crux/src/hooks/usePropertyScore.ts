@@ -87,7 +87,10 @@ export function usePropertyScore(propertyId: string, intent?: string) {
       const token = await getToken().catch(() => null);
       const params = new URLSearchParams();
       params.set("intent", fetchIntent || intent || "balanced");
-      params.set("lifecycle", "delivered");
+      // Deliberately NOT sent. The backend derives the lifecycle from the RERA
+      // record; hardcoding "delivered" here told the engine that delivery risk
+      // was moot for every property, which zeroes module D's weight — including
+      // for projects still under construction.
       params.set("macro_cycle", "growth");
       const qs = params.toString();
 

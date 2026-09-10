@@ -2,6 +2,7 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
+import { useCallback, useEffect, useRef } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
@@ -23,9 +24,21 @@ class ApiError extends Error {
   }
 }
 
+/** Minimal shape of the Clerk browser global we actually use. Typed rather than
+ *  `any` so a rename in Clerk's SDK surfaces at compile time instead of at runtime. */
+interface ClerkBrowserGlobal {
+  session?: {
+    getToken: (opts?: { skipCache?: boolean }) => Promise<string | null>;
+  };
+}
+
+function clerkGlobal(): ClerkBrowserGlobal | undefined {
+  return (globalThis as { Clerk?: ClerkBrowserGlobal }).Clerk;
+}
+
 async function getBrowserToken(): Promise<string | null> {
   try {
-    const clerk = (window as any).Clerk;
+    const clerk = clerkGlobal();
     if (clerk?.session) {
       return await clerk.session.getToken();
     }
@@ -40,7 +53,7 @@ async function refreshAndRetry(
   options: FetchOptions,
 ): Promise<Response> {
   try {
-    const clerk = (window as any).Clerk;
+    const clerk = clerkGlobal();
     if (clerk?.session) {
       const freshToken = await clerk.session.getToken({ skipCache: true });
       const retryHeaders: Record<string, string> = {
@@ -129,11 +142,11 @@ export async function apiFetch<T = unknown>(
     const message =
       (typeof body.message === "string" ? body.message : undefined) ||
       (typeof body.error === "string" ? body.error : undefined) ||
-      (typeof body.error === "object" && body.error !== null ? (body.error as any).message : undefined) ||
+      (typeof body.error === "object" && body.error !== null ? (body.error as { message?: string }).message : undefined) ||
       `Request failed with status ${response.status}`;
     const code =
       (typeof body.error === "string" ? body.error : undefined) ||
-      (typeof body.error === "object" && body.error !== null ? (body.error as any).code : undefined) ||
+      (typeof body.error === "object" && body.error !== null ? (body.error as { code?: string }).code : undefined) ||
       response.statusText || "UNKNOWN_ERROR";
 
     throw new ApiError(response.status, code, message);
@@ -143,12 +156,33 @@ export async function apiFetch<T = unknown>(
   return data as T;
 }
 
+/**
+ * Returns a STABLE fetch function — same identity for the life of the component.
+ *
+ * This previously returned a fresh closure on every render. Anything that put it
+ * in a hook dependency array (a useCallback, or an effect that loads data) was
+ * therefore re-created on every render, and an effect depending on it would run
+ * on every render — set state, re-render, run again. Keeping the identity stable
+ * and reading the current token through a ref makes the hook safe to depend on,
+ * which is the only way data-loading effects can use it at all.
+ */
 export function useApiFetch() {
   const { getToken } = useAuth();
+  const getTokenRef = useRef(getToken);
 
-  return function api<T = unknown>(path: string, options: FetchOptions = {}): Promise<T> {
-    return apiFetch<T>(path, { ...options, getToken });
-  };
+  useEffect(() => {
+    getTokenRef.current = getToken;
+  }, [getToken]);
+
+  return useCallback(function api<T = unknown>(
+    path: string,
+    options: FetchOptions = {},
+  ): Promise<T> {
+    return apiFetch<T>(path, {
+      ...options,
+      getToken: () => getTokenRef.current(),
+    });
+  }, []);
 }
 
 export function useCruxApi() {

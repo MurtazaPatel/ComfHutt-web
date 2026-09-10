@@ -1,0 +1,14 @@
+{
+  "_comment": "Known pre-existing lint errors, enforced by scripts/lint-gate.mjs. CI fails if a linter CRASH occurs (always) or if the error count EXCEEDS these numbers. Lower these as the backlog is burned down; never raise them.",
+  "_recorded": "2026-08-28",
+  "_context": "ESLint was crashing repo-wide on v10 (eslint-plugin-react caps at ^9.7), so lint had been dead and CI ran it as continue-on-error. Pinning to ^9.39.5 revealed this backlog.",
+  "apps/crux": {
+    "maxErrors": 28,
+    "breakdown": {
+      "react-hooks/refs": 12,
+      "react-hooks/set-state-in-effect": 8,
+      "react-hooks/static-components": 6,
+      "react/no-unescaped-entities": 2
+    }
+  }
+}
