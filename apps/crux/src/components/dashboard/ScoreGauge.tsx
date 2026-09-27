@@ -65,7 +65,7 @@ export function ScoreGauge({ score, grade, size = "default" }: ScoreGaugeProps) 
         {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className="font-bold tabular-nums text-crux-text-primary leading-none tracking-tighter"
+            className="font-bold text-crux-text-primary leading-none tracking-tighter"
             style={{ fontSize: textSize }}
           >
             {score}

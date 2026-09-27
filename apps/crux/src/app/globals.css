@@ -24,7 +24,11 @@
 
   --color-crux-text-primary: #09090B; /* Almost black for high contrast */
   --color-crux-text-secondary: #52525B; /* Premium gray */
-  --color-crux-text-muted: #A1A1AA;
+  /* #A1A1AA measured 2.56:1 on white — it is used for captions and helper
+     lines all over the dashboard, so that was failing WCAG AA (4.5:1) for
+     body text everywhere at once. #6B7280 is 4.83:1 and is the same grey the
+     ComfHutt wordmark itself is drawn in. */
+  --color-crux-text-muted: #6B7280;
   --color-crux-text-light: #F4F4F5;
 
   --color-crux-border: #E4E4E7; /* Soft silver border */
