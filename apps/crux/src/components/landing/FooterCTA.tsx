@@ -47,7 +47,7 @@ const LINK_COLS: Array<{ heading: string; links: Array<{ label: string; href: st
 ];
 
 const FOOTER_LINK =
-  "inline-block py-1.5 text-[13px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-text-primary hover:underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
+  "inline-block break-words py-1.5 text-[13px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-text-primary hover:underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
 
 export default function FooterCTA() {
   // reducedMotion="user" is set per section: page.tsx is owned elsewhere, and a
