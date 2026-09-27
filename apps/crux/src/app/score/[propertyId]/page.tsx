@@ -3,16 +3,16 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2, RefreshCw, Lock, ArrowRight } from "lucide-react";
+import { Loader2, Lock, ArrowRight, AlertCircle, Check } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { useAuth } from "@clerk/nextjs";
 import { usePropertyScore } from "@/hooks/usePropertyScore";
 import { apiFetch } from "@/lib/api";
+import { formatDateLong } from "@/lib/format";
 import { ScoreGauge } from "@/components/dashboard/ScoreGauge";
 import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
 import { CgmGradeSurface } from "@/components/dashboard/CgmGradeSurface";
-
-const DATA_SOURCES = ["MCA21", "eCourts", "RERA", "NHB RESIDEX", "NASA VIIRS"];
+import { Surface, SurfaceTitle } from "@/components/dashboard/ui/Surface";
 
 interface PropertyRecord {
   id: string;
@@ -30,24 +30,23 @@ function gradeFromScore(score: number): string {
   return "Risk";
 }
 
-function percentileFromScore(score: number): number {
-  return Math.max(1, 100 - score);
-}
-
 function MiniHeader() {
   return (
     <div className="border-b border-black/5 bg-white">
-      <div className="max-w-[960px] mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="text-[18px] font-bold tracking-[-0.03em] text-crux-text-primary">
+      <div className="mx-auto flex h-16 max-w-[960px] items-center justify-between gap-3 px-4 sm:px-6">
+        <Link
+          href="/"
+          className="rounded text-[18px] font-bold tracking-[-0.03em] text-crux-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
+        >
           CRUX
         </Link>
         <Link
           href="/signup"
           onClick={() => track("signup_from_anon_score_page")}
-          className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold bg-crux-green text-white rounded-full hover:bg-crux-green-mid transition-colors"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-crux-green px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
         >
           Sign up free
-          <ArrowRight size={14} />
+          <ArrowRight size={14} aria-hidden="true" />
         </Link>
       </div>
     </div>
@@ -94,11 +93,18 @@ export default function AnonymousScorePage() {
   const rawAddress = property?.address_raw || property?.address_normalized || propertyId;
   const isFallbackAddress = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawAddress);
   const displayAddress = isFallbackAddress ? "Property Intelligence Report" : rawAddress;
+  const locationLine = property?.city
+    ? `${property.city}${property.state ? `, ${property.state}` : ""}`
+    : null;
 
   if (!isLoaded || (isLoaded && isSignedIn)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="w-6 h-6 animate-spin text-crux-green" />
+      <div className="flex min-h-dvh items-center justify-center bg-white">
+        <Loader2
+          size={24}
+          aria-label="Loading"
+          className="animate-spin text-crux-green motion-reduce:animate-none"
+        />
       </div>
     );
   }
@@ -106,26 +112,26 @@ export default function AnonymousScorePage() {
   // Quota exceeded — the signup wall
   if (quotaExceeded) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-dvh bg-white">
         <MiniHeader />
-        <div className="max-w-[600px] mx-auto px-6 py-24 text-center">
-          <div className="w-16 h-16 rounded-full bg-crux-green-tint flex items-center justify-center mx-auto mb-6">
-            <Lock className="w-7 h-7 text-crux-green" />
+        <div className="mx-auto max-w-[600px] px-4 py-24 text-center sm:px-6">
+          <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-crux-green-tint">
+            <Lock size={26} aria-hidden="true" className="text-crux-green" />
           </div>
-          <h1 className="text-2xl font-bold text-crux-text-primary mb-3">
+          <h1 className="mb-3 text-2xl font-bold text-crux-text-primary">
             You&rsquo;ve used your {quotaExceeded.maxReports} free scores
           </h1>
-          <p className="text-sm text-crux-text-secondary mb-8 max-w-[420px] mx-auto">
+          <p className="mx-auto mb-8 max-w-[420px] text-sm text-crux-text-secondary">
             Create a free account to keep scoring — unlimited properties, full CRUX Lens access,
             and your report history saved.
           </p>
           <Link
             href="/signup"
             onClick={() => track("signup_after_quota")}
-            className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-crux-green text-white rounded-full hover:bg-crux-green-mid transition-colors"
+            className="inline-flex items-center gap-2 rounded-full bg-crux-green px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Create free account
-            <ArrowRight size={16} />
+            <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -135,40 +141,53 @@ export default function AnonymousScorePage() {
   // Computing state — live progress
   if (isComputing) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-dvh bg-white">
         <MiniHeader />
-        <div className="max-w-[960px] mx-auto px-6 py-10">
-          <div className="mb-4 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl p-5">
-            <h1 className="text-[18px] font-semibold text-crux-text-primary truncate">{displayAddress}</h1>
-            {property?.city && (
-              <p className="text-[13px] text-crux-text-secondary mt-0.5">
-                {property.city}{property.state ? `, ${property.state}` : ""}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col items-center justify-center py-24 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl">
-            <div className="w-16 h-16 rounded-full bg-crux-green-tint flex items-center justify-center mb-6">
-              <Loader2 className="w-8 h-8 text-crux-green animate-spin" />
+        <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+          <Surface className="mb-4" padding="tight">
+            <h1 className="truncate text-[18px] font-semibold text-crux-text-primary">{displayAddress}</h1>
+            {locationLine && <p className="mt-0.5 text-[13px] text-crux-text-secondary">{locationLine}</p>}
+          </Surface>
+          <Surface className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="mb-6 flex size-14 items-center justify-center rounded-full bg-crux-green-tint">
+              <Loader2
+                size={26}
+                aria-hidden="true"
+                className="animate-spin text-crux-green motion-reduce:animate-none"
+              />
             </div>
-            <h2 className="text-xl font-semibold text-crux-text-primary mb-6">
-              CRUX AI is analyzing this property...
-            </h2>
-            <div className="flex flex-col gap-3 w-full max-w-[420px] text-left">
+            <h2 className="mb-6 text-[18px] font-semibold text-crux-text-primary">Reading the public record…</h2>
+            <ol className="flex w-full max-w-[420px] flex-col gap-3 text-left" aria-live="polite">
               {progressMessages.length > 0 ? (
-                progressMessages.map((msg, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <Loader2 size={16} className="text-crux-green animate-spin mt-0.5 flex-shrink-0" />
-                    <p className="text-[14px] text-gray-700">{msg}</p>
-                  </div>
-                ))
+                progressMessages.map((msg, idx) => {
+                  const isLast = idx === progressMessages.length - 1;
+                  return (
+                    <li key={idx} className="flex items-start gap-3">
+                      {isLast ? (
+                        <Loader2
+                          size={16}
+                          aria-hidden="true"
+                          className="mt-0.5 shrink-0 animate-spin text-crux-green motion-reduce:animate-none"
+                        />
+                      ) : (
+                        <Check size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-crux-green" />
+                      )}
+                      <p className="text-[14px] text-crux-text-secondary">{msg}</p>
+                    </li>
+                  );
+                })
               ) : (
-                <div className="flex items-center gap-3">
-                  <Loader2 size={16} className="text-crux-green animate-spin flex-shrink-0" />
-                  <p className="text-[14px] text-gray-700">Initializing...</p>
-                </div>
+                <li className="flex items-center gap-3">
+                  <Loader2
+                    size={16}
+                    aria-hidden="true"
+                    className="shrink-0 animate-spin text-crux-green motion-reduce:animate-none"
+                  />
+                  <p className="text-[14px] text-crux-text-secondary">Starting…</p>
+                </li>
               )}
-            </div>
-          </div>
+            </ol>
+          </Surface>
         </div>
       </div>
     );
@@ -176,14 +195,14 @@ export default function AnonymousScorePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-dvh bg-white">
         <MiniHeader />
-        <div className="max-w-[960px] mx-auto px-6 py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <div className="h-64 bg-gray-50 rounded-2xl animate-pulse" />
+              <div className="h-64 animate-pulse rounded-2xl bg-crux-bg-secondary motion-reduce:animate-none" />
             </div>
-            <div className="h-64 bg-gray-50 rounded-2xl animate-pulse" />
+            <div className="h-64 animate-pulse rounded-2xl bg-crux-bg-secondary motion-reduce:animate-none" />
           </div>
         </div>
       </div>
@@ -192,20 +211,21 @@ export default function AnonymousScorePage() {
 
   if (error || !score) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-dvh bg-white">
         <MiniHeader />
-        <div className="max-w-[960px] mx-auto px-6 py-20 text-center">
-          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
-            <RefreshCw className="w-6 h-6 text-red-400" />
+        <div className="mx-auto max-w-[960px] px-4 py-20 text-center sm:px-6">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-red-50">
+            <AlertCircle size={22} aria-hidden="true" className="text-red-500" />
           </div>
-          <h1 className="text-xl font-semibold text-crux-text-primary mb-2">Could not load this score</h1>
-          <p className="text-sm text-crux-text-secondary mb-4">{error || "Please try again."}</p>
+          <h1 className="mb-2 text-xl font-semibold text-crux-text-primary">Could not load this score</h1>
+          <p className="text-sm text-crux-text-secondary">{error || "Please try again."}</p>
         </div>
       </div>
     );
   }
 
   const scoreValue = score.score_composite ?? 0;
+  const dataSources = score.data_sources_used ?? [];
   const currentWeights: Record<string, number> = {
     cpsm_legal_authenticity: 0.2,
     cpsm_technical_compliance: 0.2,
@@ -220,47 +240,31 @@ export default function AnonymousScorePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-dvh bg-white">
       <MiniHeader />
-      <div className="max-w-[960px] mx-auto px-6 py-10">
-        <div
-          className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 mb-6"
-          style={{ borderRadius: "16px", padding: "24px" }}
-        >
-          <h1 className="text-[24px] font-semibold text-gray-900 mb-1 leading-tight tracking-tight">
+      <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+        <Surface className="mb-6" as="section">
+          <h1 className="mb-1 text-[22px] font-semibold leading-tight tracking-tight text-crux-text-primary sm:text-[24px]">
             {displayAddress}
           </h1>
-          {property?.city && (
-            <p className="text-[13px] text-crux-text-muted mb-1">
-              {property.city}{property.state ? `, ${property.state}` : ""}
-            </p>
-          )}
+          {locationLine && <p className="mb-1 text-[13px] text-crux-text-muted">{locationLine}</p>}
           <p className="text-[13px] text-crux-text-secondary">
-            {score.created_at
-              ? `Scored ${new Date(score.created_at).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}`
-              : "Score pending"}
+            {score.created_at ? `Scored ${formatDateLong(score.created_at)}` : "Score pending"}
           </p>
-        </div>
+        </Surface>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
             {/* CGM-1.0 grade surface when this row was produced by the CGM engine;
                 otherwise the legacy CPSM gauge + 5-pillar breakdown (same flag). */}
             {score.module_scores && score.module_scores.length > 0 ? (
               <CgmGradeSurface score={score} />
             ) : (
-              <div
-                className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
-                style={{ borderRadius: "16px", padding: "24px" }}
-              >
-                <div className="flex flex-col sm:flex-row items-start gap-8">
-                  <ScoreGauge score={scoreValue} grade={gradeFromScore(scoreValue)} percentile={percentileFromScore(scoreValue)} />
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text-[16px] font-semibold text-crux-text-primary mb-4">Category Breakdown</h2>
+              <Surface as="section">
+                <div className="flex flex-col items-start gap-6 sm:flex-row sm:gap-8">
+                  <ScoreGauge score={scoreValue} grade={gradeFromScore(scoreValue)} />
+                  <div className="min-w-0 flex-1">
+                    <SurfaceTitle as="h2">Category Breakdown</SurfaceTitle>
                     {score.score_breakdown ? (
                       <CategoryBreakdown breakdown={score.score_breakdown} weights={currentWeights} />
                     ) : (
@@ -268,46 +272,50 @@ export default function AnonymousScorePage() {
                     )}
                   </div>
                 </div>
-              </div>
+              </Surface>
             )}
 
-            <div
-              className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
-              style={{ borderRadius: "16px", padding: "24px" }}
-            >
-              <h3 className="text-[14px] font-semibold text-crux-text-primary mb-3">Data Sources</h3>
-              <div className="flex flex-wrap gap-2">
-                {(score.data_sources_used ?? DATA_SOURCES).map((source) => (
-                  <span
-                    key={source}
-                    className="inline-flex items-center px-3 py-1.5 text-[12px] font-medium text-gray-600 bg-white shadow-sm ring-1 ring-black/5 rounded-full"
-                  >
-                    {source}
-                  </span>
-                ))}
-              </div>
-            </div>
+            {/* Only the registers this score says it read. No hardcoded fallback:
+                naming a source the engine never consulted is a claim CRUX cannot
+                stand behind, least of all on a link anyone can forward. */}
+            <Surface as="section">
+              <SurfaceTitle as="h3">Data Sources</SurfaceTitle>
+              {dataSources.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {dataSources.map((source) => (
+                    <span
+                      key={source}
+                      className="inline-flex items-center rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-crux-text-secondary shadow-sm ring-1 ring-black/5"
+                    >
+                      {source}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[13px] text-crux-text-muted">
+                  This score did not report which sources it used.
+                </p>
+              )}
+            </Surface>
           </div>
 
-          {/* Upsell — Watch/Lens/Cast/Yield live behind a free account */}
+          {/* Upsell — promises only what a free account actually gets today. */}
           <div>
-            <div
-              className="bg-crux-bg-accent shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-crux-green/20"
-              style={{ borderRadius: "16px", padding: "20px" }}
-            >
-              <h3 className="text-[14px] font-semibold text-crux-text-primary mb-2">Want more?</h3>
-              <p className="text-[13px] text-crux-text-secondary mb-4">
-                Create a free account to unlock CRUX Lens, Cast, Yield, and Watch on this property.
+            <Surface className="bg-crux-bg-accent ring-crux-green/20" padding="tight">
+              <h3 className="mb-2 text-[14px] font-semibold text-crux-text-primary">Want more?</h3>
+              <p className="mb-4 text-[13px] text-crux-text-secondary">
+                Create a free account to ask CRUX Lens about this property, read the full report, and keep your
+                scored properties in one place.
               </p>
               <Link
                 href="/signup"
                 onClick={() => track("signup_from_anon_score_page")}
-                className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-semibold bg-crux-green text-white rounded-xl hover:bg-crux-green-mid transition-colors"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-crux-green px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
               >
                 Sign up free
-                <ArrowRight size={14} />
+                <ArrowRight size={14} aria-hidden="true" />
               </Link>
-            </div>
+            </Surface>
           </div>
         </div>
       </div>
