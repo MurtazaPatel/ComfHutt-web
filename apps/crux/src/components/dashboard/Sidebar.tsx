@@ -9,15 +9,36 @@ import {
   MessageSquare,
   FileText,
   Settings,
+  type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
+interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+/** The four destinations that fit a phone's bottom bar. */
+const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Home", icon: House },
   { href: "/dashboard/properties", label: "Properties", icon: Building2 },
   { href: "/dashboard/lens", label: "Lens", icon: MessageSquare },
   { href: "/dashboard/reports", label: "Reports", icon: FileText },
 ];
+
+/**
+ * Settings had a page and an imported icon but no nav entry, so the only way in
+ * was to type the URL. It is listed last on both breakpoints.
+ */
+const SETTINGS_ITEM: NavItem = { href: "/dashboard/settings", label: "Settings", icon: Settings };
+
+const ALL_ITEMS: NavItem[] = [...NAV_ITEMS, SETTINGS_ITEM];
+
+/** One weight pair for both breakpoints; they used to disagree. */
+function iconStroke(active: boolean) {
+  return active ? 2.2 : 1.8;
+}
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -29,97 +50,130 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside
-        className="hidden md:flex fixed left-0 top-0 h-full w-[72px] hover:w-60 flex-col bg-white border-r border-crux-border z-40 transition-all duration-300 group overflow-hidden"
-      >
-      {/* Logo */}
-      <div className="flex items-center px-4 mt-4 h-10 w-full">
-        <Link
-          href="/dashboard"
-          className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-crux-green hover:bg-crux-green-mid transition-colors duration-150"
-          aria-label="CRUX Dashboard"
-        >
-          {/* ComfHutt house mark (matches the favicon) */}
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-        </Link>
-        <span className="ml-3 text-lg font-bold text-crux-text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          CRUX
-        </span>
-      </div>
+      {/*
+        Desktop rail. It widens on hover *and* on focus-within, because the labels
+        used to be `opacity-0` until hover: a keyboard user tabbing the nav landed on
+        invisible link text. Every link also carries an explicit `aria-label`, so the
+        accessible name exists in the collapsed state regardless of what is painted —
+        a `title` tooltip is not an accessible name.
 
-      {/* Nav items */}
-      <nav className="flex flex-col gap-2 mt-8 flex-1 px-4 w-full">
-        {NAV_ITEMS.map((item) => {
+        The width itself is not transitioned. `transition-all` on `w-[72px] → w-60`
+        animated layout on every frame of the hover, which janks the whole main column
+        beside it; only colour and label opacity move.
+      */}
+      <aside className="group fixed left-0 top-0 z-40 hidden h-dvh w-[72px] flex-col overflow-hidden border-r border-crux-border bg-white hover:w-60 focus-within:w-60 md:flex">
+        <div className="mt-4 flex h-10 w-full items-center px-4">
+          <Link
+            href="/dashboard"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-crux-green transition-colors duration-150 hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            aria-label="CRUX dashboard home"
+          >
+            {/* ComfHutt house mark (matches the favicon) */}
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          </Link>
+          <span className="ml-3 whitespace-nowrap text-lg font-bold text-crux-text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none">
+            CRUX
+          </span>
+        </div>
+
+        <nav aria-label="Dashboard" className="mt-8 flex w-full flex-1 flex-col gap-2 px-4">
+          {ALL_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-label={item.label}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "relative flex h-10 w-10 items-center rounded-lg transition-colors duration-150 group-hover:w-full group-focus-within:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green motion-reduce:transition-none",
+                  active
+                    ? "bg-crux-green-tint text-crux-green"
+                    : "text-crux-text-muted hover:bg-crux-bg-secondary hover:text-crux-text-primary",
+                )}
+              >
+                {active && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-crux-green"
+                  />
+                )}
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center">
+                  <Icon size={20} strokeWidth={iconStroke(active)} aria-hidden="true" />
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="ml-3 whitespace-nowrap text-[14px] font-medium opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none"
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="mb-6 flex w-full items-center px-4">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center">
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-8 h-8",
+                  userButtonAvatarBox: "w-8 h-8",
+                },
+              }}
+            />
+          </span>
+          <span className="ml-3 whitespace-nowrap text-[14px] font-medium text-crux-text-secondary opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none">
+            Account
+          </span>
+        </div>
+      </aside>
+
+      {/*
+        Mobile bottom bar. `pb-safe` was a class this Tailwind v4 setup never
+        defined (no plugin, no `@utility`), so the bar sat under the home indicator
+        on iOS — real safe-area padding instead. Tiles flex rather than taking a
+        fixed 56px so six of them still fit at 360px without a horizontal scroll.
+      */}
+      <nav
+        aria-label="Dashboard"
+        className="fixed bottom-0 left-0 right-0 z-40 flex items-stretch justify-around border-t border-crux-border bg-white px-1 pb-[env(safe-area-inset-bottom)] md:hidden"
+      >
+        {ALL_ITEMS.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              title={item.label}
+              aria-current={active ? "page" : undefined}
               className={cn(
-                "relative flex items-center w-10 group-hover:w-full h-10 rounded-lg transition-all duration-150",
-                active
-                  ? "text-crux-green bg-crux-green-tint"
-                  : "text-crux-text-muted hover:text-crux-text-primary hover:bg-gray-100"
+                "flex h-16 min-w-0 flex-1 basis-0 flex-col items-center justify-center rounded-lg px-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green",
+                active ? "text-crux-green" : "text-crux-text-muted hover:text-crux-text-primary",
               )}
             >
-              {active && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-crux-green rounded-r-full" />
-              )}
-              <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center">
-                <Icon size={20} strokeWidth={1.8} />
-              </div>
-              <span className="ml-3 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium text-[14px]">
+              <Icon size={20} strokeWidth={iconStroke(active)} aria-hidden="true" />
+              <span className="mt-1 w-full truncate text-center text-[10px] font-medium">
                 {item.label}
               </span>
             </Link>
           );
         })}
-      </nav>
-
-      {/* User avatar */}
-      <div className="px-4 mb-6 w-full flex items-center">
-        <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center">
-          <UserButton
-            appearance={{
-              elements: {
-                avatarBox: "w-8 h-8",
-                userButtonAvatarBox: "w-8 h-8",
-              },
-            }}
-          />
-        </div>
-        <span className="ml-3 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium text-[14px] text-crux-text-secondary">
-          Profile & Settings
-        </span>
-      </div>
-      </aside>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-crux-border z-40 flex items-center justify-around px-2 pb-safe">
-        {NAV_ITEMS.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex flex-col items-center justify-center w-14 h-14 rounded-lg",
-                active ? "text-crux-green" : "text-crux-text-muted hover:text-crux-text-primary"
-              )}
-            >
-              <Icon size={20} strokeWidth={active ? 2.5 : 1.8} />
-              <span className="text-[10px] mt-1 font-medium">{item.label}</span>
-            </Link>
-          );
-        })}
-        <div className="flex flex-col items-center justify-center w-14 h-14 rounded-lg">
+        <div className="flex h-16 min-w-0 flex-1 basis-0 flex-col items-center justify-center px-0.5">
           <UserButton
             appearance={{
               elements: {
@@ -128,7 +182,9 @@ export function Sidebar() {
               },
             }}
           />
-          <span className="text-[10px] mt-1 font-medium text-crux-text-muted">Profile</span>
+          <span className="mt-1 w-full truncate text-center text-[10px] font-medium text-crux-text-muted">
+            Account
+          </span>
         </div>
       </nav>
     </>

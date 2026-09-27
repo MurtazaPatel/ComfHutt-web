@@ -1,43 +1,28 @@
 "use client";
 
-interface RiskFlag {
-  id: string;
-  severity: "high" | "medium" | "low";
-  message: string;
-}
+import { FindingsList } from "./FindingsList";
 
-const PLACEHOLDER_RISKS: RiskFlag[] = [
-  { id: "1", severity: "high", message: "RERA registration expires in 45 days" },
-  { id: "2", severity: "medium", message: "Adjacent property has pending litigation" },
-  { id: "3", severity: "low", message: "12% vacancy rate in this micro-market" },
-];
-
-function SeverityTriangle({ severity }: { severity: RiskFlag["severity"] }) {
-  const color = severity === "high" ? "#EF4444" : severity === "medium" ? "#F59E0B" : "var(--color-crux-text-muted)";
-  return (
-    <span className="flex-shrink-0" style={{ color }}>
-      ▲
-    </span>
-  );
-}
-
-export function RiskFlags() {
-  return (
-    <div className="flex flex-col gap-2">
-      {PLACEHOLDER_RISKS.map((risk) => (
-        <div
-          key={risk.id}
-          className="flex items-start gap-2 py-1"
-        >
-          <SeverityTriangle severity={risk.severity} />
-          <span
-            className="text-[14px] text-crux-text-primary leading-relaxed"
-            style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-          >
-            {risk.message}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
+/**
+ * The report's adverse findings about this property, rendered verbatim.
+ *
+ * This component used to render three hardcoded sentences — a RERA expiry, a
+ * neighbouring litigation, a micro-market vacancy rate — for every property, on a
+ * product that names real builders. None of them was a finding about anything.
+ *
+ * The real source is `risk_flags` on `GET /crux/report/:property_id`: up to five
+ * plain strings written by the report agent, with **no severity field**. There is
+ * therefore no severity marker here; the old `▲` triangle graded each line as
+ * high/medium/low from data that does not exist.
+ *
+ * An empty array is a genuine, publishable result on this product, so it is stated
+ * rather than hidden.
+ */
+export function RiskFlags({
+  flags,
+  emptyLabel = "No risk flags recorded for this property.",
+}: {
+  flags: readonly string[] | null | undefined;
+  emptyLabel?: string;
+}) {
+  return <FindingsList items={flags} tone="risk" emptyLabel={emptyLabel} />;
 }
