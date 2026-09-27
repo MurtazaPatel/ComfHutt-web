@@ -305,7 +305,7 @@ export function ReportViewer({ propertyId, address }: ReportViewerProps) {
       <Surface className="mx-auto max-w-[800px]">
         {heading}
         <p className="mt-6 text-[14px] leading-relaxed text-crux-text-secondary">
-          You have used {quotaExceeded.reportCount} of {quotaExceeded.maxReports} free reports.
+          You have used {quotaExceeded.reportCount} of {quotaExceeded.maxReports} free grades.
           Sign in or upgrade to open this one.
         </p>
       </Surface>

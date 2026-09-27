@@ -28,9 +28,13 @@ const instrumentSerif = Instrument_Serif({
 });
 
 const SITE_URL = "https://crux.comfhutt.com";
-const SITE_TITLE = "CRUX — AI Property Intelligence by ComfHutt";
+// Metadata states only what CRUX does today: a letter grade for RERA-registered
+// projects in Gujarat. The previous copy promised any property in the country and
+// a live signal count nothing in the code supports — neither is true, and both
+// were the first thing a search result showed.
+const SITE_TITLE = "CRUX — Grades for Gujarat's RERA-registered projects";
 const SITE_DESCRIPTION =
-  "Score any property in India. 20+ live data signals — legal, spatial, financial. Free. No signup required.";
+  "CRUX grades RERA-registered projects in Gujarat A+ to D, from GujRERA filings, tribunal orders and the court record. Every grade links to the documents behind it. Free, and no signup for your first three.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -79,11 +83,9 @@ const jsonLd = [
     "@type": "WebSite",
     name: "CRUX",
     url: SITE_URL,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${SITE_URL}/?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
+    // No SearchAction: it advertised a sitelinks search box at /?q=<term>, and
+    // nothing on this site reads a `q` parameter. Declaring an entry point that
+    // does not resolve is a false claim, just one made to a crawler.
   },
   {
     "@context": "https://schema.org",

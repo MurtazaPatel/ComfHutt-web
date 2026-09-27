@@ -135,7 +135,7 @@ export function PromptInputBar({ onSend, onStop, isLoading, error }: PromptInput
 
         {/* Advisory requirement — this line ships. */}
         <p className="mt-2 text-center text-[11px] text-crux-text-muted">
-          CRUX Lens may produce inaccurate information. Verify critical decisions independently.
+          CRUX Lens is a research tool, not investment advice. It can be wrong — check anything you act on against the linked record.
         </p>
       </div>
     </div>

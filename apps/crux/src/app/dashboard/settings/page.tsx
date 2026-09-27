@@ -15,6 +15,15 @@ function Field({ label, value, note }: { label: string; value: string; note?: st
   );
 }
 
+/** "free" -> "Free", "pro_monthly" -> "Pro Monthly". */
+function titleCase(value: string): string {
+  return value
+    .split(/[_\s-]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
 export default function SettingsPage() {
   const { user, isLoading } = useCruxUser();
 
@@ -46,7 +55,11 @@ export default function SettingsPage() {
           <Surface>
             <SurfaceTitle>Plan &amp; usage</SurfaceTitle>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Field label="Plan" value={user.planTier} />
+              {/* planTier arrives lowercase, and can still read "pro" on an account
+                  carrying the retired ₹199 consumer tier. Show it capitalised rather
+                  than rewriting it: claiming an account is on Free when the backend
+                  says otherwise would be its own inaccuracy. */}
+              <Field label="Plan" value={titleCase(user.planTier)} />
               <Field label="Searches run" value={String(user.totalSearches)} />
               <Field
                 label="Watch credits"

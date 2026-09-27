@@ -306,7 +306,7 @@ export default function SignUpForm() {
           Create your account
         </h1>
         <p className="text-[14px] text-crux-text-secondary mt-1.5">
-          Start scoring properties in under 90 seconds
+          Unlimited grades, free — no card, no builder pays for a rating
         </p>
       </div>
 

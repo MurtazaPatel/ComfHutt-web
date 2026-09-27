@@ -22,7 +22,7 @@ function MiniScoreGauge({ score }: { score: number }) {
     <div
       className="relative h-[56px] w-[56px] flex-shrink-0"
       role="img"
-      aria-label={`CRUX score ${score} out of 100`}
+      aria-label={`Composite ${score} out of 100`}
     >
       <svg width="56" height="56" viewBox="0 0 56 56" className="-rotate-90" aria-hidden="true">
         <circle cx="28" cy="28" r={radius} fill="none" stroke="var(--color-crux-border)" strokeWidth="3" />

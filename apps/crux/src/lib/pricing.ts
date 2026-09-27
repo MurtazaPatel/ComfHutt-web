@@ -1,79 +1,136 @@
+/**
+ * CRUX plan definitions.
+ *
+ * The tiers below are the ones locked in the business decisions doc. Two things
+ * about them are easy to get wrong and expensive to get wrong:
+ *
+ * 1. **Consumer Pro at ₹199/month is retired.** It was replaced by the one-time
+ *    Booking Report. Nothing in the product may offer it, price it, or imply it.
+ *
+ * 2. **Only Free is purchasable today.** Booking Report and the Professional
+ *    seats are real, decided prices, but invoicing them is gated on shipping the
+ *    Booking Report page, one-time Razorpay and PDF export. Until then the price
+ *    is the plan, not the invoice — so `purchasable` is false and no surface may
+ *    render a checkout button for them. A pay button that cannot complete is
+ *    worse than no button.
+ *
+ * Feature strings list only what is built. CRUX Cast and CRUX Yield return HTTP
+ * 501, and alerts, re-scoring and the PDF dossier are unshipped, so none of them
+ * appear here regardless of what a roadmap says.
+ */
+
+export type PlanId = "free" | "booking_report" | "professional_solo" | "professional_firm" | "institutional";
+
 export interface PlanDefinition {
-  id: "free" | "pro_monthly" | "pro_annual";
+  id: PlanId;
   name: string;
-  billingCycle: "monthly" | "annual" | null;
-  priceRupees: number;
+  /** Who the tier is for, in the buyer's own words. */
+  audience: string;
+  billingCycle: "one_time" | "monthly" | "annual" | null;
+  /** Rupees. Null where the price is set per pilot rather than listed. */
+  priceRupees: number | null;
   priceLabel: string;
+  /** Annual price where the tier offers one, for the "or ₹X/year" line. */
+  annualRupees?: number;
   features: string[];
+  /**
+   * False when the tier cannot be bought right now. A false value must suppress
+   * every checkout affordance for that tier, not merely grey it out.
+   */
+  purchasable: boolean;
+  /** Shown beside an unpurchasable tier so the state is explained, not hidden. */
+  availabilityNote?: string;
 }
 
-interface PlansResponse {
-  success: boolean;
-  data: {
-    plans: PlanDefinition[];
-    paymentsConfigured: boolean;
-  };
-}
-
-// Fallback used only if the backend is unreachable at render time — must be
-// kept in sync with comfhutt-backend/src/config/pricing.ts, which is the
-// actual source of truth served at runtime via GET /crux/billing/plans.
-export const FALLBACK_PLANS: PlanDefinition[] = [
+export const PLANS: PlanDefinition[] = [
   {
     id: "free",
     name: "Free",
+    audience: "Every buyer",
     billingCycle: null,
     priceRupees: 0,
-    priceLabel: "/forever",
+    priceLabel: "forever",
     features: [
-      "Full CRUX Score (0-100)",
-      "All 20+ parameters",
-      "CRUX Lens AI assistant",
-      "CRUX Cast predictions",
-      "CRUX Yield forecasts",
-      "3 Watch credits/month",
+      "The CRUX Grade, A+ to D",
+      "Cohort percentile once the corpus supports one",
+      "All seven module verdicts",
+      "Confidence on every grade",
+      "Evidence links back to the filing or case",
+      "CRUX Lens, the AI assistant",
+      "Shareable verdict card",
+      "3 grades without an account, unlimited with a free one",
     ],
+    purchasable: true,
   },
   {
-    id: "pro_monthly",
-    name: "Pro Monthly",
-    billingCycle: "monthly",
-    priceRupees: 199,
-    priceLabel: "/month",
-    features: [
-      "Unlimited Watch credits",
-      "Priority re-scoring on data updates",
-      "Personalized investor fit profile",
-      "Full PDF dossier export",
-      "Early access to new features",
-    ],
-  },
-  {
-    id: "pro_annual",
-    name: "Pro Annual",
-    billingCycle: "annual",
+    id: "booking_report",
+    name: "Booking Report",
+    audience: "A buyer about to pay a booking amount",
+    billingCycle: "one_time",
     priceRupees: 999,
-    priceLabel: "/year",
+    priceLabel: "one-time",
     features: [
-      "Everything in Pro Monthly",
-      "5 months free vs. paying monthly",
-      "Locked-in annual rate",
+      "Counted court cases with match confidence and links",
+      "RERA complaints against the promoter",
+      "Escrow and construction-progress trend",
+      "Price fairness against comparables, for a price you enter",
+      "Developer track record and delivery forecast",
+      "Questions to ask the builder, as a checklist",
     ],
+    purchasable: false,
+    availabilityNote: "Coming shortly after launch",
+  },
+  {
+    id: "professional_solo",
+    name: "Professional — Solo",
+    audience: "Brokers, CAs and property advocates · 1 seat",
+    billingCycle: "monthly",
+    priceRupees: 4999,
+    priceLabel: "per month",
+    annualRupees: 49999,
+    features: [
+      "Unlimited Booking Reports",
+      "Full legal detail on every case",
+      "Comparables",
+      "Share cards",
+    ],
+    purchasable: false,
+    availabilityNote: "Coming shortly after launch",
+  },
+  {
+    id: "professional_firm",
+    name: "Professional — Firm",
+    audience: "Brokerages and practices · 5 seats",
+    billingCycle: "monthly",
+    priceRupees: 10000,
+    priceLabel: "per month",
+    annualRupees: 99999,
+    features: ["Everything in Solo, across 5 seats", "Branded share cards", "Firm dashboard"],
+    purchasable: false,
+    availabilityNote: "Coming shortly after launch",
+  },
+  {
+    id: "institutional",
+    name: "Institutional",
+    audience: "Housing finance, NBFCs, co-operative banks and diligence teams",
+    billingCycle: null,
+    // Deliberately unpriced. The doc is explicit that institutional pricing is
+    // set with the first pilot, so putting a number here would invent one.
+    priceRupees: null,
+    priceLabel: "Priced with each pilot",
+    features: [
+      "Per-pull grading against your own pipeline",
+      "Portfolio Watch on financed projects",
+    ],
+    purchasable: false,
+    availabilityNote: "Talk to us",
   },
 ];
 
-export async function fetchPlans(): Promise<{ plans: PlanDefinition[]; paymentsConfigured: boolean }> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
+/** The only tier anyone can act on today. */
+export const FREE_PLAN = PLANS[0];
 
-  try {
-    const res = await fetch(`${apiUrl}/crux/billing/plans`, {
-      // Landing page is marketing content — cache briefly, revalidate hourly.
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) throw new Error(`plans fetch failed: ${res.status}`);
-    const body = (await res.json()) as PlansResponse;
-    return { plans: body.data.plans, paymentsConfigured: body.data.paymentsConfigured };
-  } catch {
-    return { plans: FALLBACK_PLANS, paymentsConfigured: false };
-  }
+/** Format a rupee figure the way an Indian reader expects: ₹4,999 / ₹49,999. */
+export function formatRupees(amount: number): string {
+  return `₹${amount.toLocaleString("en-IN")}`;
 }

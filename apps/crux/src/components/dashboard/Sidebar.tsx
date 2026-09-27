@@ -11,6 +11,7 @@ import {
   Settings,
   type LucideIcon,
 } from "lucide-react";
+import { ComfHuttMark } from "@/components/brand/ComfHuttMark";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -63,26 +64,19 @@ export function Sidebar() {
       */}
       <aside className="group fixed left-0 top-0 z-40 hidden h-dvh w-[72px] flex-col overflow-hidden border-r border-crux-border bg-white hover:w-60 focus-within:w-60 md:flex">
         <div className="mt-4 flex h-10 w-full items-center px-4">
+          {/*
+            The lockup. Two things were wrong: the glyph was a generic lucide house
+            outline, not the ComfHutt mark, and it sat on flat #10B981 — a white mark
+            on that green measures 2.6:1, under the 3:1 floor for a non-text graphic.
+            The deeper gradient (#059669 -> #047857) takes the same white mark to
+            ~3.8-5.5:1 and reads as a solid brand chip rather than a flat swatch.
+          */}
           <Link
             href="/dashboard"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-crux-green transition-colors duration-150 hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-crux-green-mid to-crux-green-dark text-white shadow-sm transition-shadow duration-150 hover:shadow-[var(--shadow-premium-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
             aria-label="CRUX dashboard home"
           >
-            {/* ComfHutt house mark (matches the favicon) */}
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="white"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
+            <ComfHuttMark className="w-[19px]" />
           </Link>
           <span className="ml-3 whitespace-nowrap text-lg font-bold text-crux-text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none">
             CRUX

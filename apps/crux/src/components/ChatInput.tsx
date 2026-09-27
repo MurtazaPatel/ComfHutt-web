@@ -8,11 +8,28 @@ import { track } from "@vercel/analytics";
 import { cn } from "@/lib/utils";
 import { useApiFetch } from "@/lib/api";
 
+/**
+ * Placeholders name the area CRUX actually covers.
+ *
+ * The old set invited an address anywhere in the country and offered to take a
+ * pasted listing-portal link. CRUX grades RERA-registered projects in Gujarat and
+ * cannot read a portal listing, so both were promises this box could not keep.
+ * Keep the third line: "Satellite" is the Ahmedabad locality, nothing to do with
+ * imagery, and it has been mistaken for a banned source before.
+ */
 const PLACEHOLDERS = [
-  "Enter any address in India...",
-  "Paste a 99acres link...",
+  "A project or locality in Gujarat…",
   "Try: 2BHK Satellite, Ahmedabad",
+  "Try: Vesu, Surat",
 ];
+
+/** True when the visitor has asked for less motion — the typewriter is motion. */
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
 
 interface ChatInputProps {
   onSubmit?: (query: string) => void;
@@ -46,9 +63,16 @@ export default function ChatInput({
   useEffect(() => {
     const currentPlaceholder = placeholder || PLACEHOLDERS[placeholderIndex];
     let charIndex = 0;
-    let typingTimeout: NodeJS.Timeout;
+    let typingTimeout: ReturnType<typeof setTimeout>;
 
     const type = () => {
+      // Reduced motion: show the hint outright and stop. No per-character
+      // animation, and no rotation either — a placeholder that swaps itself out
+      // is still movement the visitor asked not to see.
+      if (prefersReducedMotion()) {
+        setDisplayedPlaceholder(currentPlaceholder);
+        return;
+      }
       if (isTyping && charIndex < currentPlaceholder.length) {
         setDisplayedPlaceholder(currentPlaceholder.slice(0, charIndex + 1));
         charIndex++;
@@ -108,7 +132,7 @@ export default function ChatInput({
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
       if (msg.includes("geocode") || msg.includes("find") || msg.includes("not found")) {
-        setError("Could not find this address. Try a more specific one.");
+        setError("Could not find this project. Try a project name or locality in Gujarat.");
       } else if (msg.includes("rate") || msg.includes("429")) {
         setError("Too many requests. Try again in a few minutes.");
       } else {
@@ -120,15 +144,19 @@ export default function ChatInput({
   };
 
   const containerStyles = cn(
-    "flex items-center gap-3 rounded-2xl transition-all duration-300",
+    // Explicit property list, not transition-all: the container also animates
+    // its shadow on focus, and transition-all would drag layout properties in.
+    "flex items-center gap-3 rounded-2xl transition-[border-color,box-shadow] duration-300 motion-reduce:transition-none",
+    // The ring is driven by the input's own :focus-visible so keyboard users get
+    // an unmistakable outline, while a click does not draw one.
+    "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-crux-green has-[:focus-visible]:ring-offset-2",
     size === "large" ? "px-6 py-4 sm:py-5" : "px-5 py-3.5",
     {
       "bg-white border border-crux-border shadow-lg": variant === "default",
       "bg-white border border-crux-border": variant === "white",
-      "bg-[#141414] border border-crux-border-dark": variant === "dark",
+      "bg-crux-surface-dark-card border border-crux-border-dark": variant === "dark",
     },
-    (isFocused || query) && "animate-glow-pulse",
-    (isFocused || query) && "border-crux-green",
+    (isFocused || query) && "border-crux-green shadow-[var(--shadow-premium-glow)]",
     className
   );
 
@@ -136,9 +164,8 @@ export default function ChatInput({
     "flex-1 outline-none bg-transparent font-medium",
     "text-base",
     {
-      "text-crux-text-primary placeholder-crux-text-muted":
-        variant !== "dark",
-      "text-white placeholder-gray-500": variant === "dark",
+      "text-crux-text-primary placeholder-crux-text-muted": variant !== "dark",
+      "text-crux-text-light placeholder-crux-text-muted": variant === "dark",
     }
   );
 
@@ -172,20 +199,25 @@ export default function ChatInput({
           type="submit"
           disabled={!query.trim() || isSubmitting}
           className={cn(
-            "shrink-0 flex items-center justify-center rounded-xl p-2.5 min-w-11 min-h-11 transition-all duration-200",
+            "shrink-0 flex items-center justify-center rounded-xl p-2.5 min-w-11 min-h-11",
+            "transition-[background-color,opacity] duration-200 motion-reduce:transition-none",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2",
             query.trim() && !isSubmitting
-              ? "bg-gradient-green text-white hover:opacity-90 cursor-pointer"
+              // Brand green from the token, not the .bg-gradient-green utility:
+              // that utility is still built from the rejected #22C55E/#16A34A
+              // pair in globals.css, which this file cannot edit.
+              ? "bg-crux-green text-white hover:bg-crux-green-mid cursor-pointer"
               : variant === "dark"
-                ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                ? "bg-crux-border-dark text-crux-text-muted cursor-not-allowed"
+                : "bg-crux-bg-secondary text-crux-text-muted cursor-not-allowed"
           )}
-          aria-label="Submit query"
+          aria-label="Grade this project"
         >
-          {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={18} />}
+          {isSubmitting ? <Loader2 size={18} className="animate-spin motion-reduce:animate-none" /> : <ArrowRight size={18} />}
         </button>
       </div>
       {error && (
-        <p className="mt-2 text-xs text-red-500 text-center">{error}</p>
+        <p className="mt-2 text-xs text-red-600 text-center" role="status">{error}</p>
       )}
     </form>
   );

@@ -120,7 +120,7 @@ export default function AnonymousScorePage() {
             <Lock size={26} aria-hidden="true" className="text-crux-green" />
           </div>
           <h1 className="mb-3 text-2xl font-bold text-crux-text-primary">
-            You&rsquo;ve used your {quotaExceeded.maxReports} free scores
+            You&rsquo;ve used your {quotaExceeded.maxReports} free grades
           </h1>
           <p className="mx-auto mb-8 max-w-[420px] text-sm text-crux-text-secondary">
             Create a free account to keep scoring — unlimited properties, full CRUX Lens access,

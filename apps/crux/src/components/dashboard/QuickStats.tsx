@@ -73,7 +73,7 @@ export function QuickStats() {
       {/* avgScore is null until something is actually graded. A zero here would be a
           number the engine never produced, so the card says it has nothing yet. */}
       <StatCard
-        label="Average score"
+        label="Average composite"
         value={stats.avgScore === null ? "—" : String(stats.avgScore)}
         caption={stats.avgScore === null ? "Nothing graded yet" : "Across graded properties"}
         isLoading={isLoading}
