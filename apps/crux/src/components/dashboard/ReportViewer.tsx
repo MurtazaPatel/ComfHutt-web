@@ -15,7 +15,7 @@ import { Surface, SurfaceTitle } from "./ui/Surface";
 import { ReportSection } from "./ReportSection";
 import { RiskFlags } from "./RiskFlags";
 import { FindingsList } from "./FindingsList";
-import { useCruxReport, type CruxReportRow } from "./useCruxReport";
+import { useCruxReport, type CruxReportRow } from "@/hooks/useCruxReport";
 
 /**
  * The printable CRUX report for one property.
@@ -53,15 +53,23 @@ const MODULE_ORDER = ["L", "D", "T", "F", "C", "X", "P"];
  * a meaning for a source, and nothing turns one into a link: the refs carry no URL,
  * and synthesising one would fabricate the very thing a reader would click to
  * check us.
+ *
+ * Only the four namespaces the engine actually builds refs from are listed:
+ * `gujrera:*`, `rera:complaint`, `ecourts:cnr` and `maps:distance*`. An earlier
+ * version of this map also pre-spelled mca21, cpcb, residex and cpwd. Those are
+ * legacy CPSM *fetcher* sources — they can appear in a score's
+ * `data_sources_used`, which is the engine's own claim and is rendered verbatim
+ * elsewhere — but they are never evidence-ref namespaces, so those entries could
+ * not have fired here. Seeding them still asserted that a module's finding was
+ * read from a source it was not, two of them names the product is barred from
+ * citing. A namespace that starts appearing gets added once it is real; until
+ * then the raw string is the honest fallback.
  */
 const SOURCE_NAME: Record<string, string> = {
   gujrera: "GujRERA",
+  rera: "RERA",
   ecourts: "eCourts",
-  mca21: "MCA21",
-  maps: "Google Maps",
-  cpcb: "CPCB",
-  residex: "NHB RESIDEX",
-  cpwd: "CPWD",
+  maps: "Maps",
 };
 
 function sourceLabel(source: string): string {
