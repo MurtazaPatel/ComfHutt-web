@@ -239,7 +239,8 @@ function ProgressDots({ active }: { active: number }) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 flex-row gap-2 md:bottom-auto md:left-auto md:right-8 md:top-1/2 md:-translate-x-0 md:-translate-y-1/2 md:flex-col md:gap-2.5">
+      className="pointer-events-none absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 flex-row gap-2 md:bottom-auto md:left-auto md:right-8 md:top-1/2 md:-translate-x-0 md:-translate-y-1/2 md:flex-col md:gap-2.5"
+    >
       {WIDGETS.map((_, i) => (
         <span
           key={i}
