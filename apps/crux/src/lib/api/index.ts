@@ -73,12 +73,35 @@ async function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * Whether this request can be safely sent twice.
+ *
+ * Retrying a failed POST is not free here. `POST /crux/watch/:id` spends one of a
+ * user's three Watch credits, and `POST /crux/card/:id` mints a share card with its
+ * own token and 90-day expiry. A 5xx or a dropped connection does not tell us
+ * whether the server completed the write before failing, so a blind retry can
+ * double-spend a credit or leave two live cards for one property. GET and HEAD carry
+ * no such cost, so only those are retried on a server error.
+ *
+ * A transport-level failure (the fetch itself threw — DNS, TLS, connection refused)
+ * is different: the request may never have reached the server. We still do not retry
+ * a non-idempotent one, because "may never have arrived" is not "did not arrive",
+ * and a duplicate charge is worse than an error the user can act on.
+ */
+function isIdempotent(method: string | undefined): boolean {
+  const m = (method ?? "GET").toUpperCase();
+  return m === "GET" || m === "HEAD";
+}
+
 async function fetchWithRetry(
   url: string,
   options: FetchOptions,
   retries = 3,
 ): Promise<Response> {
-  for (let attempt = 0; attempt < retries; attempt++) {
+  const retryable = isIdempotent(options.method);
+  const attempts = retryable ? retries : 1;
+
+  for (let attempt = 0; attempt < attempts; attempt++) {
     try {
       const response = await fetch(url, { ...options, signal: options.signal });
 
@@ -86,7 +109,7 @@ async function fetchWithRetry(
         return refreshAndRetry(url, options);
       }
 
-      if (response.status >= 500 && attempt < retries - 1) {
+      if (response.status >= 500 && attempt < attempts - 1) {
         const backoff = Math.pow(2, attempt) * 1000;
         await delay(backoff);
         continue;
@@ -94,7 +117,9 @@ async function fetchWithRetry(
 
       return response;
     } catch (err) {
-      if (attempt === retries - 1) throw err;
+      // An abort is the caller's own decision, not a failure to retry around.
+      if ((err as Error)?.name === "AbortError") throw err;
+      if (attempt === attempts - 1) throw err;
       const backoff = Math.pow(2, attempt) * 1000;
       await delay(backoff);
     }

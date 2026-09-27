@@ -3,6 +3,74 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 
+/**
+ * One citation behind a module verdict — the engine's `EvidenceRef`.
+ *
+ * Note what is NOT here: a URL. The ref is a pointer into the evidence ledger and
+ * `source` is a `namespace:document` pair (`gujrera:form3`, `ecourts`,
+ * `maps:distance+places`). These are source attributions, not links, and a URL
+ * must never be synthesised from them — that would fabricate the one thing a
+ * reader would click to check us.
+ *
+ * Every field is optional so a row written by an older engine, or a payload whose
+ * keys get renamed, renders as less rather than as broken.
+ */
+export interface CgmEvidenceRef {
+  /** Stable pointer into the evidence ledger. Internal; not shown. */
+  ref?: string | null;
+  /** `namespace:document`, e.g. "gujrera:form3". Shown, mapped to plain English. */
+  source?: string | null;
+  /** Layer 0 authority tier. Carried, not rendered: T1–T3 have no public meaning we can state. */
+  tier?: "T1" | "T2" | "T3" | "T4" | string | null;
+  /** ISO timestamp the source was read; null = unknown. */
+  observed_at?: string | null;
+}
+
+/** The four contradictions the engine can record. Unknown values must still render. */
+export type CgmEvidenceFlagCode =
+  | "project_count_overstated"
+  | "history_predates_registration"
+  | "web_possession_claim_vs_record"
+  | "web_allegation_absent_from_record";
+
+/**
+ * A contradiction between something published about a project and the regulator's
+ * record of it. Self-published (T4) evidence never moves a score; it can only
+ * disagree with the record, and the disagreement is shown, both sides, as the
+ * engine wrote it. There is no severity and no summary message — `claim` and
+ * `record` are already complete sentences, and the page must not paraphrase an
+ * adverse statement about a named builder.
+ */
+export interface CgmEvidenceFlag {
+  code?: CgmEvidenceFlagCode | string | null;
+  /** What was published. */
+  claim?: string | null;
+  /** What the regulator's record holds. */
+  record?: string | null;
+  /** The sentence the claim was read from. */
+  quote?: string | null;
+  /** The page the claim was read from. A real link when non-null. */
+  url?: string | null;
+  observed_at?: string | null;
+}
+
+/**
+ * The legal module's counting, which is the most defensible thing CRUX does.
+ *
+ * `cases_counted` are the cases tied to this promoter with enough confidence to
+ * enter the maths. `cases_possible` carry a matching name but could not be tied to
+ * him, so they were deliberately EXCLUDED. Showing only a total would be the
+ * dishonest version of this number.
+ */
+export interface CgmLegalSummary {
+  /** 0..1 searchable-history factor — why a verdict is capped rather than clean. */
+  subject_exposure?: number | null;
+  cases_counted?: number | null;
+  cases_possible?: number | null;
+  coverage?: number | null;
+  verdict?: string | null;
+}
+
 // CGM-1.0 module verdict (spec §2). Present only when CGM_V1_ENABLED produced this row.
 export interface CgmModuleScore {
   code: "L" | "D" | "T" | "F" | "C" | "X" | "P";
@@ -11,6 +79,8 @@ export interface CgmModuleScore {
   coverage: number;
   verdict: string;
   not_assessed: boolean;
+  /** Per-module source attributions. Optional — older rows carry none. */
+  evidence_refs?: CgmEvidenceRef[] | null;
 }
 
 export interface CruxScore {
@@ -43,11 +113,21 @@ export interface CruxScore {
   cohort_percentile?: number | null;
   module_scores?: CgmModuleScore[] | null;
   gates_applied?: Array<{ gate_id: string; trigger_ref: string; cap: number }>;
-  legal_summary?: { cases_counted: number; cases_possible: number; coverage: number; verdict: string } | null;
+  legal_summary?: CgmLegalSummary | null;
   vastu_overlay?: { verdict: string; factorsAnswered: number; factorsTotal: number; notes: string[] } | null;
   price_assessed?: boolean;
   not_rated_reason?: string | null;
   provisional?: boolean;
+  /** Published-claim vs record contradictions. Top-level, not per-module. */
+  evidence_flags?: CgmEvidenceFlag[] | null;
+
+  // ─── Cache metadata (only on the non-streaming GET /crux/score/:id) ───────────
+  // This hook reads the SSE stream endpoint, which does not set these. Typed and
+  // rendered defensively so a switch to the plain GET starts telling the truth
+  // about freshness instead of implying every grade was just computed.
+  fromCache?: boolean;
+  cachedAt?: string | null;
+  shareToken?: string | null;
 }
 
 
@@ -202,6 +282,11 @@ export function usePropertyScore(propertyId: string, intent?: string) {
 
   useEffect(() => {
     if (isLoaded) {
+      // Kicking off the SSE fetch is the one thing this effect exists to do, and
+      // the request has to clear the previous score before the first byte arrives
+      // — otherwise the screen shows the last property's grade while loading the
+      // next one. The lint rule cannot tell that apart from a cascading render.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchScoreStream(intent, false);
     }
   }, [fetchScoreStream, intent, isLoaded]);

@@ -1,42 +1,35 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Printer, Share2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { ArrowLeft, Printer } from "lucide-react";
 import { ReportViewer } from "@/components/dashboard/ReportViewer";
 
 export default function ReportPage() {
-  const params = useParams();
-  const router = useRouter();
-  const propertyId = params.propertyId as string;
+  const { propertyId } = useParams<{ propertyId: string }>();
 
   return (
-    <div className="max-w-[960px] mx-auto px-6 py-10">
-      {/* Top bar */}
-      <div className="flex items-center justify-between mb-8">
+    <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+      <div className="mb-8 flex items-center justify-between gap-4 print:hidden">
+        {/* A real link rather than router.back(): the label promises the property,
+            and history may not hold it (the report is linkable on its own). */}
+        <Link
+          href={`/dashboard/properties/${propertyId}`}
+          className="flex items-center gap-2 rounded-lg px-1 py-1 text-[14px] text-crux-text-secondary transition-colors hover:text-crux-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green motion-reduce:transition-none"
+        >
+          <ArrowLeft size={16} aria-hidden="true" />
+          Back to property
+        </Link>
+        {/* Share is gone rather than dead: there is no share link on this route's data.
+            Print is the browser's own, which is also how a PDF gets made. */}
         <button
           type="button"
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-[14px] text-crux-text-secondary hover:text-crux-text-primary transition-colors"
+          onClick={() => window.print()}
+          className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-[13px] text-crux-text-secondary transition-colors hover:text-crux-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green motion-reduce:transition-none"
         >
-          <ArrowLeft size={16} />
-          Back to Property
+          <Printer size={14} aria-hidden="true" />
+          Print
         </button>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex items-center gap-1.5 text-[13px] text-crux-text-secondary hover:text-crux-text-primary transition-colors"
-          >
-            <Printer size={14} />
-            Print
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-1.5 text-[13px] text-crux-text-secondary hover:text-crux-text-primary transition-colors"
-          >
-            <Share2 size={14} />
-            Share
-          </button>
-        </div>
       </div>
 
       <ReportViewer propertyId={propertyId} />

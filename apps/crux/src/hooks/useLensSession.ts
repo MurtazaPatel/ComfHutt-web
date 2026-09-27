@@ -160,6 +160,12 @@ export function useLensSession(propertyId: string) {
     // reset — so every mount showed an empty chat regardless of what was stored.
     let cancelled = false;
 
+    // react-hooks/set-state-in-effect: this is the one place the reset has to happen
+    // in an effect. It is not deriving state — it clears the previous property's
+    // transcript, cancels its stream and then re-reads sessionStorage for the new
+    // one. The alternative (remounting via a `key`) would move the decision into
+    // every caller and take this hook's session recovery with it.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSessionId(null);
     setMessages([]);
     setError(null);
@@ -348,7 +354,23 @@ export function useLensSession(propertyId: string) {
         timestamp: new Date().toISOString(),
       };
 
-      setMessages((prev) => [...prev, userMsg].slice(-MAX_MESSAGES));
+      /**
+       * Commit a stopped answer before clearing the slot for the next question.
+       *
+       * An aborted stream never delivers a `done` frame, so the text Lens had already
+       * produced stays in currentAssistantRef and is only on screen as
+       * `activeMessage`. Nulling the ref here — which is what has to happen before
+       * the next answer starts — used to delete it: press Stop, ask something else,
+       * and everything Lens had said disappeared from the transcript. Same for a
+       * stream that failed mid-answer, where the error frame leaves the ref intact.
+       * A `done` frame has already committed and nulled the ref, so this cannot
+       * duplicate a completed answer.
+       */
+      const partial = currentAssistantRef.current;
+      setMessages((prev) => {
+        const withPartial = partial && partial.content.trim() ? [...prev, partial] : prev;
+        return [...withPartial, userMsg].slice(-MAX_MESSAGES);
+      });
       setError(null);
       currentAssistantRef.current = null;
       syncActiveMessage();

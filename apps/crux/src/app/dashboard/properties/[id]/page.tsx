@@ -2,15 +2,17 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Share2, Settings, Loader2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Share2, Loader2, RefreshCw, AlertCircle, AlertTriangle, Check } from "lucide-react";
 import { usePropertyScore } from "@/hooks/usePropertyScore";
 import { useApiFetch } from "@/lib/api";
+import { formatDateLong, formatRelative } from "@/lib/format";
+import { isUngraded } from "@/lib/grade";
 import { ScoreGauge } from "@/components/dashboard/ScoreGauge";
 import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
 import { CgmGradeSurface } from "@/components/dashboard/CgmGradeSurface";
 import { PropertyActions } from "@/components/dashboard/PropertyActions";
-
-const DATA_SOURCES = ["MCA21", "eCourts", "RERA", "NHB RESIDEX", "NASA VIIRS"];
+import { PageHeading, Surface, SurfaceTitle } from "@/components/dashboard/ui/Surface";
+import { ThinkingOrb, ORB_STATE } from "@/components/orb";
 
 interface PropertyRecord {
   id: string;
@@ -28,10 +30,6 @@ function gradeFromScore(score: number): string {
   return "Risk";
 }
 
-function percentileFromScore(score: number): number {
-  return Math.max(1, 100 - score);
-}
-
 export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -40,23 +38,34 @@ export default function PropertyDetailPage() {
 
   const { score, isLoading, error, isComputing, progressMessages, recompute } = usePropertyScore(propertyId);
 
-  const [property, setProperty] = useState<PropertyRecord | null>(null);
-  const [propertyLoading, setPropertyLoading] = useState(true);
+  // Stamped with the id it belongs to, so a late reply for the previous property
+  // can never label this one. Deriving `property` and `propertyLoading` from that
+  // stamp replaces the reset-then-fetch pair of setState calls this effect used to
+  // make on every id change.
+  const [fetched, setFetched] = useState<{ id: string; record: PropertyRecord | null } | null>(null);
+  // Owned here so the header Share button drives the one modal PropertyActions has,
+  // rather than a second, dead copy of it.
+  const [shareOpen, setShareOpen] = useState(false);
 
   // Fetch property metadata (address) separately
   useEffect(() => {
     if (!propertyId) return;
-    setProperty(null);
-    setPropertyLoading(true);
+    let live = true;
     apiFetch<{ success: boolean; data?: PropertyRecord }>(`/crux/property/${propertyId}`)
       .then((res) => {
-        if (res.success && res.data) setProperty(res.data);
+        if (live) setFetched({ id: propertyId, record: res.success && res.data ? res.data : null });
       })
       .catch(() => {
-        // Non-fatal — property address will fall back to ID if not available
-      })
-      .finally(() => setPropertyLoading(false));
-  }, [propertyId]);
+        // Non-fatal — the address falls back to the ID below.
+        if (live) setFetched({ id: propertyId, record: null });
+      });
+    return () => {
+      live = false;
+    };
+  }, [propertyId, apiFetch]);
+
+  const property = fetched?.id === propertyId ? fetched.record : null;
+  const propertyLoading = fetched?.id !== propertyId;
 
   // Show the user's original input (the project name they searched) as the title, not
   // the geocoded address (which collapses to "City, State, PIN" and loses the name).
@@ -64,52 +73,73 @@ export default function PropertyDetailPage() {
   const isFallbackAddress = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawAddress);
   const displayAddress = isFallbackAddress ? "Property Intelligence Report" : rawAddress;
 
-  // Computing state — showing live progress
+  const locationLine = property?.city
+    ? `${property.city}${property.state ? `, ${property.state}` : ""}`
+    : null;
+
+  const backButton = (
+    <button
+      type="button"
+      onClick={() => router.back()}
+      className="flex items-center gap-2 rounded-lg text-[14px] text-crux-text-secondary transition-colors hover:text-crux-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+    >
+      <ArrowLeft size={16} aria-hidden="true" />
+      Back
+    </button>
+  );
+
+  // Computing state — showing live progress. Deliberately plain: the previous
+  // version shimmered the heading through a clipped gradient, which made the one
+  // line explaining the wait the hardest thing on the page to read.
   if (isComputing) {
     return (
-      <div className="max-w-[960px] mx-auto px-6 py-10">
-        <div className="mb-4 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl p-5">
-          <h1 className="text-[18px] font-semibold text-crux-text-primary truncate">
-            {displayAddress}
-          </h1>
-          {property?.city && (
-            <p className="text-[13px] text-crux-text-secondary mt-0.5">{property.city}{property.state ? `, ${property.state}` : ""}</p>
-          )}
-        </div>
-        <div className="flex flex-col items-center justify-center py-24 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" style={{ backgroundSize: "200% 100%" }} />
-          
-          <div className="w-16 h-16 rounded-full bg-crux-green-tint flex items-center justify-center mb-6 relative z-10">
-            <Loader2 className="w-8 h-8 text-crux-green animate-spin" />
+      <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+        <Surface className="mb-4" padding="tight">
+          <h1 className="truncate text-[18px] font-semibold text-crux-text-primary">{displayAddress}</h1>
+          {locationLine && <p className="mt-0.5 text-[13px] text-crux-text-secondary">{locationLine}</p>}
+        </Surface>
+        <Surface className="flex flex-col items-center justify-center py-20 text-center">
+          {/* The orb carries the wait. `solving` is the tuned state for the grading
+              engine working through its modules; it gates itself on visibility and
+              holds one frame under prefers-reduced-motion. aria-hidden because the
+              heading below and the aria-live step list already announce progress. */}
+          <div aria-hidden className="mb-6 flex h-16 w-16 items-center justify-center">
+            <ThinkingOrb state={ORB_STATE.grading} size={64} />
           </div>
-          <h2 className="text-xl font-semibold text-crux-text-primary mb-6 relative z-10 animate-pulse bg-gradient-to-r from-gray-900 via-gray-600 to-gray-900 bg-clip-text text-transparent">
-            CRUX AI is analyzing this property...
-          </h2>
-          
-          <div className="flex flex-col gap-3 w-full max-w-[420px] text-left relative z-10">
+          <h2 className="mb-6 text-[18px] font-semibold text-crux-text-primary">Reading the public record…</h2>
+
+          <ol className="flex w-full max-w-[420px] flex-col gap-3 text-left" aria-live="polite">
             {progressMessages.map((msg, idx) => {
               const isLast = idx === progressMessages.length - 1;
               return (
-                <div key={idx} className={`flex items-start gap-3 transition-opacity duration-300 ${isLast ? 'opacity-100' : 'opacity-50'}`}>
+                <li key={idx} className="flex items-start gap-3">
                   {isLast ? (
-                    <Loader2 size={16} className="text-crux-green animate-spin mt-0.5 flex-shrink-0" />
+                    <Loader2
+                      size={16}
+                      aria-hidden="true"
+                      className="mt-0.5 shrink-0 animate-spin text-crux-green motion-reduce:animate-none"
+                    />
                   ) : (
-                    <div className="w-4 h-4 rounded-full bg-crux-green/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                      <div className="w-2 h-2 rounded-full bg-crux-green" />
-                    </div>
+                    <Check size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-crux-green" />
                   )}
-                  <p className={`text-[14px] ${isLast ? 'text-gray-800 font-medium' : 'text-gray-500'}`}>{msg}</p>
-                </div>
+                  <p className={isLast ? "text-[14px] font-medium text-crux-text-primary" : "text-[14px] text-crux-text-secondary"}>
+                    {msg}
+                  </p>
+                </li>
               );
             })}
             {progressMessages.length === 0 && (
-              <div className="flex items-center gap-3">
-                <Loader2 size={16} className="text-crux-green animate-spin flex-shrink-0" />
-                <p className="text-[14px] text-gray-800 font-medium">Initializing...</p>
-              </div>
+              <li className="flex items-center gap-3">
+                <Loader2
+                  size={16}
+                  aria-hidden="true"
+                  className="shrink-0 animate-spin text-crux-green motion-reduce:animate-none"
+                />
+                <p className="text-[14px] font-medium text-crux-text-primary">Starting…</p>
+              </li>
             )}
-          </div>
-        </div>
+          </ol>
+        </Surface>
       </div>
     );
   }
@@ -117,51 +147,41 @@ export default function PropertyDetailPage() {
   // Loading skeleton
   if (isLoading || propertyLoading) {
     return (
-      <div className="max-w-[960px] mx-auto px-6 py-10">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="h-8 w-8 bg-gray-100 rounded-lg animate-pulse" />
-          <div className="h-6 w-48 bg-gray-100 rounded animate-pulse" />
+      <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+        <div className="mb-8 flex items-center gap-3">
+          <div className="size-8 animate-pulse rounded-lg bg-crux-bg-secondary motion-reduce:animate-none" />
+          <div className="h-6 w-48 animate-pulse rounded bg-crux-bg-secondary motion-reduce:animate-none" />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <div className="h-64 bg-gray-50 rounded-2xl animate-pulse" />
+            <div className="h-64 animate-pulse rounded-2xl bg-crux-bg-secondary motion-reduce:animate-none" />
           </div>
-          <div className="h-64 bg-gray-50 rounded-2xl animate-pulse" />
+          <div className="h-64 animate-pulse rounded-2xl bg-crux-bg-secondary motion-reduce:animate-none" />
         </div>
       </div>
     );
   }
 
-  // Error state (no score to display)
+  // Error state (no score to display). There used to be a second, byte-identical
+  // copy of this block further down — unreachable, so it only ever drifted.
   if (error && !score && !isComputing) {
     return (
-      <div className="max-w-[960px] mx-auto px-6 py-10">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-[14px] text-crux-text-secondary hover:text-crux-text-primary mb-6 transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl">
-          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
-            <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-            </svg>
+      <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+        <div className="mb-6">{backButton}</div>
+        <Surface className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-red-50">
+            <AlertCircle size={22} aria-hidden="true" className="text-red-500" />
           </div>
-          <h1 className="text-xl font-semibold text-crux-text-primary mb-2">
-            Could not load property
-          </h1>
-          <p className="text-sm text-crux-text-secondary mb-4">{error}</p>
+          <h1 className="mb-2 text-xl font-semibold text-crux-text-primary">Could not load property</h1>
+          <p className="mb-4 text-sm text-crux-text-secondary">{error}</p>
           <button
             type="button"
             onClick={() => recompute()}
-            className="px-4 py-2 text-sm font-medium bg-crux-green text-white rounded-xl hover:bg-crux-green-mid transition-colors"
+            className="rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Compute Score
           </button>
-        </div>
+        </Surface>
       </div>
     );
   }
@@ -169,86 +189,41 @@ export default function PropertyDetailPage() {
   // Score not yet computed — show prompt to compute
   if (!score && !isLoading && !error && !isComputing) {
     return (
-      <div className="max-w-[960px] mx-auto px-6 py-10">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-[14px] text-crux-text-secondary hover:text-crux-text-primary mb-6 transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
-        <div className="mb-4 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl p-5">
-          <h1 className="text-[18px] font-semibold text-crux-text-primary truncate">
-            {displayAddress}
-          </h1>
-          {property?.city && (
-            <p className="text-[13px] text-crux-text-secondary mt-0.5">{property.city}{property.state ? `, ${property.state}` : ""}</p>
-          )}
-        </div>
-        <div className="flex flex-col items-center justify-center py-24 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl">
-          <div className="w-16 h-16 rounded-full bg-crux-green-tint flex items-center justify-center mb-6">
-            <RefreshCw className="w-6 h-6 text-crux-green" />
+      <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+        <div className="mb-6">{backButton}</div>
+        <Surface className="mb-4" padding="tight">
+          <h1 className="truncate text-[18px] font-semibold text-crux-text-primary">{displayAddress}</h1>
+          {locationLine && <p className="mt-0.5 text-[13px] text-crux-text-secondary">{locationLine}</p>}
+        </Surface>
+        <Surface className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="mb-6 flex size-14 items-center justify-center rounded-full bg-crux-green-tint">
+            <RefreshCw size={24} aria-hidden="true" className="text-crux-green" />
           </div>
-          <h2 className="text-xl font-semibold text-crux-text-primary mb-3">
-            Property Created
-          </h2>
-          <p className="text-sm text-crux-text-secondary mb-2 max-w-[420px]">
-            This property hasn&apos;t been scored yet. Generate a CRUX score
-            to see the breakdown across 6 categories.
-          </p>
-          <p className="text-[12px] text-crux-text-muted mb-6">
-            Free tier: 2 scores/month. Takes 5-10 seconds.
+          <h2 className="mb-3 text-xl font-semibold text-crux-text-primary">Property Created</h2>
+          {/* Seven modules, not six — L, D, T, F, C, X, P. No quota or timing claim
+              here: neither number is backed by anything this app can see. */}
+          <p className="mb-6 max-w-[420px] text-sm text-crux-text-secondary">
+            This property hasn&apos;t been scored yet. Generate a CRUX score to see the grade and the verdict for each
+            of the seven modules.
           </p>
           <button
             type="button"
             onClick={() => recompute()}
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-crux-green text-white rounded-xl hover:bg-crux-green-mid transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
-            <RefreshCw size={14} />
+            <RefreshCw size={14} aria-hidden="true" />
             Generate CRUX Score
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state (no score to display)
-  if (error && !score) {
-    return (
-      <div className="max-w-[960px] mx-auto px-6 py-10">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-[14px] text-crux-text-secondary hover:text-crux-text-primary mb-6 transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 rounded-2xl">
-          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
-            <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-            </svg>
-          </div>
-          <h1 className="text-xl font-semibold text-crux-text-primary mb-2">
-            Could not load property
-          </h1>
-          <p className="text-sm text-crux-text-secondary mb-4">{error}</p>
-          <button
-            type="button"
-            onClick={() => recompute()}
-            className="px-4 py-2 text-sm font-medium bg-crux-green text-white rounded-xl hover:bg-crux-green-mid transition-colors"
-          >
-            Compute Score
-          </button>
-        </div>
+        </Surface>
       </div>
     );
   }
 
   const scoreValue = score?.score_composite ?? 0;
-  
+  const dataSources = score?.data_sources_used ?? [];
+  // A card of an ungraded, uncomputed property has nothing on it worth sending.
+  const canShare = Boolean(score) && (!isUngraded(score?.grade) || score?.score_composite != null);
+
   // Reconstruct weights mapping
   const currentWeights: Record<string, number> = {
     cpsm_legal_authenticity: 0.20,
@@ -265,159 +240,120 @@ export default function PropertyDetailPage() {
   }
 
   return (
-    <div className="max-w-[960px] mx-auto px-6 py-10">
-      {/* Top bar */}
-      <div className="flex items-center justify-between mb-8">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-[14px] text-crux-text-secondary hover:text-crux-text-primary transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="p-2 text-crux-text-secondary hover:text-crux-text-primary hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Share"
-          >
-            <Share2 size={16} />
-          </button>
-          <button
-            type="button"
-            className="p-2 text-crux-text-secondary hover:text-crux-text-primary hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Settings"
-          >
-            <Settings size={16} />
-          </button>
-        </div>
-      </div>
+    <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+      <div className="mb-4">{backButton}</div>
 
-      {/* Property header */}
-      <div
-        className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 mb-6"
-        style={{ borderRadius: "16px", padding: "24px" }}
-      >
-          <h1
-          className="text-[24px] font-semibold text-gray-900 mb-1 leading-tight tracking-tight"
-          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-        >
-          {displayAddress}
-        </h1>
-        {isFallbackAddress && (
-          <p className="text-[11px] font-mono text-gray-400 mb-2 uppercase tracking-wider">ID: {propertyId}</p>
-        )}
-        {property?.city && (
-          <p
-            className="text-[13px] text-crux-text-muted mb-1"
-            style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-          >
-            {property.city}{property.state ? `, ${property.state}` : ""}
-          </p>
-        )}
-        <p
-          className="text-[13px] text-crux-text-secondary"
-          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-        >
-          {score?.created_at
-            ? `Scored ${new Date(score.created_at).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })} · Intent: ${score.intent_profile || "Balanced"}`
-            : "Score pending"}
-        </p>
-        {score?.degraded && (
-          <p className="text-[12px] text-amber-500 mt-1">⚠ Some data sources are degraded</p>
-        )}
-      </div>
+      {/* Page heading, same block every other dashboard page uses. Share opens the
+          one modal PropertyActions owns; the old Settings button is gone — there
+          is no per-property setting for it to open. */}
+      <PageHeading
+        title={displayAddress}
+        subtitle={
+          <>
+            {locationLine && <span className="block">{locationLine}</span>}
+            <span className="block">
+              {score?.created_at
+                ? `Scored ${formatDateLong(score.created_at)} · Intent: ${score.intent_profile || "Balanced"}`
+                : "Score pending"}
+            </span>
+            {/* A cached grade was computed earlier, not just now. Say which. */}
+            {score?.fromCache && score.cachedAt && (
+              <span className="block">Served from cache · last checked {formatRelative(score.cachedAt)}</span>
+            )}
+            {isFallbackAddress && (
+              <span className="mt-1 block font-mono text-[11px] uppercase tracking-wider text-crux-text-muted">
+                ID: {propertyId}
+              </span>
+            )}
+            {score?.degraded && (
+              <span className="mt-1 flex items-center gap-1.5 text-[12px] text-amber-700">
+                <AlertTriangle size={12} aria-hidden="true" className="shrink-0" />
+                Some data sources are degraded
+              </span>
+            )}
+          </>
+        }
+        action={
+          canShare ? (
+            <button
+              type="button"
+              onClick={() => setShareOpen(true)}
+              aria-label="Share this report"
+              className="rounded-lg p-2 text-crux-text-secondary transition-colors hover:bg-crux-bg-secondary hover:text-crux-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            >
+              <Share2 size={16} aria-hidden="true" />
+            </button>
+          ) : undefined
+        }
+      />
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left: Score + Breakdown */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           {score?.module_scores && score.module_scores.length > 0 ? (
             <CgmGradeSurface score={score} />
           ) : (
-          <div
-            className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
-            style={{ borderRadius: "16px", padding: "24px" }}
-          >
-            <div className="flex flex-col sm:flex-row items-start gap-8">
-              <ScoreGauge
-                score={scoreValue}
-                grade={gradeFromScore(scoreValue)}
-                percentile={percentileFromScore(scoreValue)}
-              />
-              <div className="flex-1 min-w-0">
-                <h2
-                  className="text-[16px] font-semibold text-crux-text-primary mb-4"
-                  style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-                >
-                  Category Breakdown
-                </h2>
-                {score?.score_breakdown ? (
-                  <CategoryBreakdown
-                    breakdown={score.score_breakdown}
-                    weights={currentWeights}
-                  />
-                ) : (
-                  <p className="text-[13px] text-crux-text-muted">No breakdown data available.</p>
-                )}
+            <Surface as="section">
+              <div className="flex flex-col items-start gap-6 sm:flex-row sm:gap-8">
+                <ScoreGauge score={scoreValue} grade={gradeFromScore(scoreValue)} />
+                <div className="min-w-0 flex-1">
+                  <SurfaceTitle as="h2">Category Breakdown</SurfaceTitle>
+                  {score?.score_breakdown ? (
+                    <CategoryBreakdown breakdown={score.score_breakdown} weights={currentWeights} />
+                  ) : (
+                    <p className="text-[13px] text-crux-text-muted">No breakdown data available.</p>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {score?.confidence_score !== undefined && (
-              <p className="text-[12px] text-crux-text-muted mt-4 pt-4 border-t border-[#ededed]">
-                Confidence: {Math.round(score.confidence_score * 100)}% ·
-                Version {score.crux_version || "1.0"}
-              </p>
-            )}
-          </div>
+              {score?.confidence_score !== undefined && (
+                <p className="mt-4 border-t border-crux-border pt-4 text-[12px] text-crux-text-muted">
+                  Confidence: {Math.round(score.confidence_score * 100)}% · Version {score.crux_version || "1.0"}
+                </p>
+              )}
+            </Surface>
           )}
 
-          {/* Data Sources */}
-          <div
-            className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
-            style={{ borderRadius: "16px", padding: "24px" }}
-          >
-            <h3
-              className="text-[14px] font-semibold text-crux-text-primary mb-3"
-              style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-            >
-              Data Sources
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {(score?.data_sources_used ?? DATA_SOURCES).map((source) => (
-                <span
-                  key={source}
-                  className="inline-flex items-center px-3 py-1.5 text-[12px] font-medium text-gray-600 bg-white shadow-sm ring-1 ring-black/5 rounded-full"
-                >
-                  {source}
-                </span>
-              ))}
-            </div>
-          </div>
+          {/* Data Sources — only the registers the engine says it read. A hardcoded
+              fallback list used to fill this in, naming sources that were never
+              consulted on a page that makes adverse claims about named builders. */}
+          <Surface as="section">
+            <SurfaceTitle as="h3">Data Sources</SurfaceTitle>
+            {dataSources.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {dataSources.map((source) => (
+                  <span
+                    key={source}
+                    className="inline-flex items-center rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-crux-text-secondary shadow-sm ring-1 ring-black/5"
+                  >
+                    {source}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[13px] text-crux-text-muted">
+                This score did not report which sources it used.
+              </p>
+            )}
+          </Surface>
         </div>
 
         {/* Right: Actions */}
         <div>
-          <div
-            className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
-            style={{ borderRadius: "16px", overflow: "hidden" }}
-          >
-            <div
-              className="px-4 py-3 border-b border-black/5"
-              style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-            >
+          <Surface padding="none" className="overflow-hidden">
+            <div className="border-b border-black/5 px-4 py-3">
               <h3 className="text-[14px] font-semibold text-crux-text-primary">Actions</h3>
             </div>
             <PropertyActions
               propertyId={propertyId}
               onRecompute={recompute}
+              shareOpen={shareOpen}
+              onShareOpenChange={setShareOpen}
+              intent={score?.intent_profile}
+              canShare={canShare}
             />
-          </div>
+          </Surface>
         </div>
       </div>
     </div>

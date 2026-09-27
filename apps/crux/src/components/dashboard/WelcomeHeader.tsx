@@ -1,38 +1,41 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 interface WelcomeHeaderProps {
   userName?: string | null;
   isLoading?: boolean;
 }
 
+/**
+ * Type sizes are pinned here, with explicit leading, so the skeleton below can
+ * reserve exactly the height the real text takes: 28px × 1.25 = 35px for the
+ * heading, 18px × 1.5 = 27px for the line under it. The old skeleton guessed
+ * 34px and 29px, so the page jumped as the profile resolved.
+ */
+const TITLE_CLASS = "text-[28px] font-bold leading-[1.25] tracking-tight text-crux-text-primary";
+const SUBTITLE_CLASS = "text-[18px] font-medium leading-[1.5] text-crux-text-secondary";
+
 export function WelcomeHeader({ userName, isLoading = false }: WelcomeHeaderProps) {
+  const reduceMotion = useReducedMotion();
+
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-2">
-        <div className="h-[34px] w-[200px] bg-[var(--color-crux-bg-secondary)] rounded animate-pulse" />
-        <div className="h-[29px] w-[320px] bg-[var(--color-crux-border)] opacity-50 rounded animate-pulse" />
+      <div aria-hidden="true">
+        <div className="mb-2 h-[35px] w-[200px] max-w-full animate-pulse rounded bg-crux-bg-secondary motion-reduce:animate-none" />
+        <div className="h-[27px] w-[320px] max-w-full animate-pulse rounded bg-crux-bg-secondary motion-reduce:animate-none" />
       </div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <h2
-        className="mb-2 text-[28px] font-bold text-foreground tracking-tight leading-tight"
-      >
-        Welcome{userName ? `, ${userName}` : ""}
-      </h2>
-      <p
-        className="text-[18px] text-muted-foreground font-medium"
-      >
-        Find intelligence on any property in India.
-      </p>
+      <h1 className={`mb-2 ${TITLE_CLASS}`}>Welcome{userName ? `, ${userName}` : ""}</h1>
+      <p className={SUBTITLE_CLASS}>Find intelligence on any property in Gujarat.</p>
     </motion.div>
   );
 }

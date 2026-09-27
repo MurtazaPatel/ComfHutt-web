@@ -6,18 +6,10 @@ interface UserMessageProps {
 
 export function UserMessage({ content }: UserMessageProps) {
   return (
-    <div className="flex justify-end px-6">
-      <div
-        className="text-[16px] leading-[1.65] text-[#0d0d0d] max-w-[70%]"
-        style={{
-          fontFamily: "var(--font-inter, Inter, sans-serif)",
-          background: "#f5f5f5",
-          borderRadius: "16px",
-          padding: "12px 16px",
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-word",
-        }}
-      >
+    <div className="flex justify-end px-4 sm:px-6">
+      {/* whitespace-pre-wrap keeps the line breaks the user typed; break-words stops a
+          pasted survey number or URL from widening the column past 360px. */}
+      <div className="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl bg-crux-bg-secondary px-4 py-3 text-[16px] leading-[1.65] text-crux-text-primary sm:max-w-[70%]">
         {content}
       </div>
     </div>

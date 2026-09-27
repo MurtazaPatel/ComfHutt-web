@@ -1,34 +1,36 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { scoreColor } from "@/lib/grade";
 
 interface ScoreGaugeProps {
   score: number;
   grade?: string;
-  percentile?: number;
   size?: "default" | "small";
 }
 
-export function ScoreGauge({ score, grade, percentile, size = "default" }: ScoreGaugeProps) {
+/**
+ * The legacy CPSM composite dial: a 0–100 number and, optionally, the grade the
+ * engine attached to it.
+ *
+ * It used to also render an "area percentile" pill from a caller-supplied
+ * percentile. Every caller derived that percentile as `100 - score`, which is not
+ * a percentile of anything — CRUX had no area cohort to rank against. The prop is
+ * gone rather than made optional so no future caller can reintroduce the claim;
+ * a real cohort rank belongs on the CGM surface, which reads it from the API.
+ */
+export function ScoreGauge({ score, grade, size = "default" }: ScoreGaugeProps) {
   const dims = size === "default" ? 120 : 96;
   const radius = size === "default" ? 54 : 42;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (Math.min(score, 100) / 100) * circumference;
 
-  const color =
-    score < 30 ? "#EF4444" : score <= 55 ? "#F59E0B" : "var(--color-crux-green)";
-
+  const color = scoreColor(score);
   const textSize = size === "default" ? "40px" : "32px";
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="relative" style={{ width: dims, height: dims }}>
-        <svg
-          width={dims}
-          height={dims}
-          viewBox={`0 0 ${dims} ${dims}`}
-          className="-rotate-90"
-        >
+      <div className="relative shrink-0" style={{ width: dims, height: dims }}>
+        <svg width={dims} height={dims} viewBox={`0 0 ${dims} ${dims}`} className="-rotate-90">
           {/* Background ring */}
           <circle
             cx={dims / 2}
@@ -45,7 +47,7 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
-          {/* Progress ring */}
+          {/* Progress ring. The sweep is decorative, so reduced-motion drops it. */}
           <circle
             cx={dims / 2}
             cy={dims / 2}
@@ -57,52 +59,23 @@ export function ScoreGauge({ score, grade, percentile, size = "default" }: Score
             strokeDasharray={circumference}
             strokeDashoffset={offset}
             filter="url(#glow)"
-            style={{
-              transition: "stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
-            }}
+            className="transition-[stroke-dashoffset] duration-[800ms] ease-out motion-reduce:transition-none"
           />
         </svg>
         {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className="font-bold text-gray-900 leading-none tracking-tighter"
-            style={{
-              fontSize: textSize,
-              fontFamily: "var(--font-inter, Inter, sans-serif)",
-            }}
+            className="font-bold tabular-nums text-crux-text-primary leading-none tracking-tighter"
+            style={{ fontSize: textSize }}
           >
             {score}
           </span>
-          <span
-            className="text-[12px] text-[#6e6e6e] mt-0.5"
-            style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-          >
-            /100
-          </span>
+          <span className="text-[12px] text-crux-text-secondary mt-0.5">/100</span>
         </div>
       </div>
 
       {grade && (
-        <span
-          className="text-[14px] font-semibold text-gray-900 tracking-tight"
-          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-        >
-          {grade}
-        </span>
-      )}
-
-      {percentile !== undefined && (
-        <span
-          className="inline-flex items-center px-[10px] py-[4px] text-[12px] font-semibold tracking-wide rounded-full"
-          style={{
-            backgroundColor: "rgba(34, 197, 94, 0.1)",
-            color: "var(--color-crux-green-dark)",
-            borderRadius: "9999px",
-            boxShadow: "inset 0 0 0 1px rgba(34, 197, 94, 0.2)",
-          }}
-        >
-          Top {percentile}% in area
-        </span>
+        <span className="text-[14px] font-semibold text-crux-text-primary tracking-tight">{grade}</span>
       )}
     </div>
   );

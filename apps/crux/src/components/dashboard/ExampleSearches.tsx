@@ -2,12 +2,18 @@
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Localities inside CRUX's coverage.
+ *
+ * Every example the chips used to offer was outside Gujarat, so tapping one
+ * demonstrated the product failing.
+ */
 const EXAMPLES = [
-  "2BHK Satellite, Ahmedabad",
-  "Bandra West, Mumbai",
-  "Whitefield, Bangalore",
-  "DLF Phase 1, Gurgaon",
-  "Koregaon Park, Pune",
+  "Bodakdev, Ahmedabad",
+  "Vesu, Surat",
+  "Alkapuri, Vadodara",
+  "Kalawad Road, Rajkot",
+  "Sector 11, Gandhinagar",
 ];
 
 interface ExampleSearchesProps {
@@ -16,24 +22,20 @@ interface ExampleSearchesProps {
 
 export function ExampleSearches({ onSelect }: ExampleSearchesProps) {
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div className="flex flex-wrap gap-2">
       {EXAMPLES.map((example) => (
         <button
           key={example}
           type="button"
           onClick={() => onSelect(example)}
           className={cn(
-            "inline-flex items-center px-[10px] py-[4px]",
-            "rounded-full",
+            "inline-flex cursor-pointer items-center rounded-full px-[10px] py-[4px]",
             "text-xs font-medium",
-            "bg-[#f5f5f5] text-[#6e6e6e]",
-            "border-none cursor-pointer",
-            "transition-colors duration-150",
-            "hover:bg-[#fafafa] hover:text-[#0d0d0d]"
+            "bg-crux-bg-secondary text-crux-text-secondary",
+            "transition-colors duration-150 motion-reduce:transition-none",
+            "hover:bg-crux-bg-accent hover:text-crux-text-primary",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2",
           )}
-          style={{
-            borderRadius: "9999px",
-          }}
         >
           {example}
         </button>
