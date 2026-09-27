@@ -12,6 +12,7 @@ import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
 import { CgmGradeSurface } from "@/components/dashboard/CgmGradeSurface";
 import { PropertyActions } from "@/components/dashboard/PropertyActions";
 import { PageHeading, Surface, SurfaceTitle } from "@/components/dashboard/ui/Surface";
+import { ThinkingOrb, ORB_STATE } from "@/components/orb";
 
 interface PropertyRecord {
   id: string;
@@ -98,8 +99,12 @@ export default function PropertyDetailPage() {
           {locationLine && <p className="mt-0.5 text-[13px] text-crux-text-secondary">{locationLine}</p>}
         </Surface>
         <Surface className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="mb-6 flex size-14 items-center justify-center rounded-full bg-crux-green-tint">
-            <Loader2 size={26} aria-hidden="true" className="animate-spin text-crux-green motion-reduce:animate-none" />
+          {/* The orb carries the wait. `solving` is the tuned state for the grading
+              engine working through its modules; it gates itself on visibility and
+              holds one frame under prefers-reduced-motion. aria-hidden because the
+              heading below and the aria-live step list already announce progress. */}
+          <div aria-hidden className="mb-6 flex h-16 w-16 items-center justify-center">
+            <ThinkingOrb state={ORB_STATE.grading} size={64} />
           </div>
           <h2 className="mb-6 text-[18px] font-semibold text-crux-text-primary">Reading the public record…</h2>
 

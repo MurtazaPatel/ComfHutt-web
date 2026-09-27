@@ -13,6 +13,7 @@ import { ScoreGauge } from "@/components/dashboard/ScoreGauge";
 import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
 import { CgmGradeSurface } from "@/components/dashboard/CgmGradeSurface";
 import { Surface, SurfaceTitle } from "@/components/dashboard/ui/Surface";
+import { ThinkingOrb, ORB_STATE } from "@/components/orb";
 
 interface PropertyRecord {
   id: string;
@@ -149,12 +150,11 @@ export default function AnonymousScorePage() {
             {locationLine && <p className="mt-0.5 text-[13px] text-crux-text-secondary">{locationLine}</p>}
           </Surface>
           <Surface className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="mb-6 flex size-14 items-center justify-center rounded-full bg-crux-green-tint">
-              <Loader2
-                size={26}
-                aria-hidden="true"
-                className="animate-spin text-crux-green motion-reduce:animate-none"
-              />
+            {/* Same orb as the signed-in grading page, so an anonymous visitor and
+                an account holder watch the same thing happen. aria-hidden: the
+                heading and the aria-live step list already announce progress. */}
+            <div aria-hidden className="mb-6 flex h-16 w-16 items-center justify-center">
+              <ThinkingOrb state={ORB_STATE.grading} size={64} />
             </div>
             <h2 className="mb-6 text-[18px] font-semibold text-crux-text-primary">Reading the public record…</h2>
             <ol className="flex w-full max-w-[420px] flex-col gap-3 text-left" aria-live="polite">
