@@ -4,34 +4,33 @@ import Link from "next/link";
 import { MessageSquare, Clock, ArrowRight } from "lucide-react";
 import { useRecentProperties } from "@/hooks/useRecentProperties";
 import { PromptBox } from "@/components/dashboard/PromptBox";
+import { PageHeading, Surface } from "@/components/dashboard/ui/Surface";
+import { gradeBand } from "@/lib/grade";
+import { formatRelative } from "@/lib/format";
 
-function formatRelative(dateStr: string): string {
-  try {
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    const days = Math.floor(hrs / 24);
-    return `${days}d ago`;
-  } catch {
-    return dateStr;
-  }
-}
+const rowFocus =
+  "rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
 
 export default function LensIndexPage() {
   const { properties, isLoading } = useRecentProperties(20);
 
   if (isLoading) {
     return (
-      <div className="max-w-[960px] mx-auto px-6 py-10">
-        <div className="mb-8 animate-pulse">
-          <div className="h-8 w-24 bg-gray-100 rounded mb-2" />
-          <div className="h-4 w-48 bg-gray-100 rounded" />
+      <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+        <div className="mb-8 animate-pulse motion-reduce:animate-none">
+          <div className="mb-2 h-8 w-24 rounded bg-crux-bg-secondary" />
+          <div className="h-4 w-48 rounded bg-crux-bg-secondary" />
         </div>
-        <div className="space-y-3">
+        {/* Mirrors a real row — 40px mark, two text lines — so nothing jumps on load. */}
+        <div className="space-y-3" aria-hidden="true">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-20 bg-gray-50 border border-[#ededed] rounded-2xl animate-pulse" />
+            <Surface key={i} padding="tight" className="flex items-center gap-3 sm:gap-4">
+              <div className="h-10 w-10 shrink-0 animate-pulse rounded-xl bg-crux-bg-secondary motion-reduce:animate-none" />
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="h-4 w-1/2 animate-pulse rounded bg-crux-bg-secondary motion-reduce:animate-none" />
+                <div className="h-3 w-1/3 animate-pulse rounded bg-crux-bg-secondary motion-reduce:animate-none" />
+              </div>
+            </Surface>
           ))}
         </div>
       </div>
@@ -39,62 +38,75 @@ export default function LensIndexPage() {
   }
 
   return (
-    <div className="max-w-[960px] mx-auto px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-crux-text-primary tracking-tight">Lens</h1>
-        <p className="text-sm text-crux-text-secondary mt-1">
-          AI-powered property research conversations
-        </p>
-      </div>
+    <div className="mx-auto max-w-[960px] px-4 py-10 sm:px-6">
+      <PageHeading title="Lens" subtitle="AI-powered property research conversations" />
 
       <div className="mb-12">
         <PromptBox actionType="lens" />
       </div>
 
       {properties.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-white border border-[#ededed] rounded-2xl">
-          <div className="w-16 h-16 rounded-full bg-crux-green-tint flex items-center justify-center mb-4">
-            <MessageSquare className="w-6 h-6 text-crux-green" />
+        <Surface className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-crux-bg-accent">
+            <MessageSquare className="h-6 w-6 text-crux-green" />
           </div>
-          <h2 className="text-lg font-semibold text-crux-text-primary mb-2">No research sessions yet</h2>
-          <p className="text-sm text-crux-text-secondary mb-4 max-w-[360px]">
+          <h2 className="mb-2 text-lg font-semibold text-crux-text-primary">No research sessions yet</h2>
+          <p className="mb-4 max-w-[360px] text-sm text-crux-text-secondary">
             Score a property to start asking questions about it
           </p>
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-crux-green text-white rounded-xl hover:bg-crux-green-mid transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Go to Dashboard
             <ArrowRight size={14} />
           </Link>
-        </div>
+        </Surface>
       ) : (
         <div className="space-y-3">
-          {properties.map((property) => (
-            <Link
-              key={property.id}
-              href={`/dashboard/lens/${property.propertyId}`}
-              className="flex items-center gap-4 bg-white border border-[#ededed] rounded-2xl p-5 hover:border-crux-green/30 hover:shadow-sm transition-all duration-200 group"
-            >
-              <div className="w-10 h-10 rounded-xl bg-crux-green-tint flex items-center justify-center flex-shrink-0">
-                <MessageSquare size={18} className="text-crux-green" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-[15px] font-semibold text-crux-text-primary truncate group-hover:text-crux-green transition-colors">
-                  {property.address || "Unknown address"}
-                </h3>
-                <p className="text-[13px] text-crux-text-secondary truncate mt-0.5">
-                  {property.city ? `${property.city} · ` : ""}Score: {property.score}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <Clock size={14} className="text-crux-text-muted" />
-                <span className="text-[12px] text-crux-text-muted">
-                  {formatRelative(property.scoredAt)}
-                </span>
-              </div>
-            </Link>
-          ))}
+          {properties.map((property) => {
+            // The engine owns the grade; we only present it. A property with no score
+            // yet says so — it does not render as a zero, which is what "Score: 0" on
+            // every row used to be.
+            const band = property.grade ? gradeBand(property.grade) : null;
+
+            return (
+              <Link key={property.id} href={`/dashboard/lens/${property.propertyId}`} className={`group block ${rowFocus}`}>
+                <Surface padding="tight" interactive className="flex items-center gap-3 sm:gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-crux-bg-accent">
+                    <MessageSquare size={18} className="text-crux-green" />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-[15px] font-semibold text-crux-text-primary transition-colors group-hover:text-crux-green motion-reduce:transition-none">
+                      {property.address || "Unknown address"}
+                    </h3>
+                    <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13px] text-crux-text-secondary">
+                      {property.city && <span className="truncate">{property.city}</span>}
+                      {property.city && <span aria-hidden="true">·</span>}
+                      {property.score === null ? (
+                        <span>Not scored yet</span>
+                      ) : (
+                        <span>Score {property.score}</span>
+                      )}
+                      {band && (
+                        <span
+                          className={`inline-flex items-center rounded-full border px-2 py-[1px] text-[11px] font-semibold ${band.chipClass}`}
+                        >
+                          {band.label}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <Clock size={14} className="text-crux-text-muted" aria-hidden="true" />
+                    <span className="text-[12px] text-crux-text-muted">{formatRelative(property.scoredAt)}</span>
+                  </div>
+                </Surface>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

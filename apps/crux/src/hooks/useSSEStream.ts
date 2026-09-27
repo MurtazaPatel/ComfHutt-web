@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 
 export interface SSEDelta {
@@ -25,6 +25,11 @@ export function useSSEStream() {
       setIsStreaming(true);
       setError(null);
       setChunks([]);
+
+      // A second start while one is still in flight used to orphan the first: its
+      // reader loop went on appending to the `chunks` array this call had just
+      // cleared, interleaving two answers. One stream at a time.
+      abortRef.current?.abort();
 
       const controller = new AbortController();
       abortRef.current = controller;
@@ -125,6 +130,20 @@ export function useSSEStream() {
     setChunks([]);
     setError(null);
   }, [abort]);
+
+  /**
+   * Nothing cancelled the request when the chat unmounted. Leaving the Lens page
+   * mid-answer left the POST open — the server kept generating and the reader loop
+   * kept calling setState on a component that no longer existed. Unmount only: the
+   * controller is read from the ref at teardown, so this can never abort a stream
+   * belonging to a live conversation.
+   */
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+      abortRef.current = null;
+    };
+  }, []);
 
   return { chunks, isStreaming, error, start, abort, reset };
 }

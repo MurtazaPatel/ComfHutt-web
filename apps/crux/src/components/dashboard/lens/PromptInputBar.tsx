@@ -8,127 +8,105 @@ interface PromptInputBarProps {
   onSend: (message: string) => void;
   onStop?: () => void;
   isLoading: boolean;
-  sessionExpired?: boolean;
-  onCreateNew?: () => void;
   error?: string | null;
 }
 
-export function PromptInputBar({
-  onSend,
-  onStop,
-  isLoading,
-  sessionExpired,
-  onCreateNew,
-  error,
-}: PromptInputBarProps) {
+/** Tallest the composer grows before it scrolls internally. */
+const MAX_HEIGHT_PX = 200;
+
+export function PromptInputBar({ onSend, onStop, isLoading, error }: PromptInputBarProps) {
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Keyboard shortcut: "/" focuses input
+  // Keyboard shortcut: "/" focuses the composer.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
-        e.preventDefault();
-        textareaRef.current?.focus();
-      }
+      // A "/" that belongs to someone else must not be swallowed:
+      // - isComposing: mid-IME composition, where "/" is part of the candidate the
+      //   user is typing. preventDefault there silently eats the character.
+      // - a modifier: "/" with Ctrl/Cmd/Alt is a browser or OS shortcut.
+      if (e.key !== "/" || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
+
+      // Any editable host, not just <input>/<textarea> — a contenteditable (rich text,
+      // a comment box, a search combobox) is just as much somewhere "/" is literal.
+      const active = document.activeElement as HTMLElement | null;
+      if (!active) return;
+      const tag = active.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || active.isContentEditable) return;
+
+      e.preventDefault();
+      textareaRef.current?.focus();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  const adjustHeight = useCallback(() => {
+  /**
+   * Auto-grow, driven by the value rather than by the change event.
+   *
+   * It used to run only inside onChange, with handleSubmit separately poking
+   * `style.height = "auto"`. Any value change that did not come from a keystroke
+   * therefore left the box at its old height, and the two code paths disagreed about
+   * who owned it. Keying off `text` means the height always describes what is in the
+   * box — including when sending empties it.
+   */
+  useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 200) + "px";
-  }, []);
+    el.style.height = `${Math.min(el.scrollHeight, MAX_HEIGHT_PX)}px`;
+  }, [text]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const trimmed = text.trim();
     if (!trimmed || isLoading) return;
     onSend(trimmed);
     setText("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
-  };
+  }, [text, isLoading, onSend]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    // Enter sends, Shift+Enter is a newline — but never while an IME is composing,
+    // where Enter commits the candidate.
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
       handleSubmit();
     }
   };
 
-  if (sessionExpired) {
-    return (
-      <div className="sticky bottom-0 bg-gradient-to-t from-white via-white to-transparent pt-8 pb-6 px-6">
-        <div
-          className="max-w-[768px] mx-auto flex flex-col items-center gap-2 border border-[#e5e5e5] bg-white py-4"
-          style={{ borderRadius: "16px" }}
-        >
-          <p className="text-[14px] text-crux-text-secondary">Session expired.</p>
-          <button
-            type="button"
-            onClick={onCreateNew}
-            className="px-4 py-2 text-sm font-medium bg-crux-green text-white rounded-lg hover:bg-crux-green-mid transition-colors"
-          >
-            Start a new session
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div
-      className="sticky bottom-0 pb-6 px-6"
-      style={{
-        background: "linear-gradient(to top, white 80%, transparent)",
-        paddingTop: "16px",
-      }}
-    >
-      <div className="max-w-[768px] mx-auto">
+    <div className="sticky bottom-0 bg-gradient-to-t from-white from-80% to-transparent px-4 pb-6 pt-4 sm:px-6">
+      <div className="mx-auto max-w-[768px]">
         <div
           className={cn(
-            "flex items-end gap-2 border bg-white transition-all duration-[220ms]",
-            "focus-within:border-crux-green focus-within:shadow-[0_0_0_3px_rgba(34,197,94,0.12)]",
-            "border-[#e5e5e5]"
+            "flex items-end gap-2 rounded-2xl border border-crux-border bg-white px-3 py-2",
+            "transition-colors duration-200 motion-reduce:transition-none",
+            "focus-within:border-crux-green focus-within:ring-[3px] focus-within:ring-crux-green/15",
           )}
-          style={{ borderRadius: "16px", padding: "8px 12px" }}
         >
           <textarea
             ref={textareaRef}
             value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-              adjustHeight();
-            }}
+            onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={isLoading ? "CRUX is responding..." : "Ask anything about this property..."}
+            placeholder={isLoading ? "CRUX is responding…" : "Ask anything about this property…"}
             disabled={isLoading}
             rows={1}
+            aria-label="Message CRUX Lens"
             className={cn(
-              "flex-1 border-none outline-none resize-none bg-transparent",
+              "min-h-[24px] max-h-[200px] flex-1 resize-none border-none bg-transparent py-[4px] outline-none",
               "text-[16px] leading-[1.65] text-crux-text-primary placeholder:text-crux-text-muted",
-              "disabled:opacity-50 py-[4px]"
+              "disabled:opacity-50",
             )}
-            style={{
-              fontFamily: "var(--font-inter, Inter, sans-serif)",
-              minHeight: "24px",
-              maxHeight: "200px",
-            }}
           />
 
           {isLoading ? (
             <button
               type="button"
               onClick={onStop}
-              className="flex items-center justify-center flex-shrink-0 bg-gray-800 text-white hover:bg-gray-700 transition-colors"
-              style={{ width: "32px", height: "32px", borderRadius: "8px" }}
-              aria-label="Stop"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-crux-text-primary text-white transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+              aria-label="Stop generating"
             >
-              <Square size={14} fill="white" />
+              <Square size={13} fill="currentColor" />
             </button>
           ) : (
             <button
@@ -136,13 +114,13 @@ export function PromptInputBar({
               onClick={handleSubmit}
               disabled={!text.trim()}
               className={cn(
-                "flex items-center justify-center flex-shrink-0 transition-colors duration-150",
+                "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-150",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none",
                 text.trim()
-                  ? "bg-crux-green text-white hover:bg-crux-green-mid cursor-pointer"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  ? "cursor-pointer bg-crux-green text-white hover:bg-crux-green-mid"
+                  : "cursor-not-allowed bg-crux-bg-secondary text-crux-text-muted",
               )}
-              style={{ width: "32px", height: "32px", borderRadius: "8px" }}
-              aria-label="Send"
+              aria-label="Send message"
             >
               <ArrowUp size={16} strokeWidth={2.5} />
             </button>
@@ -150,15 +128,13 @@ export function PromptInputBar({
         </div>
 
         {error && (
-          <p className="mt-2 text-center text-[13px] text-red-500">
+          <p role="alert" className="mt-2 text-center text-[13px] text-red-600">
             {error}
           </p>
         )}
 
-        <p
-          className="text-center text-[11px] text-[#9b9b9b] mt-2"
-          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-        >
+        {/* Advisory requirement — this line ships. */}
+        <p className="mt-2 text-center text-[11px] text-crux-text-muted">
           CRUX Lens may produce inaccurate information. Verify critical decisions independently.
         </p>
       </div>
