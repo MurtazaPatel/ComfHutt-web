@@ -131,3 +131,49 @@ export function scoreColor(value: number): string {
   if (value <= 55) return "#F59E0B";
   return "var(--color-crux-green)";
 }
+
+/**
+ * The seven modules the engine grades, in the order it reports them.
+ *
+ * Lifted here because CgmGradeSurface and ReportViewer each carried their own
+ * copy of this table, and the dashboard now needs a third. Labels read as
+ * strengths on purpose: every module score is "higher is better", so a module
+ * named for its risk would make a high score look like a bad result.
+ */
+export const MODULE_ORDER = ["L", "D", "T", "F", "C", "X", "P"] as const;
+
+export type ModuleCode = (typeof MODULE_ORDER)[number];
+
+export const MODULE_LABEL: Record<string, string> = {
+  L: "Legal Standing",
+  D: "Delivery Execution",
+  T: "Developer Trust",
+  F: "Financial Integrity",
+  C: "Compliance",
+  X: "Location",
+  P: "Price Fairness",
+};
+
+/**
+ * One plain line on what each module reads.
+ *
+ * Deliberately conservative: each line names only record types the adapter
+ * actually builds evidence from (GujRERA filings, RERA complaints, eCourts
+ * cases, mapped distances). Where the engine's inputs are less certain the line
+ * describes the question the module answers rather than naming a source, because
+ * naming a source CRUX does not read is the failure this product cannot afford.
+ */
+export const MODULE_BLURB: Record<string, string> = {
+  L: "Court and tribunal cases tied to the promoter, and what could not be tied to them.",
+  D: "Whether the project is being built at the pace its own filings promised.",
+  T: "The developer's track record across everything they have registered.",
+  F: "What the project's own financial filings say about how funds are being used.",
+  C: "Whether the registration and mandatory filings are current and complete.",
+  X: "Where it sits, and what is actually within reach of it.",
+  P: "Whether the asking price is defensible for this location and this stage.",
+};
+
+/** Label for a module code, falling back to the raw code for anything unmapped. */
+export function moduleLabel(code: string): string {
+  return MODULE_LABEL[code] ?? code;
+}
