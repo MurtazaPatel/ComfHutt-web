@@ -2,7 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@comfhutt/design-system/tokens.css";
-@import "../styles/peeps-animations.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -74,18 +73,10 @@
   }
 }
 
-/* ── Gradient text utility ── */
-.text-gradient-green {
-  background: linear-gradient(135deg, #22C55E, #16A34A, #15803D);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ── Green gradient bg utility ── */
-.bg-gradient-green {
-  background: linear-gradient(135deg, #22C55E, #16A34A, #15803D);
-}
+/* Removed: .text-gradient-green, .bg-gradient-green and the .ticker-* set.
+   All three were built from the rejected #22C55E / #16A34A greens, and all three
+   lost their last consumer when the hero marquee and the ChatInput CTA were
+   rewritten. Brand green is --color-crux-green (#10B981). */
 
 /* ── Fade-up animation ── */
 @keyframes fadeUp {
@@ -100,53 +91,6 @@
 /* ── Bottom data strip scrollbar hide ── */
 .strip::-webkit-scrollbar {
   display: none;
-}
-
-/* ── Data source ticker scroll ── */
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-.ticker-track {
-  display: flex;
-  gap: 10px;
-  width: max-content;
-  animation: ticker-scroll 35s linear infinite;
-}
-
-.ticker-track-wrapper:hover .ticker-track {
-  animation-play-state: paused;
-}
-
-.ticker-pill {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  padding: 6px 14px;
-  background: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.10);
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #374151;
-  letter-spacing: 0.01em;
-  flex-shrink: 0;
-}
-
-@media (max-width: 640px) {
-  .ticker-pill { font-size: 11px; }
-}
-
-.ticker-pill.data-source::before {
-  content: '';
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #22C55E;
-  margin-right: 7px;
-  flex-shrink: 0;
 }
 
 /* ── Reduced motion ── */
