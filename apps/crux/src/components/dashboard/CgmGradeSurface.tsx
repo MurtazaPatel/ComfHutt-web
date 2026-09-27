@@ -335,7 +335,7 @@ function ModuleChip({ m }: { m: CgmModuleScore }) {
       </div>
       <div className="h-1.5 overflow-hidden rounded-full bg-crux-bg-secondary">
         <div
-          className="h-full rounded-full transition-all duration-700 motion-reduce:transition-none"
+          className="h-full rounded-full transition-[width] duration-700 motion-reduce:transition-none"
           style={{ width: `${Math.min(m.score, 100)}%`, backgroundColor: scoreColor(m.score) }}
         />
       </div>

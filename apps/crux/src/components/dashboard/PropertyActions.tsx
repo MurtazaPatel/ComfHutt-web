@@ -401,7 +401,7 @@ function ShareModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center overscroll-contain bg-black/20 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -409,7 +409,7 @@ function ShareModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="share-modal-title"
-        className="flex w-full max-w-[400px] flex-col gap-4 rounded-2xl bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
+        className="flex max-h-[90dvh] w-full max-w-[400px] flex-col gap-4 overflow-y-auto overscroll-contain rounded-2xl bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between gap-3">
@@ -447,7 +447,7 @@ function ShareModal({
 
         {card?.share_url && (
           <>
-            <div className="flex items-center gap-2 rounded-xl border border-crux-border bg-crux-bg-secondary p-3">
+            <div className="flex items-center gap-2 rounded-xl border border-crux-border bg-crux-bg-secondary p-3 focus-within:border-crux-green focus-within:ring-2 focus-within:ring-crux-green/20">
               <input
                 ref={inputRef}
                 type="text"

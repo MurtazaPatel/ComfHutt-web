@@ -157,7 +157,7 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
     >
       <div
         className={cn(
-          "relative rounded-2xl border bg-white transition-all duration-[400ms] motion-reduce:transition-none",
+          "relative rounded-2xl border bg-white transition-[border-color,box-shadow] duration-[400ms] motion-reduce:transition-none",
           isFocused
             ? "border-crux-green-mid shadow-[var(--shadow-premium-glow)]"
             : "border-crux-border shadow-[var(--shadow-premium-md)] hover:shadow-[var(--shadow-premium-lg)]",
@@ -216,7 +216,7 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
             className={cn(
               "inline-flex shrink-0 items-center gap-2 whitespace-nowrap px-[18px] py-[10px]",
               "rounded-xl text-sm font-semibold",
-              "transition-all duration-300 motion-reduce:transition-none",
+              "transition-[background-color,box-shadow,transform] duration-300 motion-reduce:transition-none",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2",
               "disabled:opacity-50 disabled:cursor-not-allowed",
               canSubmit

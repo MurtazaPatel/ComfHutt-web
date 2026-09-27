@@ -87,7 +87,7 @@ export function CategoryBreakdown({
               </div>
               <div className="h-1.5 bg-crux-bg-secondary rounded-full overflow-hidden mt-1">
                 <div
-                  className="h-full rounded-full transition-all duration-700 ease-out motion-reduce:transition-none"
+                  className="h-full rounded-full transition-[width] duration-700 ease-out motion-reduce:transition-none"
                   style={{ width: `${entry.score}%`, backgroundColor: scoreColor(entry.score) }}
                 />
               </div>

@@ -66,7 +66,7 @@ export function SurfaceTitle({
   if (action) {
     return (
       <div className="mb-4 flex items-baseline justify-between gap-4">
-        <Tag className={cn("text-[15px] font-semibold tracking-tight text-crux-text-primary", className)}>
+        <Tag className={cn("text-pretty text-[15px] font-semibold tracking-tight text-crux-text-primary", className)}>
           {children}
         </Tag>
         {action}
@@ -74,7 +74,7 @@ export function SurfaceTitle({
     );
   }
   return (
-    <Tag className={cn("mb-4 text-[15px] font-semibold tracking-tight text-crux-text-primary", className)}>
+    <Tag className={cn("mb-4 text-pretty text-[15px] font-semibold tracking-tight text-crux-text-primary", className)}>
       {children}
     </Tag>
   );
@@ -93,10 +93,10 @@ export function PageHeading({
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-[26px] font-bold leading-tight tracking-tight text-crux-text-primary">
+        <h1 className="text-pretty text-[26px] font-bold leading-tight tracking-tight text-crux-text-primary">
           {title}
         </h1>
-        {subtitle && <p className="mt-1 text-sm text-crux-text-secondary">{subtitle}</p>}
+        {subtitle && <p className="mt-1 text-pretty text-sm text-crux-text-secondary">{subtitle}</p>}
       </div>
       {action}
     </div>

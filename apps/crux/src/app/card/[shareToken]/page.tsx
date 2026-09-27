@@ -185,7 +185,7 @@ function Verdict({ card, expired }: { card: ShareCard; expired: boolean }) {
                 role="img"
                 aria-label={`CRUX score ${score} out of 100`}
               >
-                <span className="text-[34px] font-bold leading-none text-crux-text-primary">
+                <span className="text-[34px] font-bold tabular-nums leading-none text-crux-text-primary">
                   {score}
                 </span>
                 <span className="mt-0.5 text-[11px] text-crux-text-muted">/100</span>
