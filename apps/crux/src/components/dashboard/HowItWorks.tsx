@@ -18,7 +18,7 @@ const STEPS: Array<{ icon: LucideIcon; title: string; detail: string }> = [
   {
     icon: FileSearch,
     title: "CRUX reads the public record",
-    detail: "RERA filings, court and tribunal cases, and company filings for the developer.",
+    detail: "GujRERA filings, the appellate tribunal, and the court record from eCourts up to the Supreme Court.",
   },
   {
     icon: Award,

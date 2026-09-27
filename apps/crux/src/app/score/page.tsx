@@ -94,8 +94,8 @@ export default function AnonymousStartPage() {
         {remaining !== null && (
           <p className="mb-10 text-center text-[13px] text-crux-text-muted">
             {remaining > 0
-              ? `${remaining} of ${quota?.maxReports} free scores remaining`
-              : "You've used all your free scores — sign up to keep going"}
+              ? `${remaining} of ${quota?.maxReports} free grades remaining`
+              : "You've used all your free grades — create a free account to keep going"}
           </p>
         )}
         {remaining === null && <div className="mb-10" />}

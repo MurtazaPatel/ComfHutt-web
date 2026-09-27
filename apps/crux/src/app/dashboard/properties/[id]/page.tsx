@@ -199,12 +199,12 @@ export default function PropertyDetailPage() {
           <div className="mb-6 flex size-14 items-center justify-center rounded-full bg-crux-green-tint">
             <RefreshCw size={24} aria-hidden="true" className="text-crux-green" />
           </div>
-          <h2 className="mb-3 text-xl font-semibold text-crux-text-primary">Property Created</h2>
+          <h2 className="mb-3 text-xl font-semibold text-crux-text-primary">Not graded yet</h2>
           {/* Seven modules, not six — L, D, T, F, C, X, P. No quota or timing claim
               here: neither number is backed by anything this app can see. */}
           <p className="mb-6 max-w-[420px] text-sm text-crux-text-secondary">
-            This property hasn&apos;t been scored yet. Generate a CRUX score to see the grade and the verdict for each
-            of the seven modules.
+            This project has not been graded yet. Run the CRUX Grade to see its letter, A+ to D, and
+            the verdict for each of the seven modules.
           </p>
           <button
             type="button"
@@ -212,7 +212,7 @@ export default function PropertyDetailPage() {
             className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             <RefreshCw size={14} aria-hidden="true" />
-            Generate CRUX Score
+            Generate CRUX Grade
           </button>
         </Surface>
       </div>

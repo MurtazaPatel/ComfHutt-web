@@ -3,7 +3,8 @@
 // CGM-1.0 consumer surface (spec §0). Grade + cohort headline, seven module verdict
 // chips with their source attributions, a confidence meter, the legal counting split,
 // the cross-check contradictions, honest NR / provisional / Not-Assessed states, and
-// the zero-impact Vastu card. Rendered only when the score row carries module_scores
+// (the Vastu card is computed but deliberately not rendered — see below). Rendered
+// only when the score row carries module_scores
 // (i.e. produced by CGM_V1_ENABLED) — legacy rows keep the old view.
 
 import { ExternalLink, Scale } from "lucide-react";
@@ -375,7 +376,6 @@ export function CgmGradeSurface({ score }: { score: CruxScore }) {
   );
   const confidencePct = Math.round((score.confidence_score ?? 0) * 100);
   const gates = score.gates_applied ?? [];
-  const vastu = score.vastu_overlay;
 
   return (
     <div className="space-y-6">
@@ -445,28 +445,13 @@ export function CgmGradeSurface({ score }: { score: CruxScore }) {
 
       <CrossChecks flags={flags} />
 
-      {/* Vastu overlay — visually distinct, zero grade impact */}
-      {vastu && vastu.verdict !== "not_evaluated" && (
-        <section
-          className="rounded-2xl p-6 ring-1 ring-violet-200"
-          style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.06), rgba(236,72,153,0.05))" }}
-        >
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <h3 className="text-[15px] font-semibold text-violet-900">Vastu Compatibility</h3>
-            <span className="text-[13px] font-semibold text-violet-700">{vastu.verdict}</span>
-          </div>
-          <p className="mb-2 text-[12px] text-violet-700/80">
-            Based on {vastu.factorsAnswered} of {vastu.factorsTotal} factors · does not affect the CRUX Grade
-          </p>
-          {vastu.notes.length > 0 && (
-            <ul className="list-inside list-disc space-y-0.5 text-[12px] text-violet-800/90">
-              {vastu.notes.map((n, i) => (
-                <li key={i}>{n}</li>
-              ))}
-            </ul>
-          )}
-        </section>
-      )}
+      {/*
+        The Vastu overlay is not rendered. The engine still computes it and the row
+        still carries `vastu_overlay`, but the feature is listed as not built, so
+        showing it would put an unfinished surface on the page that carries the
+        product's most sensitive claims. The field stays typed in usePropertyScore
+        so nothing breaks when it is switched back on.
+      */}
     </div>
   );
 }

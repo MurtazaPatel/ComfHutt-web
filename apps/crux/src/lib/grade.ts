@@ -157,17 +157,18 @@ export const MODULE_LABEL: Record<string, string> = {
 /**
  * One plain line on what each module reads.
  *
- * Deliberately conservative: each line names only record types the adapter
- * actually builds evidence from (GujRERA filings, RERA complaints, eCourts
- * cases, mapped distances). Where the engine's inputs are less certain the line
- * describes the question the module answers rather than naming a source, because
- * naming a source CRUX does not read is the failure this product cannot afford.
+ * The allowed source families are fixed: GujRERA filings, the GujRERA authority
+ * and appellate tribunal, eCourts / Gujarat High Court / Supreme Court / IBBI,
+ * and Google Maps. Nothing else may be named on a grade-path claim — company
+ * filings (MCA21), registry (IGR), price indices, air quality and satellite data
+ * are all off the list, so a line that would have leaned on one describes the
+ * question the module answers instead.
  */
 export const MODULE_BLURB: Record<string, string> = {
   L: "Court and tribunal cases tied to the promoter, and what could not be tied to them.",
   D: "Whether the project is being built at the pace its own filings promised.",
   T: "The developer's track record across everything they have registered.",
-  F: "What the project's own financial filings say about how funds are being used.",
+  F: "What the project's own escrow and fund-utilisation filings say about the money.",
   C: "Whether the registration and mandatory filings are current and complete.",
   X: "Where it sits, and what is actually within reach of it.",
   P: "Whether the asking price is defensible for this location and this stage.",

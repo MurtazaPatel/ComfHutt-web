@@ -183,7 +183,7 @@ function Verdict({ card, expired }: { card: ShareCard; expired: boolean }) {
                 className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-full bg-white"
                 style={{ boxShadow: `inset 0 0 0 6px ${scoreColor(score)}` }}
                 role="img"
-                aria-label={`CRUX score ${score} out of 100`}
+                aria-label={`Composite ${score} out of 100`}
               >
                 <span className="text-[34px] font-bold leading-none text-crux-text-primary">
                   {score}
@@ -238,8 +238,8 @@ function Verdict({ card, expired }: { card: ShareCard; expired: boolean }) {
           Check a property yourself
         </h2>
         <p className="mb-4 text-[13px] text-crux-text-secondary">
-          CRUX reads Gujarat&rsquo;s public record — RERA filings, court and tribunal cases,
-          company filings — and gives you the verdict with the records behind it.
+          CRUX reads Gujarat&rsquo;s public record — GujRERA filings, the appellate tribunal
+          and the court record — and gives you the grade with the filing behind it.
         </p>
         <Link
           href="/signup"

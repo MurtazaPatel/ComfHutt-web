@@ -145,8 +145,8 @@ export default function AuthLayoutClient({ children, variant }: AuthLayoutClient
           <div className="anim max-w-[380px]" style={{ animationDelay: "0.2s" }}>
             <p className="text-[14px] leading-relaxed text-crux-text-secondary">
               {isSignIn
-                ? "CRUX grades Gujarat properties on the public record — RERA filings, court and tribunal cases, and the developer's own company filings — and shows you the records behind every finding."
-                : "Name a project in Gujarat. CRUX reads its RERA filings, the court and tribunal record, and the developer's company filings, then gives you one grade and the evidence for it."}
+                ? "CRUX grades Gujarat projects on the public record — GujRERA filings, the appellate tribunal and the court record — and shows you the filing behind every finding."
+                : "Name a project in Gujarat. CRUX reads its GujRERA filings, the appellate tribunal and the court record, then gives you one grade, A+ to D, with the evidence for it."}
             </p>
           </div>
         </div>
