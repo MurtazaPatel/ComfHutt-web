@@ -1,43 +1,48 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, MotionConfig, Variants } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import ChatInput from "@/components/ChatInput";
+import { MODULE_ORDER, MODULE_LABEL } from "@/lib/grade";
 
-const dataSources = [
-  "MCA21",
+/**
+ * The records CRUX reads. This list is exhaustive and deliberately short.
+ *
+ * What used to scroll past here — MCA21, CPCB AQI, NHB RESIDEX, TRAI, NASA
+ * VIIRS, CPWD, State IGR, RBI — named eight sources CRUX has no adapter for.
+ * Naming a source you do not read is the one failure this product cannot
+ * survive, so nothing may be added to this list that the engine cannot show
+ * evidence from.
+ */
+const SOURCES = [
+  "GujRERA filings",
+  "GujRERA appellate tribunal",
   "eCourts",
-  "CPCB AQI",
-  "NHB RESIDEX",
-  "TRAI",
-  "NASA VIIRS",
-  "CPWD",
-  "State IGR",
-  "RBI",
-  "RERA",
+  "Gujarat High Court",
+  "Supreme Court",
+  "IBBI",
+  "Google Maps",
 ];
 
-const trustSignals = [
-  "23 data signals",
-  "< 90s per report",
-  "Methodology is public",
-  "12 Indian cities",
-  "No signup required",
-  "Free forever",
-];
+/**
+ * An illustration of the grade surface, labelled as one.
+ *
+ * Every figure below is invented, which is why the frame says so twice: a badge
+ * in the chrome and a line under the card. The old mockup showed "CRUX Score 87",
+ * a fair value, a gross yield and a flood-risk row as though they were output
+ * from a real report — three of those four are not products CRUX has, and none of
+ * the numbers came from anywhere.
+ */
+const EXAMPLE_VERDICTS: Record<string, string> = {
+  L: "2 cases found",
+  D: "On its filed pace",
+  T: "6 projects registered",
+  F: "Filings current",
+  C: "Registration valid",
+  X: "Mapped",
+  P: "Not assessed",
+};
 
-// Interleave data sources and trust signals
-const tickerItems: { label: string; type: "data-source" | "trust-signal" }[] = [];
-const maxLen = Math.max(dataSources.length, trustSignals.length);
-for (let i = 0; i < maxLen; i++) {
-  if (i < dataSources.length)
-    tickerItems.push({ label: dataSources[i], type: "data-source" });
-  if (i < trustSignals.length)
-    tickerItems.push({ label: trustSignals[i], type: "trust-signal" });
-}
-
-// Framer Motion Variants
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -51,53 +56,53 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
 };
 
-const mockupContainerVariants: Variants = {
-  hidden: { opacity: 0, rotateX: 10, y: 40 },
+const mockupVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
-    rotateX: 4,
     y: 0,
-    transition: { type: "spring", stiffness: 80, damping: 20, staggerChildren: 0.1, delayChildren: 0.6 },
+    transition: { type: "spring", stiffness: 80, damping: 20, delay: 0.4 },
   },
 };
 
-const mockupItemVariants: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120, damping: 15 } },
-};
+const NAV_LINK =
+  "text-[13px] text-crux-text-secondary hover:text-crux-text-primary transition-colors duration-200 font-medium no-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
 
 export default function HeroSection() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  // reducedMotion="user" is set here, per section, rather than once around the
+  // page: page.tsx is a server component owned elsewhere, and a landing section
+  // that animates has to honour the preference on its own.
   return (
+    <MotionConfig reducedMotion="user">
     <section
       id="hero"
       className="relative w-full bg-background flex flex-col overflow-hidden"
       style={{ minHeight: "100svh" }}
     >
-      {/* Background Gradient Mesh */}
+      {/* Background gradient mesh */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[var(--color-crux-green-tint)] blur-[120px]" />
-        <div className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[var(--color-crux-bg-secondary)] blur-[100px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-crux-green-tint blur-[120px]" />
+        <div className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-crux-bg-secondary blur-[100px]" />
       </div>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 w-full border-b border-border bg-white/60 backdrop-blur-xl transition-all">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-3.5">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 no-underline group">
+      <nav className="sticky top-0 z-50 w-full border-b border-crux-border bg-white/60 backdrop-blur-xl">
+        <div className="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 py-3.5">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 no-underline group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
+          >
             <span
-              className="font-bold text-foreground tracking-tight transition-colors group-hover:text-[var(--color-crux-green-mid)]"
+              className="font-bold text-crux-text-primary tracking-tight transition-colors group-hover:text-crux-green-mid"
               style={{ fontSize: 20 }}
             >
               CRUX
             </span>
             <span className="flex items-center gap-1.5 self-end mb-0.5">
-              <span className="text-[10px] text-muted-foreground">by</span>
+              <span className="text-[10px] text-crux-text-muted">by</span>
+              {/* A 13px inline SVG wordmark: next/image would add a request and a
+                  layout wrapper for no gain at this size. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/comfhutt-logo.svg"
                 alt="ComfHutt"
@@ -107,242 +112,183 @@ export default function HeroSection() {
             </span>
           </Link>
 
-          {/* Center links */}
           <div className="hidden md:flex items-center gap-8">
-            <a
-              href="#how-it-works"
-              className="text-[13px] text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium no-underline"
-            >
+            <a href="#how-it-works" className={NAV_LINK}>
               How It Works
             </a>
-            <a
-              href="#features"
-              className="text-[13px] text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium no-underline"
-            >
-              Features
+            <a href="#features" className={NAV_LINK}>
+              What You Get
             </a>
-            <a
-              href="#pricing"
-              className="text-[13px] text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium no-underline"
-            >
+            <a href="#pricing" className={NAV_LINK}>
               Pricing
             </a>
           </div>
 
-          {/* CTA — anonymous free-scoring start page, no signup required */}
+          {/* Anonymous grading entry point — no signup for the first three. */}
           <Link
             href="/score"
-            className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full bg-[var(--color-crux-green)] text-white text-[12px] font-semibold shadow-[var(--shadow-premium-md)] hover:shadow-[var(--shadow-premium-glow)] hover:-translate-y-0.5 transition-all duration-300 no-underline"
+            className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full bg-crux-green text-white text-[12px] font-semibold shadow-[var(--shadow-premium-md)] hover:shadow-[var(--shadow-premium-glow)] transition-[box-shadow,background-color] duration-300 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
           >
-            Get Started →
+            Grade a project
           </Link>
         </div>
       </nav>
 
       {/* Hero content */}
       <motion.div
-        className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 pt-16 pb-12"
+        className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 pt-14 pb-12"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Pill badge */}
+        {/* Coverage badge — states the area plainly instead of claiming a first. */}
         <motion.div variants={itemVariants}>
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-white shadow-[var(--shadow-premium-sm)] backdrop-blur-sm">
-            <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-crux-green)] animate-pulse" />
-            <span className="text-[13px] text-secondary-foreground font-medium tracking-tight">
-              India&apos;s First Property Intelligence Engine
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-crux-border bg-white shadow-[var(--shadow-premium-sm)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-crux-green motion-safe:animate-pulse" />
+            <span className="text-[12px] sm:text-[13px] text-crux-text-secondary font-medium tracking-tight">
+              Gujarat · graded from the public record
             </span>
           </div>
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline — the letter grade leads, never a 0–100 number. */}
         <motion.h1
           variants={itemVariants}
-          className="mt-8 text-center font-extrabold text-foreground"
+          className="mt-8 text-center font-extrabold text-crux-text-primary text-balance"
           style={{
-            fontSize: "clamp(44px, 8vw, 88px)",
-            lineHeight: 0.95,
+            fontSize: "clamp(36px, 8vw, 84px)",
+            lineHeight: 0.98,
             letterSpacing: "-0.03em",
           }}
         >
-          Every property has a{" "}
-          <span className="text-[var(--color-crux-green)]">score.</span>
+          <span className="text-crux-green">A+ to D</span>,
           <br />
-          Most buyers never check it.
+          before you pay the booking amount.
         </motion.h1>
 
-        {/* Subtitle */}
         <motion.p
           variants={itemVariants}
-          className="mt-5 text-center text-muted-foreground max-w-[540px] mx-auto leading-relaxed"
+          className="mt-5 text-center text-crux-text-secondary max-w-[560px] mx-auto leading-relaxed text-pretty"
           style={{ fontSize: "clamp(14px, 1.6vw, 17px)" }}
         >
-          Type any address. See court cases, builder fraud, flood risk — everything your broker hides.
+          CRUX grades RERA-registered projects in Gujarat from GujRERA filings,
+          tribunal orders and the court record — and links you to every document
+          behind the letter.
         </motion.p>
 
-        {/* Chat input — real anonymous scoring entry point */}
-        <motion.div variants={itemVariants} className="mt-8 w-full max-w-[580px] mx-auto px-4">
+        <motion.div variants={itemVariants} className="mt-8 w-full max-w-[580px] mx-auto">
           <ChatInput size="large" />
         </motion.div>
 
-        {/* Trust nudge */}
-        <motion.p variants={itemVariants} className="mt-3 text-[13px] text-muted-foreground text-center tracking-wide">
-          Free <span className="mx-1.5 text-[var(--color-crux-green)]">·</span> No signup required <span className="mx-1.5 text-[var(--color-crux-green)]">·</span> Score any property in India
+        <motion.p
+          variants={itemVariants}
+          className="mt-3 text-[12px] sm:text-[13px] text-crux-text-muted text-center"
+        >
+          Free <span className="mx-1.5 text-crux-green">·</span> 3 grades without an
+          account <span className="mx-1.5 text-crux-green">·</span> Ahmedabad,
+          Gandhinagar, Surat, Vadodara, Rajkot
         </motion.p>
 
-        {/* Marquee ticker */}
-        <motion.div
-          variants={itemVariants}
-          className="w-full"
-          style={{
-            marginTop: 32,
-            marginBottom: 24,
-            overflow: "hidden",
-            maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-            padding: "16px 0",
-          }}
-        >
-          <div className="ticker-track-wrapper">
-            <div className="ticker-track">
-              {tickerItems.map((item, i) => (
-                <span key={`a-${i}`} className={`ticker-pill shadow-sm border-border ${item.type}`}>
-                  {item.label}
-                </span>
-              ))}
-              {tickerItems.map((item, i) => (
-                <span key={`b-${i}`} className={`ticker-pill shadow-sm border-border ${item.type}`}>
-                  {item.label}
-                </span>
-              ))}
-            </div>
-          </div>
+        {/* Source list — static. It was a scrolling marquee, which meant the one
+            claim a reader most needs to check was the hardest to read. */}
+        <motion.div variants={itemVariants} className="mt-10 w-full max-w-3xl mx-auto">
+          <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-crux-text-muted">
+            What CRUX reads
+          </p>
+          <ul className="mt-3 flex flex-wrap items-center justify-center gap-2">
+            {SOURCES.map((source) => (
+              <li
+                key={source}
+                className="inline-flex items-center gap-1.5 rounded-full border border-crux-border bg-white px-3 py-1.5 text-[11px] sm:text-[12px] font-medium text-crux-text-secondary shadow-[var(--shadow-premium-sm)]"
+              >
+                <span aria-hidden className="h-1 w-1 rounded-full bg-crux-green" />
+                {source}
+              </li>
+            ))}
+          </ul>
         </motion.div>
       </motion.div>
 
-      {/* Product mockup */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-0">
-        {mounted && (
-          <motion.div
-            className="relative rounded-t-2xl border border-b-0 border-border shadow-[var(--shadow-premium-lg)] overflow-hidden bg-white"
-            variants={mockupContainerVariants}
-            initial="hidden"
-            animate="visible"
-            style={{ transformOrigin: "center top" }}
-          >
-            {/* Dashboard mockup */}
-            <div className="w-full bg-[var(--color-crux-bg-primary)]" style={{ aspectRatio: "16/9" }}>
-              {/* Browser bar */}
-              <div className="w-full h-10 bg-[var(--color-crux-bg-secondary)] border-b border-border flex items-center px-4 gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+      {/* Illustration of the grade surface */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6">
+        <motion.div
+          className="relative rounded-t-2xl border border-b-0 border-crux-border shadow-[var(--shadow-premium-lg)] overflow-hidden bg-white"
+          variants={mockupVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Frame chrome. The EXAMPLE badge sits in the chrome so it travels with
+              any screenshot of this section. */}
+          <div className="w-full h-10 bg-crux-bg-secondary border-b border-crux-border flex items-center justify-between px-4 gap-3">
+            <div className="px-3 py-1 bg-white border border-crux-border rounded-md text-[10px] text-crux-text-muted font-mono truncate">
+              crux.comfhutt.com
+            </div>
+            <span className="shrink-0 rounded-full bg-crux-text-primary px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white">
+              Example
+            </span>
+          </div>
+
+          <div className="bg-crux-bg-primary p-4 sm:p-6">
+            <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:items-start">
+              {/* Letter first, composite second and smaller. */}
+              <div className="flex items-center gap-4 sm:flex-col sm:items-start">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-crux-green/30 bg-crux-green-tint">
+                  <span className="text-[34px] font-extrabold leading-none text-crux-green-dark">
+                    B+
+                  </span>
                 </div>
-                <div className="flex-1 flex justify-center">
-                  <div className="px-4 py-1 bg-white border border-border rounded-md shadow-sm text-[10px] text-muted-foreground font-mono">
-                    crux.comfhutt.com
-                  </div>
+                <div>
+                  <p className="text-[12px] text-crux-text-secondary">
+                    Composite 72
+                    <span className="text-crux-text-muted">/100</span>
+                  </p>
+                  <p className="text-[12px] text-crux-text-muted">Confidence: medium</p>
                 </div>
               </div>
 
-              {/* Dashboard content */}
-              <div className="p-5 grid grid-cols-4 gap-4">
-                {/* Sidebar */}
-                <motion.div variants={mockupItemVariants} className="col-span-1 space-y-3 pt-1">
-                  <div className="h-3 w-20 bg-gray-200 rounded" />
-                  <div className="h-2 w-16 bg-gray-100 rounded" />
-                  <div className="h-2 w-24 bg-gray-100 rounded" />
-                  <div className="h-2 w-14 bg-gray-100 rounded" />
-                  <div className="h-2 w-20 bg-gray-100 rounded" />
-                  <div className="h-2 w-18 bg-gray-100 rounded mt-4" />
-                  <div className="h-2 w-12 bg-gray-100 rounded" />
-                </motion.div>
-
-                {/* Main content */}
-                <div className="col-span-3 space-y-4">
-                  {/* KPI cards */}
-                  <div className="flex gap-3">
-                    {[
-                      { title: "CRUX Score", value: "87", sub: "High confidence", color: "var(--color-crux-green)" },
-                      { title: "Fair Value", value: "₹82L", sub: "+12% vs listed", color: "var(--color-crux-green)" },
-                      { title: "Gross Yield", value: "4.2%", sub: "Above market avg", color: "var(--color-crux-text-secondary)" },
-                    ].map((kpi, index) => (
-                      <motion.div
-                        key={index}
-                        variants={mockupItemVariants}
-                        className="flex-1 p-4 rounded-xl border border-border bg-white shadow-[var(--shadow-premium-sm)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-premium-md)] transition-all"
-                      >
-                        <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">{kpi.title}</div>
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 1 + index * 0.1, type: "spring" }}
-                          className="text-2xl font-bold mt-1"
-                          style={{ color: kpi.title === "Gross Yield" ? "var(--color-crux-text-primary)" : kpi.color }}
-                        >
-                          {kpi.value}
-                        </motion.div>
-                        <div className="text-[10px] mt-1" style={{ color: kpi.title === "Gross Yield" ? kpi.color : kpi.color }}>
-                          {kpi.sub}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Chart placeholder */}
-                  <motion.div
-                    variants={mockupItemVariants}
-                    className="h-28 rounded-xl border border-border bg-white shadow-[var(--shadow-premium-sm)] flex items-end px-4 pb-3 gap-1.5"
+              {/* The seven modules, named from the engine's own table. */}
+              <ul className="grid gap-1.5 sm:grid-cols-2">
+                {MODULE_ORDER.map((code) => (
+                  <li
+                    key={code}
+                    className="flex items-center justify-between gap-3 rounded-lg border border-crux-border bg-white px-3 py-2"
                   >
-                    {[40, 55, 45, 70, 60, 80, 65, 87].map((h, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ height: 0 }}
-                        animate={{ height: `${h}%` }}
-                        transition={{ delay: 1.2 + i * 0.05, duration: 0.5, type: "spring" }}
-                        className="flex-1 rounded-sm"
-                        style={{
-                          background: i === 7 ? "var(--color-crux-green)" : "var(--color-crux-border)",
-                        }}
-                      />
-                    ))}
-                  </motion.div>
-
-                  {/* Data rows */}
-                  <div className="space-y-2">
-                    {[
-                      { label: "Legal Status", value: "Clear", ok: true },
-                      { label: "Flood Risk", value: "Low", ok: true },
-                      { label: "Builder RERA", value: "Registered", ok: true },
-                    ].map((row, index) => (
-                      <motion.div
-                        key={row.label}
-                        variants={mockupItemVariants}
-                        className="flex items-center justify-between px-4 py-2.5 rounded-lg border border-border bg-white shadow-sm hover:shadow-[var(--shadow-premium-sm)] transition-shadow"
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span
+                        aria-hidden
+                        className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-crux-green-tint text-[9px] font-bold text-crux-green-dark"
                       >
-                        <span className="text-[12px] text-muted-foreground">{row.label}</span>
-                        <span className="text-[12px] font-medium" style={{ color: row.ok ? "var(--color-crux-green)" : "#EF4444" }}>
-                          {row.value}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                        {code}
+                      </span>
+                      <span className="truncate text-[11px] text-crux-text-secondary">
+                        {MODULE_LABEL[code]}
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-[11px] font-medium text-crux-text-primary">
+                      {EXAMPLE_VERDICTS[code]}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Bottom fade-out */}
-            <div
-              className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-              style={{
-                background: "linear-gradient(to bottom, transparent 0%, var(--color-crux-bg-primary) 100%)",
-              }}
-            />
-          </motion.div>
-        )}
+            <p className="mt-4 text-[11px] leading-relaxed text-crux-text-muted">
+              Illustration only. Not a real project, and not a real grade — every
+              figure here is invented to show the layout.
+            </p>
+          </div>
+
+          {/* Bottom fade into the next section */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 0%, var(--color-crux-bg-primary) 100%)",
+            }}
+          />
+        </motion.div>
       </div>
     </section>
+    </MotionConfig>
   );
 }

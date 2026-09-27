@@ -1,1531 +1,311 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
+  MotionConfig,
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { useCountUp } from "@/hooks/useCountUp";
+import { FileText, MessageSquare, Share2, Link2, type LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { MODULE_ORDER, MODULE_LABEL } from "@/lib/grade";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+/**
+ * What a reader gets today — three surfaces, not five products.
+ *
+ * This section used to scroll through CRUX Score, Lens, Cast, Yield and Watch.
+ * Cast and Yield return HTTP 501 and Watch (alerts, re-scoring) is unbuilt, so
+ * three of the five panels advertised software that does not exist, complete with
+ * a fair value of ₹65–68L for a Mumbai locality CRUX does not cover, a ₹8,400
+ * rent forecast and a live alert feed. What is left is what ships: the grade, the
+ * assistant that answers from the record, and the card you can send someone.
+ *
+ * Every figure in the three widgets is invented, so each widget carries an
+ * EXAMPLE badge in its own frame rather than relying on a caption elsewhere.
+ */
 
-const SPRING = [0.16, 1, 0.3, 1] as [number, number, number, number];
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface Product {
-  id: number;
+interface Surface {
   eyebrow: string;
   name: string;
   tagline: string;
   description: string;
   pills: string[];
+  Icon: LucideIcon;
 }
 
-// ─── Product data ─────────────────────────────────────────────────────────────
-
-const PRODUCTS: Product[] = [
+const SURFACES: Surface[] = [
   {
-    id: 0,
-    eyebrow: "01 / 05",
-    name: "CRUX Score",
-    tagline: "Trust, quantified.",
+    eyebrow: "01 / 03",
+    name: "The CRUX Grade",
+    tagline: "A letter you can argue with.",
     description:
-      "A 0–100 credibility index computed from 20+ verified data signals. Legal clarity, developer reliability, location quality — all in one number. Shown before price, always.",
-    pills: ["20+ data signals", "Legal clarity", "Developer track record"],
+      "A+ to D for a RERA-registered project, with all seven module verdicts, the confidence CRUX has in each, and a link to the filing or case behind every finding. Free, including the grade itself.",
+    pills: ["Seven modules", "Confidence stated", "Evidence linked"],
+    Icon: FileText,
   },
   {
-    id: 1,
-    eyebrow: "02 / 05",
+    eyebrow: "02 / 03",
     name: "CRUX Lens",
-    tagline: "Ask anything. Get truth.",
+    tagline: "Ask the record a question.",
     description:
-      "A RAG-powered property intelligence assistant. Ask about litigation, RERA status, builder history — get sourced, verified answers in plain English.",
-    pills: ["RAG-powered", "eCourts API", "RERA portal"],
+      "An assistant that answers from the documents CRUX has already read for that project, and cites them. It declines rather than guesses when the record does not say. Rate-limited on the free tier.",
+    pills: ["Answers with citations", "Declines when unsure", "Free, rate-limited"],
+    Icon: MessageSquare,
   },
   {
-    id: 2,
-    eyebrow: "03 / 05",
-    name: "CRUX Cast",
-    tagline: "See the future price.",
+    eyebrow: "03 / 03",
+    name: "The verdict card",
+    tagline: "Send it to whoever is deciding with you.",
     description:
-      "Fair value estimation and 1–3 year appreciation forecast using institutional-grade valuation methods. Know if you're overpaying before you sign.",
-    pills: ["Fair value engine", "Sales comparables", "Income cap"],
-  },
-  {
-    id: 3,
-    eyebrow: "04 / 05",
-    name: "CRUX Yield",
-    tagline: "Know your rent before you invest.",
-    description:
-      "Rental income forecast powered by micro-locality demand data — job density, transit access, comparable rents. Gross, net, and after-tax yield.",
-    pills: ["Rental comps", "Vacancy modeling", "Net yield after tax"],
-  },
-  {
-    id: 4,
-    eyebrow: "05 / 05",
-    name: "CRUX Watch",
-    tagline: "Your property never sleeps.",
-    description:
-      "Continuous monitoring with real-time alerts. Score changes, legal filings, market shifts — you know first, every time.",
-    pills: ["Real-time alerts", "Score change tracking", "Legal monitoring"],
+      "A shareable card carrying the grade, the headline findings and the disclaimer. It opens for anyone with the link — no account, no app — which is usually how a family decision actually gets made.",
+    pills: ["One link", "No account to open", "Expires"],
+    Icon: Share2,
   },
 ];
 
-// ─── useIsMobile ──────────────────────────────────────────────────────────────
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-  return isMobile;
-}
-
-// ─── LeftPanel ────────────────────────────────────────────────────────────────
-
-function LeftPanel({
-  product,
-  isMobile,
-}: {
-  product: Product;
-  isMobile: boolean;
-}) {
+/** Shown on every widget frame: none of this came from a real project. */
+function ExampleBadge() {
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={product.id}
-        initial={{ opacity: 0, y: 28 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 20,
-          padding: isMobile ? "0 16px" : "0",
-        }}
-      >
-        {/* Eyebrow */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 20,
-              height: 2,
-              background: "var(--color-crux-green)",
-              borderRadius: 2,
-              flexShrink: 0,
-            }}
-          />
-          <span
-            style={{
-              fontSize: 11,
-              letterSpacing: "0.18em",
-              color: "var(--color-crux-green)",
-              fontWeight: 700,
-              textTransform: "uppercase",
-            }}
-          >
-            {product.eyebrow}
-          </span>
-        </div>
-
-        {/* Name + tagline */}
-        <div>
-          <h3
-            style={{
-              fontSize: "clamp(28px, 3.5vw, 48px)",
-              fontWeight: 800,
-              color: "var(--color-crux-text-primary)",
-              lineHeight: 1.1,
-              margin: "0 0 10px",
-            }}
-          >
-            {product.name}
-          </h3>
-          <p
-            style={{
-              fontSize: "clamp(15px, 1.3vw, 18px)",
-              color: "var(--color-crux-green)",
-              fontStyle: "italic",
-              fontWeight: 500,
-              margin: 0,
-            }}
-          >
-            {product.tagline}
-          </p>
-        </div>
-
-        {/* Description */}
-        <p
-          style={{
-            fontSize: 15,
-            color: "var(--color-crux-text-secondary)",
-            lineHeight: 1.75,
-            margin: 0,
-            maxWidth: 380,
-          }}
-        >
-          {product.description}
-        </p>
-
-        {/* Pills */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {product.pills.map((pill) => (
-            <span
-              key={pill}
-              style={{
-                background: "var(--color-crux-bg-accent)",
-                color: "var(--color-crux-green-mid)",
-                border: "1px solid #D1FAE5",
-                borderRadius: 999,
-                padding: "5px 14px",
-                fontSize: 12,
-                fontWeight: 500,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {pill}
-            </span>
-          ))}
-        </div>
-      </motion.div>
-    </AnimatePresence>
+    <span className="rounded-full bg-crux-text-primary px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white">
+      Example
+    </span>
   );
 }
 
-// ─── ProgressDots ─────────────────────────────────────────────────────────────
-
-function ProgressDots({
-  active,
-  isMobile,
+function WidgetCard({
+  title,
+  children,
 }: {
-  active: number;
-  isMobile: boolean;
+  title: string;
+  children: React.ReactNode;
 }) {
-  if (isMobile) {
-    return (
-      <div
-        style={{
-          position: "absolute",
-          bottom: 16,
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "row",
-          gap: 8,
-          zIndex: 10,
-        }}
-      >
-        {[0, 1, 2, 3, 4].map((i) => (
+  return (
+    <div className="flex w-full max-w-[460px] flex-col gap-4 rounded-3xl border border-crux-border bg-white p-5 shadow-[var(--shadow-premium-lg)] sm:p-6">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[12px] font-semibold text-crux-text-secondary">{title}</p>
+        <ExampleBadge />
+      </div>
+      {children}
+      <p className="text-[10px] leading-relaxed text-crux-text-muted">
+        Illustration only — not a real project, grade or finding.
+      </p>
+    </div>
+  );
+}
+
+/** 1. The grade: letter first, composite second, evidence attached. */
+const EXAMPLE_MODULE_ROWS: Record<string, string> = {
+  L: "2 cases found",
+  D: "On its filed pace",
+  T: "6 projects registered",
+  F: "Filings current",
+  C: "Registration valid",
+  X: "Mapped",
+  P: "Not assessed",
+};
+
+function GradeWidget() {
+  return (
+    <WidgetCard title="Project grade">
+      <div className="flex items-center gap-4">
+        <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border border-crux-green/30 bg-crux-green-tint">
+          <span className="text-[30px] font-extrabold leading-none text-crux-green-dark">
+            B+
+          </span>
+        </div>
+        <div className="min-w-0">
+          <p className="text-[13px] font-semibold text-crux-text-primary">
+            Sound overall, with points worth reading.
+          </p>
+          <p className="mt-1 text-[12px] text-crux-text-secondary">
+            Composite 72<span className="text-crux-text-muted">/100</span> ·
+            confidence medium
+          </p>
+        </div>
+      </div>
+
+      <ul className="flex flex-col gap-1.5">
+        {MODULE_ORDER.map((code) => (
+          <li
+            key={code}
+            className="flex items-center justify-between gap-3 rounded-lg border border-crux-border bg-crux-bg-primary px-3 py-2"
+          >
+            <span className="flex min-w-0 items-center gap-2">
+              <span
+                aria-hidden
+                className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-crux-green-tint text-[9px] font-bold text-crux-green-dark"
+              >
+                {code}
+              </span>
+              <span className="truncate text-[11px] text-crux-text-secondary">
+                {MODULE_LABEL[code]}
+              </span>
+            </span>
+            <span className="shrink-0 text-[11px] font-medium text-crux-text-primary">
+              {EXAMPLE_MODULE_ROWS[code]}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <p className="flex items-center gap-1.5 text-[11px] text-crux-green-dark">
+        <Link2 size={12} aria-hidden strokeWidth={2} />
+        Every finding opens the filing or case it came from.
+      </p>
+    </WidgetCard>
+  );
+}
+
+/** 2. Lens: a static example exchange. */
+const EXAMPLE_EXCHANGE: Array<{ from: "you" | "lens"; text: string }> = [
+  { from: "you", text: "Is there litigation involving this promoter?" },
+  {
+    from: "lens",
+    text: "Two matters in the court record name the promoter, both linked in the evidence panel. A third result matched on name alone, so it is listed separately rather than counted against the project.",
+  },
+  { from: "you", text: "Is the RERA registration current?" },
+  {
+    from: "lens",
+    text: "The GujRERA registration is live and the quarterly filings are up to date as of the latest filing CRUX has read for this project.",
+  },
+];
+
+function LensWidget() {
+  return (
+    <WidgetCard title="CRUX Lens">
+      <div className="flex flex-col gap-2.5">
+        {EXAMPLE_EXCHANGE.map((turn, i) => (
           <motion.div
             key={i}
-            animate={{
-              width: 8,
-              height: i === active ? 24 : 8,
-              background: i === active ? "var(--color-crux-green)" : "#D1D5DB",
-            }}
-            style={{ borderRadius: 4, flexShrink: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          />
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.15 + i * 0.35 }}
+            className={cn("flex", turn.from === "you" ? "justify-end" : "justify-start")}
+          >
+            <p
+              className={cn(
+                "max-w-[86%] px-3.5 py-2.5 text-[12px] leading-relaxed",
+                turn.from === "you"
+                  ? "rounded-[16px_16px_4px_16px] bg-crux-bg-secondary text-crux-text-primary"
+                  : "rounded-[16px_16px_16px_4px] border border-crux-green/20 bg-crux-green-tint text-crux-text-primary"
+              )}
+            >
+              {turn.text}
+            </p>
+          </motion.div>
         ))}
       </div>
-    );
-  }
+    </WidgetCard>
+  );
+}
 
+/** 3. The verdict card, as a recipient sees it. */
+function ShareCardWidget() {
   return (
-    <div
-      style={{
-        position: "absolute",
-        right: 32,
-        top: "50%",
-        transform: "translateY(-50%)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        zIndex: 10,
-      }}
-    >
-      {[0, 1, 2, 3, 4].map((i) => (
-        <motion.div
+    <WidgetCard title="Shared card">
+      <div className="rounded-2xl border border-crux-border bg-crux-bg-primary p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="truncate text-[13px] font-semibold text-crux-text-primary">
+              Example Project
+            </p>
+            <p className="text-[11px] text-crux-text-muted">Ahmedabad, Gujarat</p>
+          </div>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-crux-green/30 bg-crux-green-tint text-[18px] font-extrabold text-crux-green-dark">
+            B+
+          </span>
+        </div>
+
+        <p className="mt-3 text-[12px] leading-relaxed text-crux-text-secondary">
+          Registration and filings are current. Two matters in the court record
+          name the promoter. Price fairness could not be assessed without an
+          asking price.
+        </p>
+
+        <p className="mt-3 border-t border-crux-border pt-3 text-[10px] leading-relaxed text-crux-text-muted">
+          A CRUX Grade is an opinion formed from public records, not investment
+          advice. Link expires.
+        </p>
+      </div>
+    </WidgetCard>
+  );
+}
+
+const WIDGETS = [GradeWidget, LensWidget, ShareCardWidget];
+
+function ProgressDots({ active }: { active: number }) {
+  return (
+    <div className="pointer-events-none absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 flex-row gap-2 md:bottom-auto md:left-auto md:right-8 md:top-1/2 md:-translate-x-0 md:-translate-y-1/2 md:flex-col md:gap-2.5">
+      {WIDGETS.map((_, i) => (
+        <span
           key={i}
-          animate={{
-            width: i === active ? 28 : 8,
-            height: 8,
-            background: i === active ? "var(--color-crux-green)" : "#D1D5DB",
-          }}
-          style={{ borderRadius: 4, flexShrink: 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          className={cn(
+            "rounded-full transition-[width,height,background-color] duration-300",
+            i === active
+              ? "h-6 w-2 bg-crux-green md:h-2 md:w-7"
+              : "h-2 w-2 bg-crux-border"
+          )}
         />
       ))}
     </div>
   );
 }
 
-// ─── WidgetCard ───────────────────────────────────────────────────────────────
-
-function WidgetCard({
-  children,
-  isMobile,
-  minHeight = 380,
-}: {
-  children: React.ReactNode;
-  isMobile: boolean;
-  minHeight?: number;
-}) {
+function TextPanel({ surface }: { surface: Surface }) {
+  const { Icon } = surface;
   return (
-    <div
-      style={{
-        background: "var(--color-crux-bg-primary)",
-        border: "1px solid var(--color-crux-border)",
-        borderRadius: 24,
-        boxShadow: "var(--shadow-premium-lg)",
-        width: "100%",
-        maxWidth: isMobile ? "100%" : 460,
-        padding: isMobile ? "24px 20px" : "28px 28px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 18,
-        minHeight: isMobile ? "auto" : minHeight,
-        overflow: "hidden",
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-// ─── 1. CRUX Score Widget ─────────────────────────────────────────────────────
-
-const SCORE_CATEGORIES = [
-  { label: "Location", pct: 30, score: 88 },
-  { label: "Developer", pct: 20, score: 94 },
-  { label: "Legal", pct: 20, score: 92 },
-  { label: "Market", pct: 15, score: 85 },
-  { label: "Structural", pct: 10, score: 90 },
-  { label: "Risk", pct: 5, score: 95 },
-];
-
-function ScoreWidget({ isMobile }: { isMobile: boolean }) {
-  const r = 88;
-  const circumference = 2 * Math.PI * r; // ≈ 552.9
-  const targetScore = 82;
-  const targetOffset = circumference - (circumference * targetScore) / 100;
-
-  const [started, setStarted] = useState(false);
-  const count = useCountUp(targetScore, 1400, started);
-
-  useEffect(() => {
-    const t = setTimeout(() => setStarted(true), 150);
-    return () => clearTimeout(t);
-  }, []);
-
-  return (
-    <WidgetCard isMobile={isMobile} minHeight={400}>
-      <style>{`
-        @keyframes pfScoreGlow {
-          0%, 100% { filter: drop-shadow(0 0 6px rgba(34,197,94,0.35)); }
-          50%       { filter: drop-shadow(0 0 14px rgba(34,197,94,0.65)); }
-        }
-      `}</style>
-
-      {/* Gauge + label */}
-      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <div
-          style={{
-            position: "relative",
-            width: isMobile ? 100 : 116,
-            height: isMobile ? 100 : 116,
-            flexShrink: 0,
-          }}
-        >
-          <svg
-            viewBox="0 0 200 200"
-            className="-rotate-90"
-            style={{ width: "100%", height: "100%" }}
-          >
-            <defs>
-              <linearGradient
-                id="pf-scoreGrad"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="var(--color-crux-green)" />
-                <stop offset="60%" stopColor="var(--color-crux-green-mid)" />
-                <stop offset="100%" stopColor="var(--color-crux-green-dark)" />
-              </linearGradient>
-            </defs>
-            {/* Track */}
-            <circle
-              cx="100"
-              cy="100"
-              r={r}
-              stroke="var(--color-crux-bg-secondary)"
-              strokeWidth="13"
-              fill="none"
-            />
-            {/* Score arc */}
-            <motion.circle
-              cx="100"
-              cy="100"
-              r={r}
-              stroke="url(#pf-scoreGrad)"
-              strokeWidth="13"
-              fill="none"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              initial={{ strokeDashoffset: circumference }}
-              animate={{
-                strokeDashoffset: started ? targetOffset : circumference,
-              }}
-              transition={{ duration: 1.4, ease: "easeOut", delay: 0.1 }}
-              style={
-                started
-                  ? { animation: "pfScoreGlow 2.5s ease-in-out 1.6s infinite" }
-                  : {}
-              }
-            />
-          </svg>
-          {/* Score number */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span
-              style={{
-                fontSize: isMobile ? 30 : 34,
-                fontWeight: 800,
-                color: "var(--color-crux-text-primary)",
-                lineHeight: 1,
-              }}
-            >
-              {count}
-            </span>
-            <span
-              style={{
-                fontSize: 9,
-                color: "var(--color-crux-text-muted)",
-                fontWeight: 500,
-                letterSpacing: "0.06em",
-              }}
-            >
-              / 100
-            </span>
-          </div>
-        </div>
-
-        <div>
-          <p style={{ fontSize: 12, color: "var(--color-crux-text-muted)", margin: "0 0 3px" }}>
-            CRUX Score
-          </p>
-          <p
-            style={{
-              fontSize: 14,
-              color: "var(--color-crux-text-primary)",
-              fontWeight: 700,
-              margin: "0 0 4px",
-            }}
-          >
-            Strong Credibility
-          </p>
-          <span
-            style={{
-              background: "var(--color-crux-bg-accent)",
-              color: "var(--color-crux-green-mid)",
-              border: "1px solid #DCFCE7",
-              borderRadius: 999,
-              padding: "3px 10px",
-              fontSize: 11,
-              fontWeight: 600,
-            }}
-          >
-            Top 18% in area
-          </span>
-        </div>
+    <div className="flex flex-col gap-4 px-4 md:px-0">
+      <div className="flex items-center gap-2.5">
+        <span className="h-0.5 w-5 shrink-0 rounded bg-crux-green" />
+        <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-crux-green">
+          {surface.eyebrow}
+        </span>
       </div>
 
-      {/* Category bars */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+      <div>
+        <h3
+          className="flex items-center gap-2.5 font-extrabold leading-tight text-crux-text-primary"
+          style={{ fontSize: "clamp(26px, 3.4vw, 44px)" }}
+        >
+          <Icon
+            size={26}
+            strokeWidth={1.75}
+            aria-hidden
+            className="shrink-0 text-crux-green"
+          />
+          {surface.name}
+        </h3>
         <p
-          style={{
-            fontSize: 11,
-            color: "var(--color-crux-text-muted)",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            margin: 0,
-            fontWeight: 600,
-          }}
+          className="mt-2 font-medium italic text-crux-green"
+          style={{ fontSize: "clamp(14px, 1.3vw, 18px)" }}
         >
-          Score breakdown
+          {surface.tagline}
         </p>
-        {SCORE_CATEGORIES.map((cat, i) => (
-          <div
-            key={cat.label}
-            style={{ display: "flex", alignItems: "center", gap: 10 }}
+      </div>
+
+      <p className="max-w-[420px] text-pretty text-[14px] leading-relaxed text-crux-text-secondary">
+        {surface.description}
+      </p>
+
+      <ul className="flex list-none flex-wrap gap-2 p-0">
+        {surface.pills.map((pill) => (
+          <li
+            key={pill}
+            className="rounded-full border border-crux-green/20 bg-crux-green-tint px-3.5 py-1.5 text-[12px] font-medium text-crux-green-mid"
           >
-            <span
-              style={{
-                fontSize: 11,
-                color: "var(--color-crux-text-secondary)",
-                width: 68,
-                flexShrink: 0,
-              }}
-            >
-              {cat.label}
-            </span>
-            <div
-              style={{
-                flex: 1,
-                height: 5,
-                background: "var(--color-crux-bg-secondary)",
-                borderRadius: 3,
-                overflow: "hidden",
-              }}
-            >
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: started ? `${cat.score}%` : 0 }}
-                transition={{
-                  duration: 0.65,
-                  ease: SPRING,
-                  delay: 0.35 + i * 0.08,
-                }}
-                style={{
-                  height: "100%",
-                  background: "linear-gradient(90deg, var(--color-crux-green), var(--color-crux-green-mid))",
-                  borderRadius: 3,
-                }}
-              />
-            </div>
-            <span
-              style={{
-                fontSize: 10,
-                color: "var(--color-crux-text-muted)",
-                width: 24,
-                textAlign: "right",
-              }}
-            >
-              {cat.pct}%
-            </span>
-          </div>
+            {pill}
+          </li>
         ))}
-      </div>
-    </WidgetCard>
-  );
-}
-
-// ─── 2. CRUX Lens Widget ──────────────────────────────────────────────────────
-
-const Q1 = "Any litigation on this property?";
-const R1 = "✓ No active litigation found. Last check: eCourts API, 2 hours ago.";
-const Q2 = "What's the RERA status?";
-const R2 = "Registered — RERA/GJ/2024/001892. Valid until Dec 2029.";
-
-function LensWidget({ isMobile }: { isMobile: boolean }) {
-  const [phase, setPhase] = useState(0);
-  // 0 = empty
-  // 1 = typing Q1
-  // 2 = Q1 done, typing dots for R1
-  // 3 = R1 visible
-  // 4 = typing Q2
-  // 5 = Q2 done, typing dots for R2
-  // 6 = R2 visible
-  const [q1Text, setQ1Text] = useState("");
-  const [q2Text, setQ2Text] = useState("");
-  const [showDots, setShowDots] = useState(false);
-  const [dotsFor, setDotsFor] = useState<1 | 2>(1);
-
-  useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    let seq = 0; // running cursor in ms
-
-    const schedule = (fn: () => void, delay: number) => {
-      const t = setTimeout(fn, delay);
-      timers.push(t);
-    };
-
-    function runSequence() {
-      seq = 0;
-      setPhase(0);
-      setQ1Text("");
-      setQ2Text("");
-      setShowDots(false);
-
-      // Start typing Q1
-      seq += 400;
-      schedule(() => setPhase(1), seq);
-
-      // Type Q1 chars at 12ms each
-      for (let i = 1; i <= Q1.length; i++) {
-        const charDelay = seq + i * 12;
-        const captured = i;
-        schedule(() => setQ1Text(Q1.slice(0, captured)), charDelay);
-      }
-      seq += Q1.length * 12 + 100;
-
-      // Typing dots for R1
-      schedule(() => {
-        setPhase(2);
-        setDotsFor(1);
-        setShowDots(true);
-      }, seq);
-      seq += 1100;
-
-      // Show R1
-      schedule(() => {
-        setShowDots(false);
-        setPhase(3);
-      }, seq);
-      seq += 600;
-
-      // Start typing Q2
-      schedule(() => setPhase(4), seq);
-      for (let i = 1; i <= Q2.length; i++) {
-        const charDelay = seq + i * 12;
-        const captured = i;
-        schedule(() => setQ2Text(Q2.slice(0, captured)), charDelay);
-      }
-      seq += Q2.length * 12 + 100;
-
-      // Typing dots for R2
-      schedule(() => {
-        setPhase(5);
-        setDotsFor(2);
-        setShowDots(true);
-      }, seq);
-      seq += 1100;
-
-      // Show R2
-      schedule(() => {
-        setShowDots(false);
-        setPhase(6);
-      }, seq);
-      seq += 3500;
-
-      // Restart
-      schedule(() => {
-        setQ1Text("");
-        setQ2Text("");
-        runSequence();
-      }, seq);
-    }
-
-    runSequence();
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
-  const UserBubble = ({
-    text,
-    typing,
-  }: {
-    text: string;
-    typing: boolean;
-  }) => (
-    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <div
-        style={{
-          background: "var(--color-crux-bg-secondary)",
-          borderRadius: "16px 16px 4px 16px",
-          padding: "10px 14px",
-          fontSize: 13,
-          color: "var(--color-crux-text-primary)",
-          maxWidth: "82%",
-          minHeight: 20,
-          lineHeight: 1.5,
-        }}
-      >
-        {text || "\u00A0"}
-        {typing && (
-          <span
-            style={{
-              display: "inline-block",
-              width: 1,
-              height: 13,
-              background: "var(--color-crux-text-secondary)",
-              marginLeft: 2,
-              verticalAlign: "text-bottom",
-              animation: "pfCursorBlink 0.8s step-end infinite",
-            }}
-          />
-        )}
-      </div>
+      </ul>
     </div>
   );
-
-  const AiBubble = ({ text }: { text: string }) => (
-    <div style={{ display: "flex", justifyContent: "flex-start" }}>
-      <div
-        style={{
-          background: "var(--color-crux-bg-accent)",
-          border: "1px solid #DCFCE7",
-          borderRadius: "16px 16px 16px 4px",
-          padding: "10px 14px",
-          fontSize: 13,
-          color: "var(--color-crux-text-primary)",
-          maxWidth: "85%",
-          lineHeight: 1.5,
-        }}
-      >
-        {text}
-      </div>
-    </div>
-  );
-
-  const TypingDots = () => (
-    <div style={{ display: "flex", justifyContent: "flex-start" }}>
-      <div
-        style={{
-          background: "var(--color-crux-bg-accent)",
-          border: "1px solid #DCFCE7",
-          borderRadius: "16px 16px 16px 4px",
-          padding: "12px 16px",
-          display: "flex",
-          gap: 5,
-          alignItems: "center",
-        }}
-      >
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "var(--color-crux-green)",
-              animation: `pfLensBounce 0.9s ease-in-out ${i * 0.18}s infinite`,
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-
-  return (
-    <WidgetCard isMobile={isMobile} minHeight={380}>
-      <style>{`
-        @keyframes pfLensBounce {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-5px); }
-        }
-        @keyframes pfCursorBlink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-      `}</style>
-
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 8,
-            background: "var(--color-crux-bg-accent)",
-            border: "1px solid #DCFCE7",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-          >
-            <circle cx="8" cy="8" r="6.5" stroke="var(--color-crux-green)" strokeWidth="1.5" />
-            <path
-              d="M8 5v3.5M8 10.5v.5"
-              stroke="var(--color-crux-green)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-        <div>
-          <p
-            style={{ fontSize: 13, fontWeight: 600, color: "var(--color-crux-text-primary)", margin: 0 }}
-          >
-            CRUX Lens
-          </p>
-          <p style={{ fontSize: 11, color: "var(--color-crux-green)", margin: 0, fontWeight: 500 }}>
-            ● Intelligence active
-          </p>
-        </div>
-      </div>
-
-      {/* Chat area */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-          justifyContent: "flex-end",
-          minHeight: isMobile ? 200 : 260,
-        }}
-      >
-        {/* Q1 */}
-        {phase >= 1 && (
-          <motion.div
-            key="q1"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <UserBubble text={q1Text} typing={phase === 1} />
-          </motion.div>
-        )}
-
-        {/* R1 or typing dots */}
-        {phase >= 2 && (
-          <motion.div
-            key="r1-area"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {showDots && dotsFor === 1 ? <TypingDots /> : <AiBubble text={R1} />}
-          </motion.div>
-        )}
-
-        {/* Q2 */}
-        {phase >= 4 && (
-          <motion.div
-            key="q2"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <UserBubble text={q2Text} typing={phase === 4} />
-          </motion.div>
-        )}
-
-        {/* R2 or typing dots */}
-        {phase >= 5 && (
-          <motion.div
-            key="r2-area"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {showDots && dotsFor === 2 ? <TypingDots /> : <AiBubble text={R2} />}
-          </motion.div>
-        )}
-      </div>
-    </WidgetCard>
-  );
 }
-
-// ─── 3. CRUX Cast Widget ──────────────────────────────────────────────────────
-
-function CastWidget({ isMobile }: { isMobile: boolean }) {
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setStarted(true), 150);
-    return () => clearTimeout(t);
-  }, []);
-
-  // Historical line: 5 points from (20,100) to (240,52)
-  // Y axis: 130=bottom (low price), 20=top (high price). viewBox 0 0 380 130
-  const histPath = "M 20 102 L 76 96 L 132 84 L 188 70 L 244 54";
-  // Projection cone
-  const upperPath = "M 244 54 L 360 26";
-  const lowerPath = "M 244 54 L 360 58";
-  const coneFill = "M 244 54 L 360 26 L 360 58 Z";
-
-  return (
-    <WidgetCard isMobile={isMobile} minHeight={360}>
-      <style>{`
-        @keyframes pfPricePulse {
-          0%, 100% { opacity: 0.75; }
-          50% { opacity: 1; }
-        }
-      `}</style>
-
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          flexWrap: "wrap",
-          gap: 8,
-        }}
-      >
-        <div>
-          <p style={{ fontSize: 11, color: "var(--color-crux-text-muted)", margin: "0 0 2px" }}>
-            Price trajectory · Govandi, Mumbai
-          </p>
-          <p
-            style={{ fontSize: 14, fontWeight: 700, color: "var(--color-crux-text-primary)", margin: 0 }}
-          >
-            Fair value vs. listed price
-          </p>
-        </div>
-        <motion.span
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: started ? 1 : 0, scale: started ? 1 : 0.85 }}
-          transition={{ duration: 0.3, delay: 1.6 }}
-          style={{
-            background: "var(--color-crux-bg-accent)",
-            border: "1px solid #DCFCE7",
-            borderRadius: 999,
-            padding: "4px 12px",
-            fontSize: 11,
-            color: "var(--color-crux-green-mid)",
-            fontWeight: 600,
-          }}
-        >
-          Fair Value: ₹65–68L
-        </motion.span>
-      </div>
-
-      {/* SVG chart */}
-      <div style={{ position: "relative", margin: "4px 0" }}>
-        <svg
-          viewBox="0 0 380 130"
-          style={{ width: "100%", height: "auto", overflow: "visible" }}
-        >
-          <defs>
-            <linearGradient
-              id="pf-histGrad"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
-            >
-              <stop offset="0%" stopColor="var(--color-crux-green)" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="var(--color-crux-green-mid)" stopOpacity="1" />
-            </linearGradient>
-            <linearGradient
-              id="pf-coneGrad"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
-            >
-              <stop offset="0%" stopColor="var(--color-crux-green)" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="var(--color-crux-green)" stopOpacity="0.04" />
-            </linearGradient>
-          </defs>
-
-          {/* Grid lines */}
-          {[30, 65, 100].map((y) => (
-            <line
-              key={y}
-              x1="0"
-              y1={y}
-              x2="380"
-              y2={y}
-              stroke="var(--color-crux-bg-secondary)"
-              strokeWidth="1"
-            />
-          ))}
-
-          {/* Projection divider */}
-          <line
-            x1="244"
-            y1="0"
-            x2="244"
-            y2="130"
-            stroke="var(--color-crux-border)"
-            strokeWidth="1"
-            strokeDasharray="4 3"
-          />
-
-          {/* Cone fill */}
-          <motion.path
-            d={coneFill}
-            fill="url(#pf-coneGrad)"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: started ? 1 : 0 }}
-            transition={{ duration: 0.5, delay: 1.1 }}
-          />
-
-          {/* Projection lines */}
-          <motion.path
-            d={upperPath}
-            stroke="var(--color-crux-green)"
-            strokeWidth="1.5"
-            fill="none"
-            strokeDasharray="5 3"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{
-              pathLength: started ? 1 : 0,
-              opacity: started ? 0.75 : 0,
-            }}
-            transition={{ duration: 0.55, delay: 1.0 }}
-          />
-          <motion.path
-            d={lowerPath}
-            stroke="var(--color-crux-green)"
-            strokeWidth="1.5"
-            fill="none"
-            strokeDasharray="5 3"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{
-              pathLength: started ? 1 : 0,
-              opacity: started ? 0.75 : 0,
-            }}
-            transition={{ duration: 0.55, delay: 1.0 }}
-          />
-
-          {/* Historical line */}
-          <motion.path
-            d={histPath}
-            stroke="url(#pf-histGrad)"
-            strokeWidth="2.5"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: started ? 1 : 0 }}
-            transition={{ duration: 0.85, ease: "easeOut", delay: 0.2 }}
-          />
-
-          {/* Latest price dot (current position, end of historical) */}
-          <motion.circle
-            cx="244"
-            cy="54"
-            r="4"
-            fill="var(--color-crux-green)"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: started ? 1 : 0, opacity: started ? 1 : 0 }}
-            transition={{ duration: 0.25, delay: 1.1 }}
-            style={{ transformOrigin: "244px 54px" }}
-          />
-
-          {/* Listed price dot — overpriced, above cone */}
-          <motion.circle
-            cx="360"
-            cy="12"
-            r="4"
-            fill="#EF4444"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: started ? 1 : 0, opacity: started ? 1 : 0 }}
-            transition={{ duration: 0.25, delay: 1.65 }}
-            style={{ transformOrigin: "360px 12px" }}
-          />
-
-          {/* Listed label */}
-          <motion.g
-            initial={{ opacity: 0 }}
-            animate={{ opacity: started ? 1 : 0 }}
-            transition={{ duration: 0.25, delay: 1.75 }}
-          >
-            <rect x="306" y="0" width="68" height="17" rx="8.5" fill="#FEF2F2" />
-            <text
-              x="340"
-              y="11.5"
-              textAnchor="middle"
-              fontSize="8.5"
-              fill="#EF4444"
-              fontWeight="700"
-            >
-              Listed ₹72L
-            </text>
-          </motion.g>
-
-          {/* Y labels */}
-          <text x="2" y="33" fontSize="8" fill="#D1D5DB">
-            ₹80L
-          </text>
-          <text x="2" y="68" fontSize="8" fill="#D1D5DB">
-            ₹65L
-          </text>
-          <text x="2" y="104" fontSize="8" fill="#D1D5DB">
-            ₹52L
-          </text>
-
-          {/* X labels */}
-          <text x="14" y="125" fontSize="8" fill="#D1D5DB">
-            2022
-          </text>
-          <text x="196" y="125" fontSize="8" fill="#D1D5DB">
-            2024
-          </text>
-          <text x="325" y="125" fontSize="8" fill="#D1D5DB">
-            2026E
-          </text>
-        </svg>
-      </div>
-
-      {/* Legend */}
-      <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-        {[
-          {
-            color: "var(--color-crux-green)",
-            dashed: false,
-            label: "Historical",
-          },
-          { color: "var(--color-crux-green)", dashed: true, label: "Projected range" },
-          { color: "#EF4444", dot: true, label: "Listed price" },
-        ].map(({ color, dashed, dot, label }) => (
-          <div
-            key={label}
-            style={{ display: "flex", alignItems: "center", gap: 5 }}
-          >
-            {dot ? (
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: color,
-                  flexShrink: 0,
-                }}
-              />
-            ) : (
-              <div
-                style={{
-                  width: 18,
-                  height: 2,
-                  background: dashed
-                    ? `repeating-linear-gradient(90deg, ${color} 0px, ${color} 4px, transparent 4px, transparent 7px)`
-                    : color,
-                  opacity: dashed ? 0.7 : 1,
-                  flexShrink: 0,
-                }}
-              />
-            )}
-            <span style={{ fontSize: 10, color: "var(--color-crux-text-muted)" }}>{label}</span>
-          </div>
-        ))}
-      </div>
-    </WidgetCard>
-  );
-}
-
-// ─── 4. CRUX Yield Widget ─────────────────────────────────────────────────────
-
-const MONTHLY_VALUES = [
-  7200, 7500, 7800, 8000, 8100, 8200, 8100, 8000, 7900, 8200, 8300, 8400,
-];
-const MONTH_LABELS = [
-  "J",
-  "F",
-  "M",
-  "A",
-  "M",
-  "J",
-  "J",
-  "A",
-  "S",
-  "O",
-  "N",
-  "D",
-];
-const YIELD_MAX = 8400;
-const BAR_MAX_H = 72;
-
-function YieldWidget({ isMobile }: { isMobile: boolean }) {
-  const [barsShown, setBarsShown] = useState(0);
-  const [showBadge, setShowBadge] = useState(false);
-  const [showIcons, setShowIcons] = useState(false);
-
-  const displayVal =
-    barsShown > 0
-      ? MONTHLY_VALUES[Math.min(barsShown - 1, MONTHLY_VALUES.length - 1)]
-      : 0;
-
-  useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = [];
-
-    for (let i = 0; i < 12; i++) {
-      timers.push(setTimeout(() => setBarsShown(i + 1), 200 + i * 90));
-    }
-    timers.push(setTimeout(() => setShowBadge(true), 200 + 12 * 90 + 300));
-    timers.push(setTimeout(() => setShowIcons(true), 200 + 12 * 90 + 600));
-
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
-  return (
-    <WidgetCard isMobile={isMobile} minHeight={360}>
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-        }}
-      >
-        <div>
-          <p style={{ fontSize: 11, color: "var(--color-crux-text-muted)", margin: "0 0 3px" }}>
-            Expected monthly rental
-          </p>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-            <span
-              style={{ fontSize: 28, fontWeight: 800, color: "var(--color-crux-text-primary)", lineHeight: 1 }}
-            >
-              ₹{displayVal.toLocaleString("en-IN")}
-            </span>
-            <span style={{ fontSize: 12, color: "var(--color-crux-text-muted)" }}>/mo</span>
-          </div>
-        </div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: showBadge ? 1 : 0, scale: showBadge ? 1 : 0.8 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            background: "var(--color-crux-bg-accent)",
-            border: "1px solid #DCFCE7",
-            borderRadius: 12,
-            padding: "8px 14px",
-            textAlign: "center",
-          }}
-        >
-          <p
-            style={{
-              fontSize: 10,
-              color: "var(--color-crux-green)",
-              margin: 0,
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}
-          >
-            Gross Yield
-          </p>
-          <p
-            style={{
-              fontSize: 18,
-              color: "var(--color-crux-green-mid)",
-              margin: 0,
-              fontWeight: 800,
-              lineHeight: 1.1,
-            }}
-          >
-            4.1%
-          </p>
-        </motion.div>
-      </div>
-
-      {/* Bar chart */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-end",
-          gap: 3,
-          height: 90,
-          paddingTop: 8,
-        }}
-      >
-        {MONTHLY_VALUES.map((val, i) => {
-          const barH = (val / YIELD_MAX) * BAR_MAX_H;
-          const isLatest = i === barsShown - 1;
-          return (
-            <div
-              key={i}
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 4,
-                height: "100%",
-                justifyContent: "flex-end",
-              }}
-            >
-              <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: barsShown > i ? barH : 0 }}
-                transition={{
-                  duration: 0.4,
-                  ease: [0.34, 1.4, 0.64, 1],
-                }}
-                style={{
-                  width: "100%",
-                  background: isLatest
-                    ? "linear-gradient(180deg, var(--color-crux-green), var(--color-crux-green-mid))"
-                    : "linear-gradient(180deg, #86EFAC, #4ADE80)",
-                  borderRadius: "3px 3px 0 0",
-                  minWidth: 6,
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 7,
-                  color: "#D1D5DB",
-                  lineHeight: 1,
-                  flexShrink: 0,
-                }}
-              >
-                {MONTH_LABELS[i]}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Signal icons */}
-      <div style={{ display: "flex", gap: 8 }}>
-        {[
-          { emoji: "💼", label: "High job density" },
-          { emoji: "🚉", label: "Transit · 8 min" },
-          { emoji: "🏢", label: "14 comp rentals" },
-        ].map((sig, i) => (
-          <motion.div
-            key={sig.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: showIcons ? 1 : 0, y: showIcons ? 0 : 8 }}
-            transition={{ duration: 0.3, delay: i * 0.1 }}
-            style={{
-              flex: 1,
-              background: "#F9FAFB",
-              border: "1px solid var(--color-crux-border)",
-              borderRadius: 10,
-              padding: "8px 10px",
-            }}
-          >
-            <div style={{ fontSize: 16, marginBottom: 3 }}>{sig.emoji}</div>
-            <div style={{ fontSize: 10, color: "var(--color-crux-text-secondary)", lineHeight: 1.3 }}>
-              {sig.label}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </WidgetCard>
-  );
-}
-
-// ─── 5. CRUX Watch Widget ─────────────────────────────────────────────────────
-
-const WATCH_ALERTS = [
-  {
-    id: "score",
-    dot: "#F59E0B",
-    bg: "#FFFBEB",
-    border: "#FDE68A",
-    title: "Score updated",
-    body: "82 → 79 · New construction permit filed nearby",
-    time: "2 min ago",
-  },
-  {
-    id: "legal",
-    dot: "var(--color-crux-green)",
-    bg: "var(--color-crux-bg-accent)",
-    border: "#DCFCE7",
-    title: "Legal clear",
-    body: "Quarterly court scan passed · No new filings",
-    time: "1 hr ago",
-  },
-  {
-    id: "market",
-    dot: "#3B82F6",
-    bg: "#EFF6FF",
-    border: "#BFDBFE",
-    title: "Market signal",
-    body: "2 comparable sales in locality at +8% YoY",
-    time: "3 hr ago",
-  },
-  {
-    id: "rera",
-    dot: "var(--color-crux-green)",
-    bg: "var(--color-crux-bg-accent)",
-    border: "#DCFCE7",
-    title: "RERA valid",
-    body: "Compliance check passed · Expires Dec 2029",
-    time: "6 hr ago",
-  },
-];
-
-function WatchWidget({ isMobile }: { isMobile: boolean }) {
-  const [visibleCount, setVisibleCount] = useState(0);
-
-  useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = [];
-
-    for (let i = 0; i < WATCH_ALERTS.length; i++) {
-      timers.push(setTimeout(() => setVisibleCount(i + 1), 200 + i * 380));
-    }
-
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
-  return (
-    <WidgetCard isMobile={isMobile} minHeight={380}>
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--color-crux-text-primary)", margin: 0 }}>
-          Property Alerts
-        </p>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              background: "var(--color-crux-green)",
-              boxShadow: "0 0 0 3px rgba(34,197,94,0.2)",
-            }}
-          />
-          <span style={{ fontSize: 11, color: "var(--color-crux-green)", fontWeight: 500 }}>
-            Monitoring
-          </span>
-        </div>
-      </div>
-
-      {/* Alert list */}
-      <div
-        style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1 }}
-      >
-        <AnimatePresence>
-          {WATCH_ALERTS.slice(0, visibleCount).map((alert) => (
-            <motion.div
-              key={alert.id}
-              initial={{ opacity: 0, x: isMobile ? 0 : 36, y: isMobile ? 16 : 0 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-              transition={{
-                duration: 0.35,
-                ease: [0.34, 1.4, 0.64, 1],
-              }}
-              style={{
-                background: alert.bg,
-                border: `1px solid ${alert.border}`,
-                borderRadius: 12,
-                padding: "11px 14px",
-                display: "flex",
-                gap: 10,
-                alignItems: "flex-start",
-              }}
-            >
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: alert.dot,
-                  marginTop: 4,
-                  flexShrink: 0,
-                  boxShadow: `0 0 0 3px ${alert.dot}28`,
-                }}
-              />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 3,
-                    gap: 8,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: "var(--color-crux-text-primary)",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {alert.title}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 10,
-                      color: "var(--color-crux-text-muted)",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {alert.time}
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: "var(--color-crux-text-secondary)",
-                    margin: 0,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {alert.body}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-    </WidgetCard>
-  );
-}
-
-// ─── RightPanel ───────────────────────────────────────────────────────────────
-
-function RightPanel({
-  activeProduct,
-  isMobile,
-}: {
-  activeProduct: number;
-  isMobile: boolean;
-}) {
-  function renderWidget() {
-    switch (activeProduct) {
-      case 0:
-        return <ScoreWidget isMobile={isMobile} />;
-      case 1:
-        return <LensWidget isMobile={isMobile} />;
-      case 2:
-        return <CastWidget isMobile={isMobile} />;
-      case 3:
-        return <YieldWidget isMobile={isMobile} />;
-      case 4:
-        return <WatchWidget isMobile={isMobile} />;
-      default:
-        return null;
-    }
-  }
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={activeProduct}
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {renderWidget()}
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
-// ─── ProductFamily (main export) ──────────────────────────────────────────────
 
 export default function ProductFamily() {
   const outerRef = useRef<HTMLDivElement>(null);
-  const [activeProduct, setActiveProduct] = useState(0);
-  const isMobile = useIsMobile();
+  const [active, setActive] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: outerRef,
@@ -1533,170 +313,85 @@ export default function ProductFamily() {
   });
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const next = Math.min(Math.floor(v * 5), 4);
-    setActiveProduct(next);
+    setActive(Math.min(Math.floor(v * SURFACES.length), SURFACES.length - 1));
   });
 
+  const Widget = WIDGETS[active];
+
+  // The outer element is one viewport of scroll per surface, plus one so the last
+  // panel can rest before the section releases.
+  // reducedMotion="user" is set here, per section, rather than once around the
+  // page: page.tsx is a server component owned elsewhere, and a landing section
+  // that animates has to honour the preference on its own.
   return (
+    <MotionConfig reducedMotion="user">
     <div
       ref={outerRef}
       id="features"
-      style={{ position: "relative", height: "600vh", scrollMarginTop: 80 }}
+      className="relative h-[400vh]"
+      style={{ scrollMarginTop: 80 }}
     >
       <div
+        className="sticky top-0 flex min-h-screen flex-col overflow-hidden"
         style={{
-          position: "sticky" as const,
-          top: 0,
-          // Use 100svh (small viewport height) to avoid mobile URL-bar jump.
-          // The min-height fallback handles browsers without svh support.
           height: "100svh",
-          minHeight: "100vh",
-          overflow: "hidden",
           background:
-            "linear-gradient(160deg, var(--color-crux-bg-accent) 0%, #FAFFFE 45%, var(--color-crux-bg-primary) 100%)",
-          display: "flex",
-          flexDirection: "column",
+            "linear-gradient(160deg, var(--color-crux-green-tint) 0%, #FFFFFF 45%, var(--color-crux-bg-primary) 100%)",
         }}
       >
-        {/* ── Section header (pinned, not animated) ── */}
-        <div
-          style={{
-            position: isMobile ? "relative" : "absolute",
-            top: isMobile ? "auto" : 96,
-            left: isMobile ? "auto" : "10%",
-            right: isMobile ? "auto" : "auto",
-            padding: isMobile ? "72px 16px 0" : undefined,
-            zIndex: isMobile ? 1 : 10,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginBottom: 8,
-            }}
-          >
-            <div
-              style={{
-                width: 22,
-                height: 2,
-                background: "var(--color-crux-green)",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                fontSize: 10,
-                letterSpacing: "0.22em",
-                color: "var(--color-crux-green)",
-                fontWeight: 700,
-                textTransform: "uppercase",
-              }}
-            >
-              CRUX Products
+        {/* Section header — pinned, so it does not animate with the panels. */}
+        <div className="px-4 pt-16 md:absolute md:left-[8%] md:top-20 md:z-10 md:px-0">
+          <div className="mb-2 flex items-center gap-2.5">
+            <span className="h-0.5 w-5 rounded bg-crux-green" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-crux-green">
+              What you get
             </span>
           </div>
           <h2
-            style={{
-              fontSize: isMobile
-                ? "clamp(16px, 5vw, 22px)"
-                : "clamp(17px, 2vw, 24px)",
-              fontWeight: 700,
-              color: "var(--color-crux-text-primary)",
-              margin: 0,
-              lineHeight: 1.3,
-            }}
+            className="font-bold leading-snug text-crux-text-primary"
+            style={{ fontSize: "clamp(17px, 2vw, 24px)" }}
           >
             One engine.{" "}
-            <span style={{ color: "var(--color-crux-green)" }}>Five dimensions</span>
-            {" "}of intelligence.
+            <span className="text-crux-green">Three surfaces</span> that exist today.
           </h2>
         </div>
 
-        {/* ── Content area ── */}
-        {isMobile ? (
-          // Mobile: stacked layout
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-              paddingTop: 16,
-              paddingBottom: 48,
-              gap: 16,
-              overflow: "hidden",
-            }}
-          >
-            {/* Widget (top) */}
-            <div
-              style={{
-                flex: "0 0 auto",
-                height: "45svh",
-                minHeight: "45vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "0 16px",
-                overflow: "hidden",
-              }}
-            >
-              <RightPanel activeProduct={activeProduct} isMobile={isMobile} />
-            </div>
-
-            {/* Text (bottom) */}
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                overflow: "hidden",
-                minHeight: 0,
-              }}
-            >
-              <LeftPanel product={PRODUCTS[activeProduct]} isMobile={isMobile} />
-            </div>
+        {/* Panels. Mobile stacks widget over text; desktop sits them side by side. */}
+        <div className="flex flex-1 flex-col gap-5 overflow-hidden pt-6 pb-16 md:flex-row md:items-center md:gap-0 md:pt-28 md:pb-0">
+          <div className="order-1 flex min-h-0 flex-1 items-center justify-center px-4 md:order-2 md:px-[8%]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`widget-${active}`}
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="flex w-full justify-center"
+              >
+                <Widget />
+              </motion.div>
+            </AnimatePresence>
           </div>
-        ) : (
-          // Desktop: side-by-side layout
-          <div
-            style={{
-              display: "flex",
-              flex: 1,
-              alignItems: "center",
-              paddingTop: 140,
-            }}
-          >
-            {/* Left text panel */}
-            <div
-              style={{
-                width: "42%",
-                padding: "0 4% 0 10%",
-                flexShrink: 0,
-              }}
-            >
-              <LeftPanel product={PRODUCTS[activeProduct]} isMobile={isMobile} />
-            </div>
 
-            {/* Right widget panel */}
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "0 8% 0 2%",
-                height: "100%",
-              }}
-            >
-              <RightPanel activeProduct={activeProduct} isMobile={isMobile} />
-            </div>
+          <div className="order-2 flex min-h-0 items-center md:order-1 md:w-[42%] md:shrink-0 md:pl-[8%] md:pr-[4%]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`text-${active}`}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -14 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="w-full"
+              >
+                <TextPanel surface={SURFACES[active]} />
+              </motion.div>
+            </AnimatePresence>
           </div>
-        )}
+        </div>
 
-        {/* Progress dots */}
-        <ProgressDots active={activeProduct} isMobile={isMobile} />
+        <ProgressDots active={active} />
       </div>
     </div>
+    </MotionConfig>
   );
 }
