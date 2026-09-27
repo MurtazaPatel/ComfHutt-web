@@ -1,57 +1,48 @@
 "use client";
 
+import { Search } from "lucide-react";
 import { useRecentProperties } from "@/hooks/useRecentProperties";
 import { PropertyCard, PropertyCardSkeleton } from "./PropertyCard";
+import { Surface, SurfaceTitle } from "./ui/Surface";
+
+/**
+ * The row scrolls horizontally, so it is focusable and labelled: a keyboard user
+ * can tab to it and pan with the arrow keys. The vertical padding keeps each
+ * card's focus ring inside the scroll box instead of clipped by `overflow-x`.
+ */
+const SCROLLER_CLASS =
+  "flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 py-2 -mx-1 " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 rounded-2xl";
 
 export function RecentProperties() {
   const { properties, isLoading } = useRecentProperties();
 
   return (
     <section>
-      <h2
-        style={{
-          fontFamily: "var(--font-inter, Inter, sans-serif)",
-          fontSize: "28px",
-          fontWeight: 600,
-          lineHeight: 1.2,
-          letterSpacing: "-0.005em",
-          color: "var(--color-crux-text-primary)",
-        }}
-        className="mb-4"
-      >
-        Recent Research
-      </h2>
+      <SurfaceTitle as="h2">Recent research</SurfaceTitle>
 
       {isLoading ? (
-        <div className="flex gap-4 overflow-x-auto pb-2 scroll-snap-x-mandatory" style={{ scrollbarWidth: "none" }}>
+        <div className={SCROLLER_CLASS} aria-busy="true" aria-label="Loading recent research">
           <PropertyCardSkeleton />
           <PropertyCardSkeleton />
           <PropertyCardSkeleton />
         </div>
       ) : properties.length === 0 ? (
-        <div
-          className="flex flex-col items-center justify-center gap-4 bg-white border border-[#ededed] py-12 px-6 text-center"
-          style={{ borderRadius: "16px" }}
-        >
-          <div className="w-12 h-12 rounded-full bg-crux-green-tint flex items-center justify-center">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-crux-green)" strokeWidth="1.5" strokeLinecap="round">
-              <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-            </svg>
-          </div>
+        <Surface className="flex flex-col items-center justify-center gap-4 px-6 py-12 text-center">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-crux-green-tint">
+            <Search size={22} strokeWidth={1.5} aria-hidden="true" className="text-crux-green" />
+          </span>
           <div>
-            <p className="text-[15px] font-medium text-crux-text-primary mb-1">
-              Score your first property
+            <p className="mb-1 text-[15px] font-medium text-crux-text-primary">
+              Grade your first property
             </p>
             <p className="text-[13px] text-crux-text-secondary">
-              Enter an address above to start analyzing.
+              Enter a project name or address in Gujarat above to start.
             </p>
           </div>
-        </div>
+        </Surface>
       ) : (
-        <div
-          className="flex gap-4 overflow-x-auto pb-2 scroll-snap-x-mandatory"
-          style={{ scrollbarWidth: "none" }}
-        >
+        <div className={SCROLLER_CLASS} tabIndex={0} role="group" aria-label="Recent research">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}

@@ -9,7 +9,17 @@ export interface PropertySummary {
   propertyId: string;
   address: string;
   city: string;
-  score: number;
+  /**
+   * Composite score, or null when this property has no score yet.
+   *
+   * Deliberately nullable. This used to coalesce to 0, which every consumer then
+   * rendered literally — the Lens list read "Score: 0" for every row, and a card's
+   * gauge sat at zero as though the engine had graded the property terribly. A
+   * property created but not yet scored has no score; that is a different fact
+   * from a score of zero, and the UI has to be able to tell them apart.
+   */
+  score: number | null;
+  /** Letter grade from the engine (A+ .. D / NR), absent until scored. */
   grade?: string;
   scoredAt: string;
 }
@@ -21,7 +31,7 @@ interface SearchesResponse {
       id: string;
       propertyId: string;
       addressRaw: string;
-      cruxScore: number;
+      cruxScore: number | null;
       scoreGrade?: string;
       shareToken?: string;
       searchedAt: string;
@@ -36,6 +46,11 @@ function parseCity(addressRaw: string): string {
     return city;
   }
   return "";
+}
+
+/** A score is only real if the API sent a number. 0 from a missing field is not one. */
+function normalizeScore(raw: unknown): number | null {
+  return typeof raw === "number" && Number.isFinite(raw) ? raw : null;
 }
 
 export function useRecentProperties(limit: number = 10) {
@@ -60,7 +75,7 @@ export function useRecentProperties(limit: number = 10) {
           propertyId: s.propertyId,
           address: s.addressRaw,
           city: parseCity(s.addressRaw),
-          score: s.cruxScore ?? 0,
+          score: normalizeScore(s.cruxScore),
           grade: s.scoreGrade,
           scoredAt: s.searchedAt,
         }));

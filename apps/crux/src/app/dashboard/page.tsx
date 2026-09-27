@@ -6,7 +6,7 @@ import { PromptBox } from "@/components/dashboard/PromptBox";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { RecentProperties } from "@/components/dashboard/RecentProperties";
 import { HowItWorks } from "@/components/dashboard/HowItWorks";
-import { MarketPulse } from "@/components/dashboard/MarketPulse";
+import { GradeGuide } from "@/components/dashboard/GradeGuide";
 
 export default function DashboardHomePage() {
   const { user, isLoading: userLoading } = useCruxUser();
@@ -14,7 +14,7 @@ export default function DashboardHomePage() {
   const firstName = user?.displayName?.split(" ")[0] || null;
 
   return (
-    <div className="max-w-[960px] mx-auto px-6 py-10">
+    <div className="mx-auto max-w-[960px] px-6 py-10">
       {/* Welcome + Prompt hero */}
       <div className="mb-10">
         <WelcomeHeader userName={firstName} isLoading={userLoading} />
@@ -34,10 +34,10 @@ export default function DashboardHomePage() {
         <RecentProperties />
       </div>
 
-      {/* Bottom two-panel */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Bottom two-panel: how the product works, and how to read its output. */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <HowItWorks />
-        <MarketPulse />
+        <GradeGuide />
       </div>
     </div>
   );

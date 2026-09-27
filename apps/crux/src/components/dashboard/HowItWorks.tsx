@@ -1,50 +1,52 @@
 "use client";
 
-const STEPS = [
-  { icon: "🔍", title: "Search any address" },
-  { icon: "🤖", title: "AI analyzes 20+ databases" },
-  { icon: "📊", title: "Get your CRUX score" },
-  { icon: "✅", title: "Make informed decisions" },
+import { MapPin, FileSearch, Award, type LucideIcon } from "lucide-react";
+import { Surface, SurfaceTitle } from "./ui/Surface";
+
+/**
+ * Three steps, each one something the product actually does.
+ *
+ * The old copy claimed a database count nothing in the code supports, and used
+ * emoji as icons.
+ */
+const STEPS: Array<{ icon: LucideIcon; title: string; detail: string }> = [
+  {
+    icon: MapPin,
+    title: "Name the property",
+    detail: "Type a project name or address in Gujarat — that is the area CRUX covers.",
+  },
+  {
+    icon: FileSearch,
+    title: "CRUX reads the public record",
+    detail: "RERA filings, court and tribunal cases, and company filings for the developer.",
+  },
+  {
+    icon: Award,
+    title: "You get a CRUX Grade",
+    detail: "A letter grade with the records behind it, so you can check the reasoning yourself.",
+  },
 ];
 
 export function HowItWorks() {
   return (
-    <div
-      className="flex flex-col gap-3 bg-white border border-[#ededed] transition-shadow duration-[220ms] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
-      style={{ borderRadius: "16px", padding: "24px" }}
-    >
-      <h3
-        style={{
-          fontFamily: "var(--font-inter, Inter, sans-serif)",
-          fontSize: "20px",
-          fontWeight: 600,
-          lineHeight: 1.3,
-          color: "var(--color-crux-text-primary)",
-        }}
-      >
-        How CRUX Works
-      </h3>
+    <Surface as="section" className="h-full">
+      <SurfaceTitle as="h2">How CRUX works</SurfaceTitle>
 
-      {STEPS.map((step, idx) => (
-        <div key={idx} className="flex items-center gap-3 py-[8px]">
-          <span
-            className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold flex-shrink-0"
-            style={{
-              backgroundColor: "#f5f5f5",
-              color: "#6e6e6e",
-              fontFamily: "var(--font-inter, Inter, sans-serif)",
-            }}
-          >
-            {idx + 1}
-          </span>
-          <span
-            className="text-[14px] font-normal text-crux-text-primary"
-            style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-          >
-            {step.title}
-          </span>
-        </div>
-      ))}
-    </div>
+      <ol className="flex flex-col gap-4">
+        {STEPS.map(({ icon: Icon, title, detail }, idx) => (
+          <li key={title} className="flex items-start gap-3">
+            <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-crux-green-tint">
+              <Icon size={14} strokeWidth={1.75} aria-hidden="true" className="text-crux-green" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[14px] font-medium text-crux-text-primary">
+                {idx + 1}. {title}
+              </p>
+              <p className="mt-0.5 text-[13px] leading-relaxed text-crux-text-secondary">{detail}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </Surface>
   );
 }

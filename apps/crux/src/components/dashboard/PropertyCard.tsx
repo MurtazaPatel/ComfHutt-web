@@ -1,49 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { gradeBand, isUngraded, scoreColor } from "@/lib/grade";
+import { formatDate } from "@/lib/format";
 import type { PropertySummary } from "@/hooks/useRecentProperties";
+import { Surface } from "./ui/Surface";
 
 interface PropertyCardProps {
   property: PropertySummary;
 }
 
-/** A circular mini score gauge rendered as an SVG ring */
+const CARD_WIDTH = "min-w-[260px] max-w-[320px] flex-shrink-0 snap-start";
+
+/** A circular mini score gauge rendered as an SVG ring. Only drawn for a real score. */
 function MiniScoreGauge({ score }: { score: number }) {
   const radius = 22;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
 
-  const color =
-    score < 30 ? "#EF4444" : score <= 55 ? "#F59E0B" : "var(--color-crux-green)";
-
   return (
-    <div className="relative w-[56px] h-[56px] flex-shrink-0">
-      <svg width="56" height="56" viewBox="0 0 56 56" className="-rotate-90">
+    <div
+      className="relative h-[56px] w-[56px] flex-shrink-0"
+      role="img"
+      aria-label={`CRUX score ${score} out of 100`}
+    >
+      <svg width="56" height="56" viewBox="0 0 56 56" className="-rotate-90" aria-hidden="true">
+        <circle cx="28" cy="28" r={radius} fill="none" stroke="var(--color-crux-border)" strokeWidth="3" />
         <circle
           cx="28"
           cy="28"
           r={radius}
           fill="none"
-          stroke="var(--color-crux-border)"
-          strokeWidth="3"
-        />
-        <circle
-          cx="28"
-          cy="28"
-          r={radius}
-          fill="none"
-          stroke={color}
+          stroke={scoreColor(score)}
           strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 0.6s cubic-bezier(0.16,1,0.3,1)" }}
+          className="transition-[stroke-dashoffset] duration-700 ease-out motion-reduce:transition-none"
         />
       </svg>
       <span
-        className="absolute inset-0 flex items-center justify-center text-[15px] font-semibold text-[#0d0d0d]"
-        style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
+        aria-hidden="true"
+        className="absolute inset-0 flex items-center justify-center text-[15px] font-semibold text-crux-text-primary"
       >
         {score}
       </span>
@@ -52,76 +50,66 @@ function MiniScoreGauge({ score }: { score: number }) {
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
-  const formattedDate = new Date(property.scoredAt).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  // `score` is nullable: a property can exist without having been graded. The old
+  // card rendered a 0 gauge and a fabricated "Top {100 - score}% in area" chip.
+  const score = property.score;
+  // Only show a grade chip when the engine actually sent a grade — including NR,
+  // which is a decision it made, not a missing value.
+  const band = property.grade ? gradeBand(property.grade) : null;
+  const gradeLabel = isUngraded(property.grade) ? "Not Rated" : `Grade ${band?.label}`;
 
   return (
     <Link
       href={`/dashboard/properties/${property.id}`}
-      className={cn(
-        "flex flex-col gap-3 bg-white border border-[#ededed] min-w-[280px] max-w-[320px] flex-shrink-0",
-        "cursor-pointer transition-all duration-[220ms]",
-        "hover:shadow-[0_4px_16px_rgba(13,13,13,0.06)] hover:border-[#e5e5e5]"
-      )}
-      style={{ borderRadius: "16px", padding: "24px" }}
+      className={`group block rounded-2xl ${CARD_WIDTH} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2`}
     >
-      <div>
-        <p
-          className="text-[14px] font-medium text-[#0d0d0d] leading-snug"
-          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-        >
-          {property.address}
-        </p>
-        <p
-          className="text-[12px] font-normal text-[#6e6e6e] mt-0.5"
-          style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-        >
-          {property.city}
-        </p>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <MiniScoreGauge score={property.score} />
+      <Surface interactive className="flex h-full flex-col gap-3">
         <div>
-          <span
-            className="inline-flex items-center px-[10px] py-[4px] text-[12px] font-medium rounded-full"
-            style={{
-              backgroundColor: "var(--color-crux-bg-accent)",
-              color: "var(--color-crux-green-mid)",
-              borderRadius: "9999px",
-            }}
-          >
-            Top {100 - property.score}% in area
-          </span>
+          <p className="text-[14px] font-medium leading-snug text-crux-text-primary">{property.address}</p>
+          {property.city && (
+            <p className="mt-0.5 text-[12px] font-normal text-crux-text-secondary">{property.city}</p>
+          )}
         </div>
-      </div>
 
-      <p
-        className="text-[11px] text-[#9b9b9b]"
-        style={{ fontFamily: "var(--font-inter, Inter, sans-serif)" }}
-      >
-        Scored {formattedDate}
-      </p>
+        <div className="flex items-center gap-3">
+          {score !== null ? (
+            <>
+              <MiniScoreGauge score={score} />
+              {band && (
+                <span
+                  className={`inline-flex items-center rounded-full border px-[10px] py-[3px] text-[12px] font-medium ${band.chipClass}`}
+                >
+                  {gradeLabel}
+                </span>
+              )}
+            </>
+          ) : (
+            <span className="inline-flex items-center rounded-full bg-crux-bg-secondary px-[10px] py-[4px] text-[12px] font-medium text-crux-text-secondary">
+              Not scored yet
+            </span>
+          )}
+        </div>
+
+        <p className="mt-auto text-[11px] text-crux-text-muted">
+          {score !== null ? "Scored" : "Added"} {formatDate(property.scoredAt)}
+        </p>
+      </Surface>
     </Link>
   );
 }
 
 export function PropertyCardSkeleton() {
   return (
-    <div
-      className="flex flex-col gap-3 bg-white border border-[#ededed] min-w-[280px] max-w-[320px] flex-shrink-0 animate-pulse"
-      style={{ borderRadius: "16px", padding: "24px" }}
-    >
-      <div className="h-5 w-3/4 bg-gray-100 rounded" />
-      <div className="h-4 w-1/2 bg-gray-50 rounded" />
-      <div className="flex items-center gap-3">
-        <div className="w-[56px] h-[56px] rounded-full bg-gray-100" />
-        <div className="h-5 w-20 bg-gray-50 rounded-full" />
+    <Surface className={`${CARD_WIDTH} animate-pulse motion-reduce:animate-none`}>
+      <div className="flex flex-col gap-3">
+        <div className="h-[18px] w-3/4 rounded bg-crux-bg-secondary" />
+        <div className="h-[15px] w-1/2 rounded bg-crux-bg-secondary" />
+        <div className="flex items-center gap-3">
+          <div className="h-[56px] w-[56px] rounded-full bg-crux-bg-secondary" />
+          <div className="h-[22px] w-24 rounded-full bg-crux-bg-secondary" />
+        </div>
+        <div className="h-[14px] w-28 rounded bg-crux-bg-secondary" />
       </div>
-      <div className="h-3 w-24 bg-gray-50 rounded" />
-    </div>
+    </Surface>
   );
 }
