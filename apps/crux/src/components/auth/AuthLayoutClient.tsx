@@ -1,81 +1,109 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Shield, Zap, TrendingUp, BarChart3 } from "lucide-react";
+import { FileText, Gavel, Landmark, MapPin } from "lucide-react";
 
 interface AuthLayoutClientProps {
   children: React.ReactNode;
   variant: "signin" | "signup";
 }
 
-const dataSourceChips = ["MCA21", "eCourts", "RERA", "IGR", "NASA VIIRS", "CPCB"];
+/**
+ * The seven things the grading engine actually scores — the module labels from
+ * CgmGradeSurface, i.e. the engine's own vocabulary.
+ *
+ * This replaced a row of chips reading MCA21, eCourts, RERA, IGR, NASA VIIRS and
+ * CPCB. Three of those names are ones CRUX is barred from citing, and naming a
+ * source on the signup page that no report will ever attribute a finding to is the
+ * same overclaim in a more prominent place. What CRUX grades is a real, checkable
+ * list; where it reads from belongs on a report, next to the finding it supports.
+ */
+const MODULES = [
+  "Legal standing",
+  "Delivery execution",
+  "Developer trust",
+  "Financial integrity",
+  "Compliance",
+  "Location",
+  "Price fairness",
+] as const;
 
-const statIcons = [
-  { icon: Shield, value: "20+", label: "Data signals" },
-  { icon: Zap, value: "<90s", label: "Per report" },
-  { icon: TrendingUp, value: "3.2K", label: "Scored today" },
-  { icon: BarChart3, value: "12", label: "Indian cities" },
-];
+/**
+ * Facts, not marketing numbers.
+ *
+ * The four stats here previously read "20+ data signals", "<90s per report",
+ * "3.2K scored today" and "12 Indian cities". The city count was simply false —
+ * coverage is Gujarat — and "3.2K scored today" was a fabricated live counter,
+ * a made-up usage figure presented as the day's traffic on the page where a user
+ * decides whether to trust the product. Every value below is backed by something
+ * in the codebase: the seven engine modules, the A+..D grade bands in lib/grade.ts,
+ * the three-report anonymous quota the backend enforces, and the coverage area.
+ */
+const FACTS = [
+  { icon: Landmark, value: "Gujarat", label: "Coverage today" },
+  { icon: FileText, value: "7", label: "Modules graded" },
+  { icon: Gavel, value: "A+ – D", label: "Grade scale" },
+  { icon: MapPin, value: "3 free", label: "No account needed" },
+] as const;
 
-export default function AuthLayoutClient({
-  children,
-  variant,
-}: AuthLayoutClientProps) {
+export default function AuthLayoutClient({ children, variant }: AuthLayoutClientProps) {
   const isSignIn = variant === "signin";
 
   return (
     <motion.div
-      className="min-h-screen w-full flex flex-col md:flex-row bg-white"
+      className="flex min-h-dvh w-full flex-col bg-white md:flex-row"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
       {/* ── LEFT BRAND PANEL ── */}
-      <div className="hidden md:flex w-1/2 flex-col justify-between px-16 py-14 relative overflow-hidden bg-crux-green-tint">
-        {/* Ambient glow */}
+      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-crux-green-tint px-16 py-14 md:flex">
+        {/* Ambient glow. Brand green (#10B981), not the rejected #22C55E. */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 50% at 30% 30%, rgba(34,197,94,0.06) 0%, transparent 60%), radial-gradient(ellipse 40% 60% at 70% 80%, rgba(34,197,94,0.04) 0%, transparent 50%)",
+              "radial-gradient(ellipse 80% 50% at 30% 30%, rgba(16,185,129,0.07) 0%, transparent 60%), radial-gradient(ellipse 40% 60% at 70% 80%, rgba(16,185,129,0.05) 0%, transparent 50%)",
           }}
         />
-
-        {/* Subtle grid texture overlay */}
         <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(34,197,94,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.3) 1px, transparent 1px)",
+              "linear-gradient(rgba(16,185,129,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.3) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
           }}
         />
 
-        {/* ── Top section ── */}
         <div className="relative z-10 flex flex-col gap-10">
           {/* Brand identity */}
           <div className="anim flex flex-col gap-2">
             <div className="flex items-baseline gap-2.5">
-              <span
-                className="font-extrabold tracking-tight text-crux-text-primary select-none"
-                style={{ fontSize: 36, letterSpacing: "-0.02em" }}
-              >
+              <span className="text-[36px] font-extrabold tracking-[-0.02em] text-crux-text-primary select-none">
                 CRUX
               </span>
-              <span className="flex items-center gap-1.5 self-end mb-1">
+              <span className="mb-1 flex items-center gap-1.5 self-end">
                 <span className="text-[11px] text-crux-text-muted">by</span>
-                <img
+                <Image
                   src="/comfhutt-logo.svg"
                   alt="ComfHutt"
-                  style={{ height: 14, width: "auto", opacity: 0.45 }}
+                  width={70}
+                  height={14}
+                  className="h-[14px] w-auto opacity-45"
                 />
               </span>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-crux-border bg-white/80 w-fit">
-              <span className="w-1.5 h-1.5 rounded-full bg-crux-green animate-pulse flex-shrink-0" />
-              <span className="text-[11px] font-mono font-medium text-crux-text-secondary uppercase tracking-[0.08em]">
-                Property Intelligence
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-crux-border bg-white/80 px-3 py-1">
+              <span
+                aria-hidden
+                className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-crux-green motion-safe:animate-pulse"
+              />
+              <span className="font-mono text-[11px] font-medium tracking-[0.08em] text-crux-text-secondary uppercase">
+                Property intelligence
               </span>
             </div>
           </div>
@@ -83,82 +111,83 @@ export default function AuthLayoutClient({
           {/* Hero statement */}
           <div className="anim space-y-3" style={{ animationDelay: "0.08s" }}>
             <p
-              className="text-crux-text-primary leading-[1.15]"
+              className="leading-[1.15] text-crux-text-primary"
               style={{
+                // The display serif has no Tailwind utility mapped to it; the
+                // variable is set on <html> in the root layout.
                 fontFamily: "var(--font-instrument-serif), serif",
                 fontSize: "clamp(28px, 3.2vw, 42px)",
                 fontStyle: "italic",
               }}
             >
               {isSignIn
-                ? "Welcome back. Your intelligence dashboard is waiting."
-                : "Start scoring properties with 20+ live data signals."}
+                ? "Welcome back. Your research is where you left it."
+                : "Know what the record says before you pay a rupee."}
             </p>
           </div>
 
-          {/* Trust chips — data sources */}
-          <div
-            className="anim flex flex-wrap gap-1.5"
-            style={{ animationDelay: "0.14s" }}
-          >
-            {dataSourceChips.map((chip, i) => (
+          {/* What CRUX grades */}
+          <div className="anim flex flex-wrap gap-1.5" style={{ animationDelay: "0.14s" }}>
+            {MODULES.map((label, i) => (
               <span
-                key={chip}
-                className="anim inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-crux-border bg-white/70 text-[11px] font-mono text-crux-text-secondary whitespace-nowrap"
+                key={label}
+                className="anim inline-flex items-center gap-1 rounded-full border border-crux-border bg-white/70 px-2.5 py-1 font-mono text-[11px] whitespace-nowrap text-crux-text-secondary"
                 style={{ animationDelay: `${0.16 + i * 0.04}s` }}
               >
-                <span className="w-1 h-1 rounded-full bg-crux-green flex-shrink-0" />
-                {chip}
+                <span aria-hidden className="h-1 w-1 flex-shrink-0 rounded-full bg-crux-green" />
+                {label}
               </span>
             ))}
           </div>
 
-          {/* Context paragraph */}
+          {/* Context paragraph. No broker-attack framing — the product brief removes
+              it explicitly, and "any address in India" overstates the coverage. */}
           <div className="anim max-w-[380px]" style={{ animationDelay: "0.2s" }}>
             <p className="text-[14px] leading-relaxed text-crux-text-secondary">
               {isSignIn
-                ? "CRUX scores every property in India against 20+ government data streams. Legal records, flood maps, builder history — all in one report."
-                : "Type any address in India. Get court cases, builder fraud, flood risk — everything your broker won't tell you. Free."}
+                ? "CRUX grades Gujarat properties on the public record — RERA filings, court and tribunal cases, and the developer's own company filings — and shows you the records behind every finding."
+                : "Name a project in Gujarat. CRUX reads its RERA filings, the court and tribunal record, and the developer's company filings, then gives you one grade and the evidence for it."}
             </p>
           </div>
         </div>
 
-        {/* ── Bottom section ── */}
         <div className="relative z-10 flex flex-col gap-6">
-          {/* Mini stat grid */}
           <div className="anim grid grid-cols-4 gap-3" style={{ animationDelay: "0.26s" }}>
-            {statIcons.map(({ icon: Icon, value, label }) => (
+            {FACTS.map(({ icon: Icon, value, label }) => (
               <div
                 key={label}
-                className="flex flex-col items-center gap-1 p-3 rounded-xl bg-white/60 border border-crux-border/60"
+                className="flex flex-col items-center gap-1 rounded-xl border border-crux-border/60 bg-white/60 p-3"
               >
-                <Icon className="w-4 h-4 text-crux-green/60" />
-                <span className="text-[13px] font-semibold text-crux-text-primary leading-none">
+                <Icon className="h-4 w-4 text-crux-green/60" aria-hidden />
+                <span className="text-[13px] leading-none font-semibold text-crux-text-primary">
                   {value}
                 </span>
-                <span className="text-[10px] text-crux-text-muted text-center leading-tight">
+                <span className="text-center text-[10px] leading-tight text-crux-text-muted">
                   {label}
                 </span>
               </div>
             ))}
           </div>
 
-          {/* Quote attribution */}
           <div className="anim" style={{ animationDelay: "0.32s" }}>
-            <p className="text-[11px] text-crux-text-muted font-mono tracking-[0.04em]">
-              Methodology is public. Results are transparent. No signup required.
+            {/* Was "Methodology is public." — the /methodology page the product brief
+                calls for does not exist yet, so that was a promise, not a fact. This
+                says what is true now: no builder can pay to change a grade. */}
+            <p className="font-mono text-[11px] tracking-[0.04em] text-crux-text-muted">
+              No builder pays for a grade. Every finding links to its record.
             </p>
           </div>
         </div>
       </div>
 
       {/* ── RIGHT FORM PANEL ── */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 md:py-0 relative bg-white">
+      <div className="relative flex flex-1 items-center justify-center bg-white px-6 py-12 md:py-0">
         <div
-          className="absolute inset-0 opacity-30 pointer-events-none"
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-30"
           style={{
             background:
-              "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(34,197,94,0.04) 0%, transparent 70%)",
+              "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16,185,129,0.04) 0%, transparent 70%)",
           }}
         />
         <div className="relative z-10 w-full max-w-[400px]">
