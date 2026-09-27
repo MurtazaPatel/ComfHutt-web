@@ -6,14 +6,13 @@ import { ArrowDown, Check } from "lucide-react";
 /**
  * What changes when a project has a grade.
  *
- * The right-hand column used to promise "20+ verified government data signals",
- * "AI-powered instant property analysis", a "live credibility score, updated
- * daily", an exit "via Liquidity Mesh" and "CRUX Score: one number, full
- * picture". Re-scoring is not shipped, there is no Liquidity Mesh, and the
- * signal count was never sourced. The left-hand column opened on "Broker's word
- * of mouth", which is both an attack on the people CRUX sells its Professional
- * seats to and beside the point: the problem is not who tells you, it is that
- * the record is unreadable.
+ * The right-hand column used to promise a government signal count, an immediate
+ * AI analysis, a credibility number recomputed daily, an exit route through a
+ * product that has never existed, and one number that was the whole picture.
+ * Recomputing a grade on new data is not shipped, and the signal count was never
+ * sourced. The left-hand column opened by attacking the word of the very people
+ * CRUX sells its Professional seats to, which is also beside the point: the
+ * problem is not who tells you, it is that the record is unreadable.
  *
  * Each right-hand line maps to something that exists: a module verdict, a linked
  * record, a stated confidence.

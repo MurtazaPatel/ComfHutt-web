@@ -15,12 +15,12 @@ import { MODULE_ORDER, MODULE_LABEL } from "@/lib/grade";
 /**
  * What a reader gets today — three surfaces, not five products.
  *
- * This section used to scroll through CRUX Score, Lens, Cast, Yield and Watch.
- * Cast and Yield return HTTP 501 and Watch (alerts, re-scoring) is unbuilt, so
- * three of the five panels advertised software that does not exist, complete with
- * a fair value of ₹65–68L for a Mumbai locality CRUX does not cover, a ₹8,400
- * rent forecast and a live alert feed. What is left is what ships: the grade, the
- * assistant that answers from the record, and the card you can send someone.
+ * This section used to scroll through five panels. Three of them advertised
+ * software that either returns HTTP 501 or was never built — a price forecast, a
+ * rental forecast and a monitoring feed — complete with a fair-value range for a
+ * Mumbai locality CRUX does not cover and a monthly rent figure from nowhere.
+ * What is left is what ships: the grade, the assistant that answers from the
+ * record, and the card you can send someone.
  *
  * Every figure in the three widgets is invented, so each widget carries an
  * EXAMPLE badge in its own frame rather than relying on a caption elsewhere.
@@ -50,8 +50,8 @@ const SURFACES: Surface[] = [
     name: "CRUX Lens",
     tagline: "Ask the record a question.",
     description:
-      "An assistant that answers from the documents CRUX has already read for that project, and cites them. It declines rather than guesses when the record does not say. Rate-limited on the free tier.",
-    pills: ["Answers with citations", "Declines when unsure", "Free, rate-limited"],
+      "An assistant scoped to one project. It answers from the documents CRUX has already read for that project and links what it cites, so an answer can be taken back to its source. Rate-limited on the free tier.",
+    pills: ["One project at a time", "Links what it cites", "Free, rate-limited"],
     Icon: MessageSquare,
   },
   {
@@ -242,7 +242,7 @@ function ProgressDots({ active }: { active: number }) {
         <span
           key={i}
           className={cn(
-            "rounded-full transition-[width,height,background-color] duration-300",
+            "rounded-full transition-[width,height,background-color] duration-300 motion-reduce:transition-none",
             i === active
               ? "h-6 w-2 bg-crux-green md:h-2 md:w-7"
               : "h-2 w-2 bg-crux-border"
@@ -325,73 +325,73 @@ export default function ProductFamily() {
   // that animates has to honour the preference on its own.
   return (
     <MotionConfig reducedMotion="user">
-    <div
-      ref={outerRef}
-      id="features"
-      className="relative h-[400vh]"
-      style={{ scrollMarginTop: 80 }}
-    >
       <div
-        className="sticky top-0 flex min-h-screen flex-col overflow-hidden"
-        style={{
-          height: "100svh",
-          background:
-            "linear-gradient(160deg, var(--color-crux-green-tint) 0%, #FFFFFF 45%, var(--color-crux-bg-primary) 100%)",
-        }}
+        ref={outerRef}
+        id="features"
+        className="relative h-[400vh]"
+        style={{ scrollMarginTop: 80 }}
       >
-        {/* Section header — pinned, so it does not animate with the panels. */}
-        <div className="px-4 pt-16 md:absolute md:left-[8%] md:top-20 md:z-10 md:px-0">
-          <div className="mb-2 flex items-center gap-2.5">
-            <span className="h-0.5 w-5 rounded bg-crux-green" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-crux-green">
-              What you get
-            </span>
+        <div
+          className="sticky top-0 flex min-h-screen flex-col overflow-hidden"
+          style={{
+            height: "100svh",
+            background:
+              "linear-gradient(160deg, var(--color-crux-green-tint) 0%, var(--color-crux-bg-primary) 100%)",
+          }}
+        >
+          {/* Section header — pinned, so it does not animate with the panels. */}
+          <div className="px-4 pt-16 md:absolute md:left-[8%] md:top-20 md:z-10 md:px-0">
+            <div className="mb-2 flex items-center gap-2.5">
+              <span className="h-0.5 w-5 rounded bg-crux-green" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-crux-green">
+                What you get
+              </span>
+            </div>
+            <h2
+              className="font-bold leading-snug text-crux-text-primary"
+              style={{ fontSize: "clamp(17px, 2vw, 24px)" }}
+            >
+              One engine.{" "}
+              <span className="text-crux-green">Three surfaces</span> that exist today.
+            </h2>
           </div>
-          <h2
-            className="font-bold leading-snug text-crux-text-primary"
-            style={{ fontSize: "clamp(17px, 2vw, 24px)" }}
-          >
-            One engine.{" "}
-            <span className="text-crux-green">Three surfaces</span> that exist today.
-          </h2>
+
+          {/* Panels. Mobile stacks widget over text; desktop sits them side by side. */}
+          <div className="flex flex-1 flex-col gap-5 overflow-hidden pt-6 pb-16 md:flex-row md:items-center md:gap-0 md:pt-28 md:pb-0">
+            <div className="order-1 flex min-h-0 flex-1 items-center justify-center px-4 md:order-2 md:px-[8%]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`widget-${active}`}
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className="flex w-full justify-center"
+                >
+                  <Widget />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="order-2 flex min-h-0 items-center md:order-1 md:w-[42%] md:shrink-0 md:pl-[8%] md:pr-[4%]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`text-${active}`}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -14 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="w-full"
+                >
+                  <TextPanel surface={SURFACES[active]} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <ProgressDots active={active} />
         </div>
-
-        {/* Panels. Mobile stacks widget over text; desktop sits them side by side. */}
-        <div className="flex flex-1 flex-col gap-5 overflow-hidden pt-6 pb-16 md:flex-row md:items-center md:gap-0 md:pt-28 md:pb-0">
-          <div className="order-1 flex min-h-0 flex-1 items-center justify-center px-4 md:order-2 md:px-[8%]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`widget-${active}`}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.22, ease: "easeOut" }}
-                className="flex w-full justify-center"
-              >
-                <Widget />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          <div className="order-2 flex min-h-0 items-center md:order-1 md:w-[42%] md:shrink-0 md:pl-[8%] md:pr-[4%]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`text-${active}`}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="w-full"
-              >
-                <TextPanel surface={SURFACES[active]} />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-
-        <ProgressDots active={active} />
       </div>
-    </div>
     </MotionConfig>
   );
 }

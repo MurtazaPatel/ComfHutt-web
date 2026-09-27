@@ -11,10 +11,11 @@ import { useApiFetch } from "@/lib/api";
 /**
  * Placeholders name the area CRUX actually covers.
  *
- * The old set opened with "Enter any address in India…" and offered to take a
- * 99acres link. CRUX grades RERA-registered projects in Gujarat and cannot read
- * a portal listing, so both were promises the box could not keep. "Satellite" in
- * the third line is the Ahmedabad locality, not imagery.
+ * The old set invited an address anywhere in the country and offered to take a
+ * pasted listing-portal link. CRUX grades RERA-registered projects in Gujarat and
+ * cannot read a portal listing, so both were promises this box could not keep.
+ * Keep the third line: "Satellite" is the Ahmedabad locality, nothing to do with
+ * imagery, and it has been mistaken for a banned source before.
  */
 const PLACEHOLDERS = [
   "A project or locality in Gujarat…",
@@ -145,7 +146,7 @@ export default function ChatInput({
   const containerStyles = cn(
     // Explicit property list, not transition-all: the container also animates
     // its shadow on focus, and transition-all would drag layout properties in.
-    "flex items-center gap-3 rounded-2xl transition-[border-color,box-shadow] duration-300",
+    "flex items-center gap-3 rounded-2xl transition-[border-color,box-shadow] duration-300 motion-reduce:transition-none",
     // The ring is driven by the input's own :focus-visible so keyboard users get
     // an unmistakable outline, while a click does not draw one.
     "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-crux-green has-[:focus-visible]:ring-offset-2",
@@ -199,10 +200,13 @@ export default function ChatInput({
           disabled={!query.trim() || isSubmitting}
           className={cn(
             "shrink-0 flex items-center justify-center rounded-xl p-2.5 min-w-11 min-h-11",
-            "transition-[background-color,opacity] duration-200",
+            "transition-[background-color,opacity] duration-200 motion-reduce:transition-none",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2",
             query.trim() && !isSubmitting
-              ? "bg-gradient-green text-white hover:opacity-90 cursor-pointer"
+              // Brand green from the token, not the .bg-gradient-green utility:
+              // that utility is still built from the rejected #22C55E/#16A34A
+              // pair in globals.css, which this file cannot edit.
+              ? "bg-crux-green text-white hover:bg-crux-green-mid cursor-pointer"
               : variant === "dark"
                 ? "bg-crux-border-dark text-crux-text-muted cursor-not-allowed"
                 : "bg-crux-bg-secondary text-crux-text-muted cursor-not-allowed"

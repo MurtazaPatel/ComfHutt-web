@@ -29,9 +29,9 @@ const instrumentSerif = Instrument_Serif({
 
 const SITE_URL = "https://crux.comfhutt.com";
 // Metadata states only what CRUX does today: a letter grade for RERA-registered
-// projects in Gujarat. The previous copy promised "any property in India" and
-// "20+ live data signals" — neither is true, and both were the first thing a
-// search result showed.
+// projects in Gujarat. The previous copy promised any property in the country and
+// a live signal count nothing in the code supports — neither is true, and both
+// were the first thing a search result showed.
 const SITE_TITLE = "CRUX — Grades for Gujarat's RERA-registered projects";
 const SITE_DESCRIPTION =
   "CRUX grades RERA-registered projects in Gujarat A+ to D, from GujRERA filings, tribunal orders and the court record. Every grade links to the documents behind it. Free, and no signup for your first three.";

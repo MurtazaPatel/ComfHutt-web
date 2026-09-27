@@ -7,16 +7,16 @@ import { FileText } from "lucide-react";
 /**
  * Why a grade is worth anything: the record exists, and nobody can read it.
  *
- * What was here before opened with "The average Indian family spends 18 years
- * saving for property" and "1 in 3 end up in a legal dispute, a fraudulent
- * developer…" — two invented statistics and a banned word — and closed with a
- * second beat selling ComfHutt Invest: "Verified Asset #001", "Legal Clarity
- * 100% Cleared", "8.4% Net", fractional entry "from ₹10,000", and "214 people
- * are already on the list" above an email form whose submit handler set a local
- * flag and threw the address away. None of that shipped, none of those numbers
- * came from anywhere, and the form told people they were on a list that does not
- * exist. The whole beat is gone rather than restated, because there was nothing
- * true to restate it as.
+ * What was here before opened with two invented statistics — how long a family
+ * saves for a home, and how often that ends badly — the second of them using a
+ * banned word for developer misconduct. It then closed with a beat selling an
+ * unshipped fractional-ownership product: a numbered "verified" asset, a legal
+ * line claiming everything was cleared, a net yield, a rupee entry ticket, and a
+ * headcount of people supposedly already signed up — above an email form whose
+ * submit handler set a local flag and threw the address away. None of it shipped,
+ * none of the figures came from anywhere, and the form told people they had joined
+ * a list that does not exist. The whole beat is gone rather than restated, because
+ * there was nothing true to restate it as.
  *
  * What remains is the one claim that needs no source: these records are public,
  * they are scattered, and reading them is work.

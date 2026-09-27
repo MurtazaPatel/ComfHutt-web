@@ -1,238 +1,229 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Lock, Zap, Gift } from "lucide-react";
+import { motion, MotionConfig } from "framer-motion";
+import { Lock, Link2, MapPin, type LucideIcon } from "lucide-react";
 import ChatInput from "@/components/ChatInput";
 
 const VP = { once: true, margin: "-100px" } as const;
 
-const TRUST_SIGNALS = [
-  { icon: Lock, label: "No signup required" },
-  { icon: Zap, label: "Results in seconds" },
-  { icon: Gift, label: "Completely free" },
+/**
+ * Closing CTA and footer.
+ *
+ * The CTA offered to grade any property in the country, free and immediate — the
+ * wrong coverage, the wrong noun for what CRUX produces, and a speed claim
+ * nothing measures. The trust row promised results in seconds for the same
+ * reason. Each line below is
+ * either free-tier behaviour from the locked tier list or the coverage area.
+ */
+const TRUST_SIGNALS: Array<{ Icon: LucideIcon; label: string }> = [
+  { Icon: Lock, label: "3 grades without an account" },
+  { Icon: Link2, label: "Every finding linked to its record" },
+  { Icon: MapPin, label: "Gujarat today" },
 ];
 
-const LINK_COLS = [
+/**
+ * Footer links. The old footer shipped six links to "#": three legal pages and
+ * three social profiles, none of which exist. A reader clicking "Privacy Policy"
+ * learned only that the footer was decorative. What is left is what resolves — the on-page sections,
+ * the disclaimer below, and an address that is actually read.
+ */
+const LINK_COLS: Array<{ heading: string; links: Array<{ label: string; href: string }> }> = [
   {
+    heading: "Product",
     links: [
-      { label: "Score a Property", href: "#hero" },
-      { label: "How It Works", href: "#how-it-works" },
+      { label: "Grade a project", href: "#hero" },
+      { label: "How it works", href: "#how-it-works" },
+      { label: "What you get", href: "#features" },
       { label: "Pricing", href: "#pricing" },
     ],
   },
   {
+    heading: "About",
     links: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms of Use", href: "#" },
-      { label: "Disclaimer", href: "#" },
-    ],
-  },
-  {
-    links: [
-      { label: "Twitter / X", href: "#" },
-      { label: "LinkedIn", href: "#" },
-      { label: "GitHub", href: "#" },
+      { label: "What a grade is not", href: "#disclaimer" },
+      { label: "support@comfhutt.com", href: "mailto:support@comfhutt.com" },
     ],
   },
 ];
 
+const FOOTER_LINK =
+  "inline-block py-1.5 text-[13px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-text-primary hover:underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
+
 export default function FooterCTA() {
+  // reducedMotion="user" is set per section: page.tsx is owned elsewhere, and a
+  // section that animates has to honour the preference itself.
   return (
-    <footer className="bg-white">
-      {/* ── CTA section ── */}
-      <div className="py-16 sm:py-32 px-4">
-        <motion.div
-          className="mx-auto max-w-2xl rounded-3xl p-6 sm:p-12 text-center border border-[var(--color-crux-green)33]"
-          style={{
-            background:
-              "linear-gradient(135deg, var(--color-crux-bg-accent) 0%, var(--color-crux-bg-primary) 50%, var(--color-crux-bg-accent) 100%)",
-          }}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VP}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <motion.h2
-            className="text-[24px] sm:text-[32px] font-bold text-crux-text-primary leading-tight tracking-[-0.5px]"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-          >
-            Ready to know the truth about your property?
-          </motion.h2>
-
-          <motion.p
-            className="mt-4 text-base text-crux-text-secondary"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          >
-            Score any property in India. Free. Instant. No signup.
-          </motion.p>
-
+    <MotionConfig reducedMotion="user">
+      <footer className="bg-white">
+        {/* ── Closing CTA ── */}
+        <div className="px-4 py-16 sm:py-28">
           <motion.div
-            className="mt-8 sm:mt-16 max-w-lg mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-          >
-            <ChatInput variant="default" size="large" />
-          </motion.div>
-
-          <motion.div
-            className="mt-6 flex flex-wrap items-center justify-center gap-6"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-          >
-            {TRUST_SIGNALS.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-1.5 text-crux-text-muted">
-                <Icon size={13} strokeWidth={2} />
-                <span className="text-xs">{label}</span>
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* ── Light footer ── */}
-      <div
-        style={{
-          background: "var(--color-crux-bg-primary)",
-          borderTop: "1px solid rgba(0, 0, 0, 0.08)",
-          paddingTop: "4rem",
-          paddingBottom: 0,
-          overflow: "hidden",
-          position: "relative",
-        }}
-      >
-        {/* Top content row */}
-        <div
-          className="mx-auto px-6 sm:px-8"
-          style={{
-            maxWidth: 1100,
-            display: "flex",
-            flexDirection: "column",
-            gap: "3rem",
-          }}
-        >
-          {/* Main grid: logo-left / links-right */}
-          <div
+            className="mx-auto max-w-2xl rounded-3xl border border-crux-green/20 p-6 text-center sm:p-12"
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr",
-              gap: "2.5rem",
+              background:
+                "linear-gradient(135deg, var(--color-crux-green-tint) 0%, var(--color-crux-bg-primary) 50%, var(--color-crux-green-tint) 100%)",
             }}
-            className="md:[grid-template-columns:1fr_2fr]"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {/* ── Left: logo + copyright ── */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {/* Logo lockup */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                {/* Green square icon */}
-                
-                <span
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 700,
-                    letterSpacing: "-0.03em",
-                    color: "#0F0F0F",
-                  }}
-                >
+            <motion.h2
+              className="text-balance text-[24px] font-bold leading-tight tracking-[-0.5px] text-crux-text-primary sm:text-[32px]"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+            >
+              Read the record before you pay the booking amount.
+            </motion.h2>
+
+            <motion.p
+              className="mt-4 text-pretty text-[15px] text-crux-text-secondary sm:text-base"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            >
+              Name a RERA-registered project in Gujarat and CRUX will grade it from
+              the filings and the court record. Free, and the first three need no
+              account.
+            </motion.p>
+
+            <motion.div
+              className="mx-auto mt-8 max-w-lg sm:mt-10"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+            >
+              <ChatInput variant="default" size="large" />
+            </motion.div>
+
+            <motion.ul
+              className="mt-6 flex list-none flex-wrap items-center justify-center gap-x-6 gap-y-2 p-0"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+            >
+              {TRUST_SIGNALS.map(({ Icon, label }) => (
+                <li key={label} className="flex items-center gap-1.5 text-crux-text-muted">
+                  <Icon size={13} strokeWidth={2} aria-hidden />
+                  <span className="text-xs">{label}</span>
+                </li>
+              ))}
+            </motion.ul>
+          </motion.div>
+        </div>
+
+        {/* ── Footer ── */}
+        <div className="relative overflow-hidden border-t border-crux-border bg-crux-bg-primary pt-16">
+          <div className="mx-auto max-w-[1100px] px-6 sm:px-8">
+            <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
+              {/* Identity */}
+              <div className="flex flex-col gap-4">
+                <span className="text-[18px] font-bold tracking-[-0.03em] text-crux-text-primary">
                   CRUX
                 </span>
+
+                <p className="max-w-[240px] text-[12px] leading-relaxed text-crux-text-secondary">
+                  © 2026 ComfHutt Technologies Pvt. Ltd.
+                </p>
+
+                <div className="mt-1.5 flex items-center gap-1.5">
+                  <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-crux-text-muted">
+                    A
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/comfhutt-logo.svg"
+                    alt="ComfHutt"
+                    className="inline-block h-3.5 w-auto align-middle opacity-45"
+                  />
+                  <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-crux-text-muted">
+                    product
+                  </span>
+                </div>
               </div>
 
-              {/* Copyright */}
-              <p style={{ fontSize: 12, color: "var(--color-crux-text-secondary)", lineHeight: 1.6, maxWidth: 220 }}>
-                © 2026 ComfHutt Technologies Pvt. Ltd.
-              </p>
-
-              {/* A ComfHutt Product */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
-                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-crux-text-muted)" }}>
-                  A
-                </span>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/comfhutt-logo.svg"
-                  alt="ComfHutt"
-                  style={{ height: 14, width: "auto", opacity: 0.45, display: "inline-block", verticalAlign: "middle" }}
-                />
-                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-crux-text-muted)" }}>
-                  PRODUCT
-                </span>
+              {/* Links */}
+              <div className="grid grid-cols-2 gap-6">
+                {LINK_COLS.map((col) => (
+                  <div key={col.heading}>
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-crux-text-muted">
+                      {col.heading}
+                    </p>
+                    <ul className="m-0 flex list-none flex-col p-0">
+                      {col.links.map(({ label, href }) => (
+                        <li key={label}>
+                          <a href={href} className={FOOTER_LINK}>
+                            {label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* ── Right: three link columns ── */}
+            {/* ── What a grade is, and is not ── */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "1.5rem",
-              }}
+              id="disclaimer"
+              className="mt-12 border-t border-crux-border pt-8"
+              style={{ scrollMarginTop: 80 }}
             >
-              {LINK_COLS.map((col, ci) => (
-                <ul key={ci} style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.85rem" }}>
-                  {col.links.map(({ label, href }) => (
-                    <li key={label}>
-                      <a
-                        href={href}
-                        style={{
-                          fontSize: 13,
-                          color: "#374151",
-                          textDecoration: "none",
-                          transition: "color 0.2s ease",
-                          display: "inline-block",
-                          padding: "6px 0",
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.color = "#0F0F0F"; e.currentTarget.style.textDecoration = "underline"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.color = "#374151"; e.currentTarget.style.textDecoration = "none"; }}
-                      >
-                        {label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ))}
+              <h2 className="text-[13px] font-semibold text-crux-text-primary">
+                What a CRUX Grade is, and is not
+              </h2>
+              <div className="mt-3 max-w-3xl space-y-2.5 text-[12px] leading-relaxed text-crux-text-secondary">
+                <p>
+                  A CRUX Grade is CRUX&rsquo;s opinion about a project, formed from
+                  the public records it was able to read at the time of grading. It
+                  is a research tool for your own diligence — not investment
+                  advice, not a legal opinion, and not a substitute for a lawyer, a
+                  chartered accountant or your own reading of the documents.
+                </p>
+                <p>
+                  Public records can be incomplete, out of date, or indexed under a
+                  name that does not match the promoter&rsquo;s. CRUX gives no
+                  warranty that a grade, a module verdict or a linked record is
+                  complete or free of error, and a grade says nothing about whether
+                  a project is safe to buy into. Where the record will not support
+                  a grade, CRUX marks the project NR rather than estimating one.
+                </p>
+                <p>
+                  CRUX is not affiliated with, endorsed by, or acting on behalf of
+                  GujRERA, any court or tribunal, any government department, any
+                  developer or industry body, or any listing portal.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* ── Oversized watermark ── */}
-        <div
-          aria-hidden="true"
-          style={{
-            display: "block",
-            textAlign: "center",
-            lineHeight: 0.85,
-            marginTop: "1rem",
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
-        >
-          <span
-            style={{
-              fontSize: "clamp(8rem, 20vw, 18rem)",
-              fontWeight: 900,
-              letterSpacing: "-0.04em",
-              display: "block",
-              whiteSpace: "nowrap",
-              background: "linear-gradient(to right, rgba(15,15,15,0.12) 0%, rgba(15,15,15,0.06) 40%, rgba(15,15,15,0.02) 70%, transparent 100%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
+          {/* Oversized wordmark */}
+          <div
+            aria-hidden="true"
+            className="mt-6 block select-none text-center leading-[0.85]"
+            style={{ pointerEvents: "none" }}
           >
-            CRUX
-          </span>
+            <span
+              className="block whitespace-nowrap font-black tracking-[-0.04em]"
+              style={{
+                fontSize: "clamp(6rem, 20vw, 18rem)",
+                background:
+                  "linear-gradient(to right, rgba(9,9,11,0.12) 0%, rgba(9,9,11,0.06) 40%, rgba(9,9,11,0.02) 70%, transparent 100%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              CRUX
+            </span>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </MotionConfig>
   );
 }
