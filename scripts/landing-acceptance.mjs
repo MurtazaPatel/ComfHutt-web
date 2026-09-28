@@ -15,7 +15,6 @@
  * Exits 0 when every check passes, 1 otherwise.
  */
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
-import { execSync } from "node:child_process";
 import { join } from "node:path";
 
 const APP = "apps/crux";
@@ -108,15 +107,35 @@ rendered < 7 ? ok("10. Section count is lower", `${rendered} sections in <main>,
              : bad("10. Section count is lower", `${rendered} sections`);
 
 // 13 — no new runtime dependency
-// Compare against main rather than a list typed from memory. The hand-written
-// baseline was missing tw-animate-css, which has been a dependency since the
-// original landing page, and the check reported it as newly added.
+// Compare against a committed baseline, not a list typed from memory and not
+// git. The hand-written list was missing tw-animate-css, which has been a
+// dependency since the original landing page, and reported it as newly added.
+// Reading `git show main:...` fixed that locally but failed in CI, where
+// actions/checkout fetches a single branch and `main` is not a local ref. A
+// committed baseline works in both and matches how .lint-baseline.json already
+// records known state in this repo.
 const pkg = JSON.parse(readFileSync(`${APP}/package.json`, "utf8"));
-const basePkg = JSON.parse(execSync(`git show main:${APP}/package.json`, { encoding: "utf8" }));
-const BASELINE = Object.keys(basePkg.dependencies || {});
-const added = Object.keys(pkg.dependencies || {}).filter((d) => !BASELINE.includes(d));
-added.length ? bad("13. No new runtime dependency", `added: ${added.join(", ")}`)
-             : ok("13. No new runtime dependency", `${Object.keys(pkg.dependencies).length} deps, identical to main`);
+let BASELINE;
+try {
+  BASELINE = JSON.parse(readFileSync("scripts/.deps-baseline.json", "utf8")).dependencies;
+} catch {
+  bad("13. No new runtime dependency", "scripts/.deps-baseline.json is missing or unreadable");
+  BASELINE = null;
+}
+const added = BASELINE === null
+  ? []
+  : Object.keys(pkg.dependencies || {}).filter((d) => !BASELINE.includes(d));
+// A removed dependency is worth knowing about too — it means the baseline is
+// stale, and a stale baseline silently stops catching additions.
+const removed = BASELINE === null
+  ? []
+  : BASELINE.filter((d) => !(pkg.dependencies || {})[d]);
+if (BASELINE !== null) {
+  if (added.length) bad("13. No new runtime dependency", `added: ${added.join(", ")}`);
+  else if (removed.length)
+    bad("13. No new runtime dependency", `baseline is stale — no longer present: ${removed.join(", ")}`);
+  else ok("13. No new runtime dependency", `${BASELINE.length} deps, matching scripts/.deps-baseline.json`);
+}
 
 let failed = 0;
 for (const r of results) {
