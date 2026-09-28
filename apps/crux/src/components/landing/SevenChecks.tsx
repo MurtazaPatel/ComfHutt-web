@@ -124,7 +124,7 @@ export default function SevenChecks() {
           </p>
           <Link
             href="/methodology"
-            className="mt-5 inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-[14px] font-semibold text-crux-green-mid no-underline transition-colors hover:text-crux-green-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="mt-5 inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-[14px] font-semibold text-crux-green-dark no-underline transition-colors hover:text-crux-green-deeper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Read the method
             <ArrowRight size={15} aria-hidden />
@@ -133,7 +133,7 @@ export default function SevenChecks() {
 
         {/* What CRUX reads. Moved here from the hero. */}
         <div className="mx-auto mt-14 max-w-3xl">
-          <h3 className="text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-crux-text-muted">
+          <h3 className="text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-crux-text-secondary">
             What CRUX reads
           </h3>
           <ul className="mt-3 flex flex-wrap items-center justify-center gap-2">

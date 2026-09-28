@@ -70,6 +70,13 @@ jobs:
       - name: "Legal facts guard — crux app (advisory: reports unfilled legal facts)"
         run: node scripts/legal-token-guard.mjs apps/crux
 
+      # HARD GATE. The structural half of the landing brief: required routes
+      # exist, no placeholder links, no drafting tokens, the grade surfaces carry
+      # the disclaimer inline, the page did not grow a section back, and nothing
+      # was added to package.json. Each of these was a promise made to a reader.
+      - name: "Landing acceptance — crux app (hard gate: structural promises hold)"
+        run: node scripts/landing-acceptance.mjs
+
       - name: Build — crux app (advisory; needs Clerk env)
         working-directory: apps/crux
         continue-on-error: true

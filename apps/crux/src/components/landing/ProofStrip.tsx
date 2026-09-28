@@ -47,8 +47,8 @@ export default function ProofStrip() {
 
       <p className="mt-3 text-center text-[11px] leading-relaxed text-crux-text-muted">
         Source: {CITED_CORPUS.source}, measured {CITED_CORPUS.asOfLabel}. These count
-        what CRUX has crawled and read — not the projects graded so far, which is a
-        smaller number shown above.
+        what CRUX has crawled and read, not the projects graded so far — a much
+        smaller number.
       </p>
     </div>
   );

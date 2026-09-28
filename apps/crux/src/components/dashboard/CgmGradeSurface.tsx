@@ -332,7 +332,7 @@ function GradeDisclaimer() {
       A CRUX Grade is an opinion based on public records.{" "}
       <Link
         href="/disclaimer"
-        className="font-medium text-crux-green-mid underline underline-offset-2 transition-colors hover:text-crux-green-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+        className="font-medium text-crux-green-dark underline underline-offset-2 transition-colors hover:text-crux-green-deeper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
       >
         What this means
       </Link>

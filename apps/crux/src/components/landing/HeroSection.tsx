@@ -165,7 +165,9 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
           >
             They check you.
             <br />
-            <span className="text-crux-green">Nobody checks them.</span>
+            {/* green-dark, not green: #10B981 on white measures 2.54:1, which fails
+                even the 3.0 large-text threshold. #047857 is 5.87:1. */}
+            <span className="text-crux-green-dark">Nobody checks them.</span>
           </motion.h1>
 
           <motion.p

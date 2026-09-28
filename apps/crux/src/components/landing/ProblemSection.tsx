@@ -99,7 +99,9 @@ export default function ProblemSection() {
           filings that hold the answer are a dozen PDFs nobody reads.
         </motion.p>
 
-        <p className="mt-5 text-center text-[11px] leading-relaxed text-crux-text-muted">
+        {/* text-secondary, not text-muted: this caption sits on bg-secondary,
+            where #6B7280 measures 4.39:1 — just under AA. */}
+        <p className="mt-5 text-center text-[11px] leading-relaxed text-crux-text-secondary">
           {CITED_CORPUS.source}: {formatCount(CITED_CORPUS.buildersProfiled)} Ahmedabad
           builders and {formatCount(CITED_CORPUS.casesPulled)} court records, measured{" "}
           {CITED_CORPUS.asOfLabel}.
