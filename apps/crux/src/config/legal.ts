@@ -5,13 +5,13 @@
  * non-developer can correct it without touching JSX, and so there is exactly one
  * place to check before publishing.
  *
- * Two values are `null` because they are facts about the company that cannot be
- * derived from this codebase: the Corporate Identity Number and the registered
- * office address as recorded on the MCA register. They must be filled in from the
- * certificate of incorporation. `scripts/legal-token-guard.mjs` fails the build
- * while either is null, because publishing a Terms of Use that names no company
- * and a Privacy Policy that gives a data subject nowhere to write is worse than
- * publishing nothing — the Terms are what stand behind every adverse grade.
+ * The Corporate Identity Number and the registered office address cannot be
+ * derived from this codebase — they come off the certificate of incorporation —
+ * so they are supplied here by hand. `scripts/legal-token-guard.mjs` refuses to
+ * let either go back to null, because publishing a Terms of Use that names no
+ * company and a Privacy Policy that gives a data subject nowhere to write is
+ * worse than publishing nothing: the Terms are what stand behind every adverse
+ * grade. Run `pnpm legal:check` before publishing a change to this file.
  */
 
 export interface LegalFacts {
@@ -33,23 +33,26 @@ export interface LegalFacts {
 export const LEGAL: LegalFacts = {
   companyName: "ComfHutt Technologies Private Limited",
 
-  // ── Fill these in before publishing ────────────────────────────────────────
-  // Both come off the certificate of incorporation / MCA record. The build guard
-  // fails while they are null.
-  cin: null,
-  registeredAddress: null,
-  // ───────────────────────────────────────────────────────────────────────────
+  // Both off the certificate of incorporation / MCA record. Supplied 28 September
+  // 2026. If either is ever corrected, correct it HERE — every legal page reads
+  // these two strings from this object, so they cannot drift apart.
+  cin: "U68100GJ2026PTC172130",
+  registeredAddress:
+    "301, Babji Hieghts, Beside Gayatri Dairy, Krushnanagar Main Road, " +
+    "Near Gandhi Society, Madhapar Circle, Rajkot, Gujarat 360006",
 
   grievanceOfficerName: "Murtaza Patel",
-  // The grievance mailbox must exist and be monitored before these pages ship:
+  // Live and monitored, confirmed 28 September 2026. It has to stay that way:
   // the Privacy Policy commits to answering a data-subject request sent here
-  // within 90 days, and the Terms commit to acknowledging a complaint in 48 hours.
+  // within 90 days, and the Terms commit to acknowledging a complaint in 48
+  // hours. The dispute form posts nowhere — it opens a mail to this address — so
+  // if this mailbox stops being read, the correction process stops existing.
   grievanceEmail: "grievance@comfhutt.com",
   // Live — already used by the main ComfHutt site.
   supportEmail: "support@comfhutt.com",
 
-  effectiveDate: "2026-09-27",
-  effectiveDateLabel: "27 September 2026",
+  effectiveDate: "2026-09-28",
+  effectiveDateLabel: "28 September 2026",
 
   jurisdiction: "Rajkot, Gujarat",
 };
