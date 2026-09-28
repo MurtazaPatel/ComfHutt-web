@@ -60,6 +60,16 @@ jobs:
       - name: "Landing copy guard — crux app (hard gate: no retired claims)"
         run: node scripts/landing-copy-guard.mjs apps/crux
 
+      # ADVISORY, deliberately. It reports drafting tokens left in the legal pages
+      # and the two company facts (CIN, registered address) that cannot be derived
+      # from this repo — so the pages can be built and reviewed before those arrive
+      # from the certificate of incorporation. It is NOT wired into `next build`:
+      # a hard gate there would take the production site down over a fact no commit
+      # can supply. Run `pnpm legal:check` (which sets LEGAL_GUARD_STRICT) before
+      # publishing the legal pages; it exits 1 while anything is still missing.
+      - name: "Legal facts guard — crux app (advisory: reports unfilled legal facts)"
+        run: node scripts/legal-token-guard.mjs apps/crux
+
       - name: Build — crux app (advisory; needs Clerk env)
         working-directory: apps/crux
         continue-on-error: true
