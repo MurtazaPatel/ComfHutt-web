@@ -169,7 +169,10 @@ export default function LegalDocument({
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-crux-border bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[36rem] items-center justify-between gap-4 px-4 py-2 sm:px-6">
+        {/* max-w-6xl to match the landing nav. It was pinned to the text column's
+            36rem, which left the wordmark and the CTA stranded mid-screen on any
+            desktop display. */}
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
           <Link
             href="/"
             className={`inline-flex min-h-11 items-center text-[18px] font-bold tracking-[-0.03em] text-crux-text-primary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-green-mid ${FOCUS_RING}`}
@@ -186,77 +189,116 @@ export default function LegalDocument({
       </header>
 
       <main className="flex-1 bg-crux-bg-primary">
-        <div className="mx-auto w-full max-w-[36rem] px-4 py-14 sm:px-6 md:py-20">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-crux-green">
-            Legal
-          </p>
-          <h1 className="mt-3 text-pretty text-[30px] font-bold leading-tight tracking-[-0.02em] text-crux-text-primary md:text-[40px]">
-            {doc.title}
-          </h1>
-          <p className="mt-3 text-[13px] text-crux-text-muted">
-            Last updated: {doc.lastUpdated}
-          </p>
+        {/*
+          Two columns from lg up, one below it.
 
-          <nav aria-label="On this page" className="mt-10 rounded-2xl border border-crux-border bg-white p-5 shadow-[var(--shadow-premium-sm)]">
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-crux-text-muted">
-              On this page
-            </h2>
-            <ul className="mt-1 flex list-none flex-col p-0">
-              {doc.sections.map((section) => (
-                <li key={section.id}>
-                  <a
-                    href={`#${section.id}`}
-                    className={`flex min-h-11 items-center text-[14px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-green-mid hover:underline ${FOCUS_RING}`}
+          The whole page used to be a single `max-w-[36rem]` column, so on a
+          desktop display it rendered as a 576px strip with ~430px of empty
+          background either side — it read as a phone layout someone had opened
+          on a laptop. The fix is NOT to widen the prose: 36rem is about 68
+          characters, which is the measure long legal text should be read at, and
+          stretching it to 1100px would make it harder to read, not easier.
+
+          So the column keeps its measure and the leftover width gets a job: the
+          "On this page" nav becomes a sticky rail beside the text instead of a
+          card stacked on top of it. On a Terms page with fourteen clauses, that
+          is the difference between scrolling back up to navigate and having the
+          clause list in view the whole way down.
+
+          Order is set explicitly because the two axes disagree: the rail reads
+          better ABOVE the text on a phone and BESIDE it on a desktop. Grid places
+          items in order-modified document order, so `order-1`/`lg:order-2` gives
+          title -> nav -> text stacked, and title -> text | nav side by side, from
+          one DOM order. The title spans both columns and the text sits in column
+          one, so the two stay flush left together.
+        */}
+        <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 md:py-20">
+          <div className="grid grid-cols-1 gap-x-14 gap-y-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
+            <header className="max-w-[38rem] lg:col-span-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-crux-green">
+                Legal
+              </p>
+              <h1 className="mt-3 text-pretty text-[30px] font-bold leading-tight tracking-[-0.02em] text-crux-text-primary md:text-[40px]">
+                {doc.title}
+              </h1>
+              <p className="mt-3 text-[13px] text-crux-text-muted">
+                Last updated: {doc.lastUpdated}
+              </p>
+            </header>
+
+            {/* Sticky from lg up. Capped and scrollable in case the list is
+                longer than the viewport — Privacy has thirteen sections. */}
+            <nav
+              aria-label="On this page"
+              className="order-1 rounded-2xl border border-crux-border bg-white p-5 shadow-[var(--shadow-premium-sm)] lg:order-2 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:sticky lg:top-20"
+            >
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-crux-text-muted">
+                On this page
+              </h2>
+              <ul className="mt-1 flex list-none flex-col p-0">
+                {doc.sections.map((section) => (
+                  <li key={section.id}>
+                    <a
+                      href={`#${section.id}`}
+                      // py-1.5 as well as min-h-11: the min-height alone pads a
+                      // one-line entry but not a wrapped one, so a two-line clause
+                      // ran flush into the next entry and the list lost its rhythm.
+                      className={`flex min-h-11 items-center py-1.5 text-[14px] leading-snug text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-green-mid hover:underline ${FOCUS_RING}`}
+                    >
+                      {section.heading}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* min-w-0 so the wide table's scroller can shrink inside the grid
+                track instead of forcing the whole column wider. */}
+            <div className="order-2 min-w-0 max-w-[38rem] lg:order-1">
+              <article className="flex flex-col gap-12">
+                {doc.intro ? <Blocks blocks={doc.intro} /> : null}
+
+                {doc.sections.map((section) => (
+                  <section
+                    key={section.id}
+                    id={section.id}
+                    aria-labelledby={`${section.id}-heading`}
+                    className="scroll-mt-24"
                   >
-                    {section.heading}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+                    <h2
+                      id={`${section.id}-heading`}
+                      className="text-pretty text-[20px] font-bold leading-snug tracking-[-0.01em] text-crux-text-primary md:text-[22px]"
+                    >
+                      {section.heading}
+                    </h2>
+                    <div className="mt-4">
+                      <Blocks blocks={section.blocks} />
+                    </div>
+                  </section>
+                ))}
+              </article>
 
-          <article className="mt-12 flex flex-col gap-12">
-            {doc.intro ? <Blocks blocks={doc.intro} /> : null}
+              {children}
 
-            {doc.sections.map((section) => (
-              <section
-                key={section.id}
-                id={section.id}
-                aria-labelledby={`${section.id}-heading`}
-                className="scroll-mt-24"
+              <nav
+                aria-label="Other legal pages"
+                className="mt-16 border-t border-crux-border pt-6"
               >
-                <h2
-                  id={`${section.id}-heading`}
-                  className="text-pretty text-[20px] font-bold leading-snug tracking-[-0.01em] text-crux-text-primary md:text-[22px]"
-                >
-                  {section.heading}
-                </h2>
-                <div className="mt-4">
-                  <Blocks blocks={section.blocks} />
-                </div>
-              </section>
-            ))}
-          </article>
-
-          {children}
-
-          <nav
-            aria-label="Other legal pages"
-            className="mt-16 border-t border-crux-border pt-6"
-          >
-            <ul className="flex list-none flex-wrap gap-x-6 p-0">
-              {otherPages.map((page) => (
-                <li key={page.href}>
-                  <Link
-                    href={page.href}
-                    className={`flex min-h-11 items-center text-[14px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-green-mid hover:underline ${FOCUS_RING}`}
-                  >
-                    {page.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+                <ul className="flex list-none flex-wrap gap-x-6 p-0">
+                  {otherPages.map((page) => (
+                    <li key={page.href}>
+                      <Link
+                        href={page.href}
+                        className={`flex min-h-11 items-center text-[14px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-green-mid hover:underline ${FOCUS_RING}`}
+                      >
+                        {page.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
         </div>
       </main>
     </>
