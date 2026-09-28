@@ -36,6 +36,9 @@ const STRICT =
 
 /** Surfaces that carry legal text. */
 const ROOTS = [
+  // Every word of legal copy lives in typed content modules, so this is the
+  // directory that actually matters — the route files are 14-line shells.
+  `${APP}/src/content/legal`,
   `${APP}/src/app/(legal)`,
   `${APP}/src/app/terms`,
   `${APP}/src/app/privacy`,
@@ -54,7 +57,12 @@ const FILES = [`${APP}/src/config/legal.ts`];
  * link label), so only bracketed ALL-CAPS placeholders and mustache tokens count.
  */
 const TOKEN_RULES = [
-  [/\{\{[^}]*\}\}/, "unreplaced mustache token"],
+  // A drafting token is {{NAME}} — an identifier and nothing else. The earlier
+  // rule was /\{\{[^}]*\}\}/, which also matched every JSX inline style
+  // (style={{ background: scoreColor(at) }}) and would have hard-failed a
+  // production build over a perfectly good attribute. Requiring an identifier,
+  // and refusing a match directly after "=", separates the two cleanly.
+  [/(?<!=)\{\{\s*[A-Za-z_][A-Za-z0-9_.]*\s*\}\}/, "unreplaced mustache token"],
   [/\[(?:INSERT|TBD|TODO|PLACEHOLDER|XXX)[^\]]*\]/i, "drafting placeholder"],
   [/\[[A-Z][A-Z0-9 _/-]{3,}\]/, "bracketed ALL-CAPS placeholder"],
   [/\bLorem ipsum\b/i, "placeholder prose"],

@@ -199,8 +199,23 @@ function Verdict({ card, expired }: { card: ShareCard; expired: boolean }) {
           )}
         </div>
 
+        {/* What a grade is, on the one surface a stranger reaches without ever
+            having seen the rest of the site. A shared card is the most likely
+            place for a grade to be read out of context, so the line that frames
+            it as an opinion belongs here more than anywhere. */}
+        <p className="mt-6 border-t border-crux-border pt-5 text-[12px] leading-relaxed text-crux-text-muted">
+          A CRUX Grade is an opinion based on public records.{" "}
+          <Link
+            href="/disclaimer"
+            className="font-medium text-crux-green-mid underline underline-offset-2 transition-colors hover:text-crux-green-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+          >
+            What this means
+          </Link>
+          .
+        </p>
+
         {d.summary && (
-          <p className="mt-6 border-t border-crux-border pt-5 text-[14px] leading-relaxed text-crux-text-secondary">
+          <p className="mt-5 text-[14px] leading-relaxed text-crux-text-secondary">
             {d.summary}
           </p>
         )}
