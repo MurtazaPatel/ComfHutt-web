@@ -40,6 +40,14 @@ export interface PlanDefinition {
   purchasable: boolean;
   /** Shown beside an unpurchasable tier so the state is explained, not hidden. */
   availabilityNote?: string;
+  /**
+   * Label for the conversation a visitor can start instead of a checkout.
+   *
+   * An unpurchasable tier still needs somewhere to go: the brief's rule is that
+   * paid CTAs collect an email or open a conversation. A mailto does both and,
+   * unlike a waitlist form, it works today. Absent on Free, which has a real CTA.
+   */
+  contactLabel?: string;
 }
 
 export const PLANS: PlanDefinition[] = [
@@ -79,6 +87,7 @@ export const PLANS: PlanDefinition[] = [
     ],
     purchasable: false,
     availabilityNote: "Coming shortly after launch",
+    contactLabel: "Notify me",
   },
   {
     id: "professional_solo",
@@ -96,6 +105,7 @@ export const PLANS: PlanDefinition[] = [
     ],
     purchasable: false,
     availabilityNote: "Coming shortly after launch",
+    contactLabel: "Talk to us",
   },
   {
     id: "professional_firm",
@@ -108,6 +118,7 @@ export const PLANS: PlanDefinition[] = [
     features: ["Everything in Solo, across 5 seats", "Branded share cards", "Firm dashboard"],
     purchasable: false,
     availabilityNote: "Coming shortly after launch",
+    contactLabel: "Talk to us",
   },
   {
     id: "institutional",
@@ -124,6 +135,7 @@ export const PLANS: PlanDefinition[] = [
     ],
     purchasable: false,
     availabilityNote: "Talk to us",
+    contactLabel: "Talk to us",
   },
 ];
 

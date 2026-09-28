@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "CRUX — RERA-registered projects in Gujarat, graded A+ to D";
+export const alt =
+  "CRUX — the credibility grade for Gujarat's RERA projects, A+ to D";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -77,7 +78,7 @@ export default function OpengraphImage() {
             color: INK,
           }}
         >
-          The CRUX Grade
+          The credibility grade for Gujarat&rsquo;s RERA projects
         </div>
         <div
           style={{
@@ -86,7 +87,7 @@ export default function OpengraphImage() {
             color: MUTED,
           }}
         >
-          RERA-registered projects in Gujarat, graded from the public record
+          Certified filings and court records. Free for buyers. Published method.
         </div>
       </div>
     ),

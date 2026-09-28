@@ -7,6 +7,7 @@
 // only when the score row carries module_scores
 // (i.e. produced by CGM_V1_ENABLED) — legacy rows keep the old view.
 
+import Link from "next/link";
 import { ExternalLink, Scale } from "lucide-react";
 import type {
   CgmEvidenceFlag,
@@ -308,7 +309,35 @@ function NotRated({ score, flags }: { score: CruxScore; flags: ReadableFlag[] })
       </Surface>
       {score.legal_summary && <LegalRecord summary={score.legal_summary} />}
       <CrossChecks flags={flags} />
+      <GradeDisclaimer />
     </div>
+  );
+}
+
+/**
+ * What a grade is, inline, on the surface that carries it.
+ *
+ * This line is not decoration and it is not duplicated from the footer by
+ * accident. CRUX publishes adverse opinions about named, living businesses; the
+ * one sentence that makes that defensible is that a grade is an opinion formed
+ * from public records. A reader looking at a C should not have to scroll to the
+ * bottom of a different page to learn that.
+ *
+ * It renders on the Not Rated branch too. "We could not grade this" is a
+ * published statement about a real builder as much as a D is.
+ */
+function GradeDisclaimer() {
+  return (
+    <p className="text-[12px] leading-relaxed text-crux-text-muted">
+      A CRUX Grade is an opinion based on public records.{" "}
+      <Link
+        href="/disclaimer"
+        className="font-medium text-crux-green-dark underline underline-offset-2 transition-colors hover:text-crux-green-deeper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+      >
+        What this means
+      </Link>
+      .
+    </p>
   );
 }
 
@@ -444,6 +473,8 @@ export function CgmGradeSurface({ score }: { score: CruxScore }) {
       {score.legal_summary && <LegalRecord summary={score.legal_summary} />}
 
       <CrossChecks flags={flags} />
+
+      <GradeDisclaimer />
 
       {/*
         The Vastu overlay is not rendered. The engine still computes it and the row

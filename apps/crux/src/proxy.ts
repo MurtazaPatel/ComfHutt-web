@@ -22,6 +22,20 @@ const isPublicRoute = createRouteMatcher([
   "/robots.txt",
   "/sitemap.xml",
   "/opengraph-image(.*)",
+  // Legal: the Disclaimer, Terms, Privacy Policy and the dispute and correction
+  // process have to be readable without an account. A correction process behind
+  // a sign-in wall is not a published correction process, and the Disclaimer is
+  // what a developer served an adverse grade is pointed at from every grade
+  // surface — including in a legal notice, by someone who will never sign up.
+  "/disclaimer",
+  "/terms",
+  "/privacy",
+  "/dispute",
+  // Same reasoning, and it is the load-bearing one: the landing page's central
+  // claim is that the method is published, with "Read the method" pointing here.
+  // A published method behind a sign-in wall is not published, and the link
+  // would have bounced an anonymous reader to /signin.
+  "/methodology",
 ]);
 
 export default clerkMiddleware(

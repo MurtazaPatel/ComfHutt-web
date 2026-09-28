@@ -54,6 +54,29 @@ jobs:
       - name: "Lint — crux app (hard gate: no crash, no new errors)"
         run: node scripts/lint-gate.mjs apps/crux
 
+      # HARD GATE. The landing page carries adverse opinions about named builders,
+      # so a retired claim reappearing there is a legal and credibility risk, not a
+      # copy regression. Fails on the strings deleted in the truth-and-clarity pass.
+      - name: "Landing copy guard — crux app (hard gate: no retired claims)"
+        run: node scripts/landing-copy-guard.mjs apps/crux
+
+      # ADVISORY, deliberately. It reports drafting tokens left in the legal pages
+      # and the two company facts (CIN, registered address) that cannot be derived
+      # from this repo — so the pages can be built and reviewed before those arrive
+      # from the certificate of incorporation. It is NOT wired into `next build`:
+      # a hard gate there would take the production site down over a fact no commit
+      # can supply. Run `pnpm legal:check` (which sets LEGAL_GUARD_STRICT) before
+      # publishing the legal pages; it exits 1 while anything is still missing.
+      - name: "Legal facts guard — crux app (advisory: reports unfilled legal facts)"
+        run: node scripts/legal-token-guard.mjs apps/crux
+
+      # HARD GATE. The structural half of the landing brief: required routes
+      # exist, no placeholder links, no drafting tokens, the grade surfaces carry
+      # the disclaimer inline, the page did not grow a section back, and nothing
+      # was added to package.json. Each of these was a promise made to a reader.
+      - name: "Landing acceptance — crux app (hard gate: structural promises hold)"
+        run: node scripts/landing-acceptance.mjs
+
       - name: Build — crux app (advisory; needs Clerk env)
         working-directory: apps/crux
         continue-on-error: true

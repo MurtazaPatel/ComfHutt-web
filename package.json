@@ -7,7 +7,10 @@
     "dev:crux": "turbo run dev --filter=@comfhutt/crux",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "legal:check": "LEGAL_GUARD_STRICT=1 node scripts/legal-token-guard.mjs apps/crux",
+    "copy:check": "node scripts/landing-copy-guard.mjs apps/crux",
+    "landing:check": "node scripts/landing-acceptance.mjs"
   },
   "devDependencies": {
     "turbo": "^2.10.8"

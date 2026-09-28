@@ -1,0 +1,25 @@
+{
+  "_comment": "Runtime dependencies of apps/crux as of main. scripts/landing-acceptance.mjs fails if package.json gains one that is not listed here. Regenerate deliberately, in the same commit that adds the dependency, so the addition is visible in review.",
+  "dependencies": [
+    "@base-ui/react",
+    "@clerk/nextjs",
+    "@comfhutt/design-system",
+    "@comfhutt/typescript-config",
+    "@lottiefiles/react-lottie-player",
+    "@vercel/analytics",
+    "@vercel/speed-insights",
+    "class-variance-authority",
+    "clsx",
+    "framer-motion",
+    "lucide-react",
+    "next",
+    "react",
+    "react-dom",
+    "react-icons",
+    "react-markdown",
+    "remark-gfm",
+    "shadcn",
+    "tailwind-merge",
+    "tw-animate-css"
+  ]
+}
