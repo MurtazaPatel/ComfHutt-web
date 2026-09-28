@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useSectionInView } from "@/hooks/useSectionInView";
 import { PLANS, formatRupees, type PlanDefinition } from "@/lib/pricing";
+import { LEGAL } from "@/config/legal";
 
 /**
  * Pricing.
@@ -17,10 +18,11 @@ import { PLANS, formatRupees, type PlanDefinition } from "@/lib/pricing";
  *
  * 2. **The Razorpay checkout path is deleted, not hidden.** Only Free is
  *    purchasable today — the Booking Report and the Professional seats cannot be
- *    invoiced until one-time payments and PDF export ship. A card whose price is
- *    real but whose checkout cannot complete gets its availability note instead of
- *    a pay button, because a button that fails on click is worse than no button.
- *    When those ship, the checkout comes back behind `plan.purchasable`.
+ *    invoiced until one-time payments and PDF export ship. A button that fails on
+ *    click is worse than no button, so an unpurchasable tier gets its availability
+ *    note and a mailto that opens a real conversation, which is what the visitor
+ *    wanted from a pay button anyway. When invoicing ships, the checkout comes back
+ *    behind `plan.purchasable`.
  *
  * 3. **Prices are a local constant, not a fetch.** The backend's plans endpoint is
  *    being corrected separately; until that lands it still serves the retired
@@ -94,10 +96,21 @@ function PlanCard({ plan, index }: { plan: PlanDefinition; index: number }) {
         </Link>
       ) : (
         // Not a disabled button: there is nothing to enable yet, and a greyed-out
-        // control reads as "broken" rather than "not out".
-        <p className="rounded-xl bg-crux-bg-secondary px-4 py-3 text-center text-[13px] font-medium text-crux-text-secondary">
-          {plan.availabilityNote}
-        </p>
+        // control reads as "broken" rather than "not out". The note says where the
+        // tier stands; the mailto gives the visitor somewhere to go today.
+        <div className="flex flex-col gap-2">
+          <p className="rounded-xl bg-crux-bg-secondary px-4 py-3 text-center text-[13px] font-medium text-crux-text-secondary">
+            {plan.availabilityNote}
+          </p>
+          {plan.contactLabel && (
+            <a
+              href={`mailto:${LEGAL.supportEmail}?subject=${encodeURIComponent(`CRUX — ${plan.name}`)}`}
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-crux-border bg-white px-5 py-3 text-sm font-semibold text-crux-text-primary no-underline transition-colors hover:border-crux-green hover:text-crux-green-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            >
+              {plan.contactLabel}
+            </a>
+          )}
+        </div>
       )}
     </motion.div>
   );
@@ -117,7 +130,7 @@ export default function PricingSection() {
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <h2 className="text-pretty text-[28px] font-bold tracking-[-0.02em] text-crux-text-primary md:text-[44px]">
-            The grade is free. It always will be.
+            Free for buyers. Paid by people whose money is at risk.
           </h2>
           <p className="mx-auto mt-4 max-w-[54ch] text-pretty text-[17px] leading-[1.7] text-crux-text-secondary">
             CRUX is paid for by the professionals and lenders who rely on it, never by
@@ -132,9 +145,9 @@ export default function PricingSection() {
         </div>
 
         <p className="mx-auto mt-10 max-w-[62ch] text-center text-[13px] leading-relaxed text-crux-text-muted">
-          Free is available now. The Booking Report and the Professional seats are
-          priced and coming shortly after launch — we would rather show you the price
-          than pretend the tier does not exist.
+          Booking Report and Professional seats open shortly. Grades are free now and
+          always. We would rather show you the price than pretend the tier does not
+          exist.
         </p>
       </div>
     </section>

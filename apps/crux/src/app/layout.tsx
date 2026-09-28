@@ -32,9 +32,9 @@ const SITE_URL = "https://crux.comfhutt.com";
 // projects in Gujarat. The previous copy promised any property in the country and
 // a live signal count nothing in the code supports — neither is true, and both
 // were the first thing a search result showed.
-const SITE_TITLE = "CRUX — Grades for Gujarat's RERA-registered projects";
+const SITE_TITLE = "CRUX — the credibility grade for Gujarat's RERA projects";
 const SITE_DESCRIPTION =
-  "CRUX grades RERA-registered projects in Gujarat A+ to D, from GujRERA filings, tribunal orders and the court record. Every grade links to the documents behind it. Free, and no signup for your first three.";
+  "CRUX grades every RERA-registered project in Gujarat from A+ to D, using certified filings and court records. Free for buyers. Published method.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

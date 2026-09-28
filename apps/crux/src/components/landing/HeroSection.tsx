@@ -3,27 +3,23 @@
 import { motion, MotionConfig, Variants } from "framer-motion";
 import Link from "next/link";
 import ChatInput from "@/components/ChatInput";
+import ProofStrip from "@/components/landing/ProofStrip";
 import { MODULE_ORDER, MODULE_LABEL } from "@/lib/grade";
 
 /**
- * The records CRUX reads. This list is exhaustive and deliberately short.
- *
- * What used to scroll past here named eight national registries and datasets —
- * company filings, air quality, a housing price index, night-lights imagery,
- * telecom and public-works records among them — that CRUX has no adapter for and
- * has never read. Naming a source you do not read is the one failure this product
- * cannot survive, so nothing may be added to this list that the engine cannot
- * show evidence from.
+ * The source list that used to sit here has moved to SevenChecks — it belongs
+ * with "what we check", not with the headline, and moving it made room for the
+ * proof strip the ticker used to occupy.
  */
-const SOURCES = [
-  "GujRERA filings",
-  "GujRERA appellate tribunal",
-  "eCourts",
-  "Gujarat High Court",
-  "Supreme Court",
-  "IBBI",
-  "Google Maps",
-];
+
+interface HeroSectionProps {
+  /**
+   * Distinct Gujarat districts represented in the database, counted server-side.
+   * Null when the query failed — the eyebrow then names the state without a count
+   * rather than printing a zero, which would read as "we cover nowhere".
+   */
+  districtCount: number | null;
+}
 
 /**
  * An illustration of the grade surface, labelled as one.
@@ -69,7 +65,7 @@ const mockupVariants: Variants = {
 const NAV_LINK =
   "text-[13px] text-crux-text-secondary hover:text-crux-text-primary transition-colors duration-200 motion-reduce:transition-none font-medium no-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
 
-export default function HeroSection() {
+export default function HeroSection({ districtCount }: HeroSectionProps) {
   // reducedMotion="user" is set here, per section, rather than once around the
   // page: page.tsx is a server component owned elsewhere, and a landing section
   // that animates has to honour the preference on its own.
@@ -115,10 +111,10 @@ export default function HeroSection() {
 
             <div className="hidden md:flex items-center gap-8">
               <a href="#how-it-works" className={NAV_LINK}>
-                How It Works
+                How it works
               </a>
               <a href="#features" className={NAV_LINK}>
-                What You Get
+                What we check
               </a>
               <a href="#pricing" className={NAV_LINK}>
                 Pricing
@@ -146,8 +142,13 @@ export default function HeroSection() {
           <motion.div variants={itemVariants}>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-crux-border bg-white shadow-[var(--shadow-premium-sm)]">
               <span className="w-1.5 h-1.5 rounded-full bg-crux-green motion-safe:animate-pulse" />
-              <span className="text-[12px] sm:text-[13px] text-crux-text-secondary font-medium tracking-tight">
-                Gujarat · graded from the public record
+              <span className="text-[12px] sm:text-[13px] text-crux-text-secondary font-medium uppercase tracking-[0.12em]">
+                {/* Counted server-side. On a failed query the count is dropped
+                    entirely rather than rendered as 0 — "Gujarat · 0 districts"
+                    would be a worse claim than naming no number at all. */}
+                {districtCount === null
+                  ? "Gujarat"
+                  : `Gujarat · ${districtCount} ${districtCount === 1 ? "district" : "districts"}`}
               </span>
             </div>
           </motion.div>
@@ -162,9 +163,9 @@ export default function HeroSection() {
               letterSpacing: "-0.03em",
             }}
           >
-            <span className="text-crux-green">A+ to D</span>,
+            They check you.
             <br />
-            before you pay the booking amount.
+            <span className="text-crux-green">Nobody checks them.</span>
           </motion.h1>
 
           <motion.p
@@ -172,9 +173,9 @@ export default function HeroSection() {
             className="mt-5 text-center text-crux-text-secondary max-w-[560px] mx-auto leading-relaxed text-pretty"
             style={{ fontSize: "clamp(14px, 1.6vw, 17px)" }}
           >
-            CRUX grades RERA-registered projects in Gujarat from GujRERA filings,
-            tribunal orders and the court record — and links you to every document
-            behind the letter.
+            CRUX grades every RERA-registered project in Gujarat from A+ to D — using
+            the builder&rsquo;s own certified filings and the court record. Free for
+            every buyer.
           </motion.p>
 
           <motion.div variants={itemVariants} className="mt-8 w-full max-w-[580px] mx-auto">
@@ -185,28 +186,17 @@ export default function HeroSection() {
             variants={itemVariants}
             className="mt-3 text-[12px] sm:text-[13px] text-crux-text-muted text-center"
           >
-            Free <span className="mx-1.5 text-crux-green">·</span> 3 grades without an
-            account <span className="mx-1.5 text-crux-green">·</span> Ahmedabad,
-            Gandhinagar, Surat, Vadodara, Rajkot
+            {/* The district names that used to end this line were a five-district
+                claim nothing in the database supported. The count in the eyebrow is
+                queried; a hardcoded list of names was not. */}
+            No signup for your first 3 grades
+            <span className="mx-1.5 text-crux-green">·</span> Method published
+            <span className="mx-1.5 text-crux-green">·</span> Gujarat-first
           </motion.p>
 
-          {/* Source list — static. It was a scrolling marquee, which meant the one
-              claim a reader most needs to check was the hardest to read. */}
-          <motion.div variants={itemVariants} className="mt-10 w-full max-w-3xl mx-auto">
-            <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-crux-text-muted">
-              What CRUX reads
-            </p>
-            <ul className="mt-3 flex flex-wrap items-center justify-center gap-2">
-              {SOURCES.map((source) => (
-                <li
-                  key={source}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-crux-border bg-white px-3 py-1.5 text-[11px] sm:text-[12px] font-medium text-crux-text-secondary shadow-[var(--shadow-premium-sm)]"
-                >
-                  <span aria-hidden className="h-1 w-1 rounded-full bg-crux-green" />
-                  {source}
-                </li>
-              ))}
-            </ul>
+          {/* Proof strip — four corpus counters, replacing the source marquee. */}
+          <motion.div variants={itemVariants} className="mt-12 w-full">
+            <ProofStrip />
           </motion.div>
         </motion.div>
 

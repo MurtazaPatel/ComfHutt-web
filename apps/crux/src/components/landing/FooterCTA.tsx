@@ -1,8 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
 import { Lock, Link2, MapPin, type LucideIcon } from "lucide-react";
 import ChatInput from "@/components/ChatInput";
+import { LEGAL } from "@/config/legal";
+
+interface FooterCTAProps {
+  /** From the CGM constants, via the stats endpoint. Null when unavailable. */
+  methodologyVersion: string | null;
+  methodologyHash: string | null;
+}
 
 const VP = { once: true, margin: "-100px" } as const;
 
@@ -22,26 +30,39 @@ const TRUST_SIGNALS: Array<{ Icon: LucideIcon; label: string }> = [
 ];
 
 /**
- * Footer links. The old footer shipped six links to "#": three legal pages and
- * three social profiles, none of which exist. A reader clicking "Privacy Policy"
- * learned only that the footer was decorative. What is left is what resolves — the on-page sections,
- * the disclaimer below, and an address that is actually read.
+ * Footer links. Every one resolves.
+ *
+ * The old footer shipped six links to "#": three legal pages and three social
+ * profiles, none of which existed. A reader clicking "Privacy Policy" learned only
+ * that the footer was decorative. The three legal routes now exist, so they are
+ * linked properly; the social profiles are still absent, and are still not linked,
+ * because a link to a profile nobody runs is the same lie in a smaller font.
  */
 const LINK_COLS: Array<{ heading: string; links: Array<{ label: string; href: string }> }> = [
   {
     heading: "Product",
     links: [
-      { label: "Grade a project", href: "#hero" },
+      { label: "Grade a project", href: "/score" },
       { label: "How it works", href: "#how-it-works" },
-      { label: "What you get", href: "#features" },
+      { label: "What we check", href: "#features" },
       { label: "Pricing", href: "#pricing" },
     ],
   },
   {
-    heading: "About",
+    heading: "Legal",
     links: [
-      { label: "What a grade is not", href: "#disclaimer" },
-      { label: "support@comfhutt.com", href: "mailto:support@comfhutt.com" },
+      { label: "Methodology", href: "/methodology" },
+      { label: "Disclaimer", href: "/disclaimer" },
+      { label: "Terms of Use", href: "/terms" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Dispute a grade", href: "/dispute" },
+    ],
+  },
+  {
+    heading: "Contact",
+    links: [
+      { label: LEGAL.supportEmail, href: `mailto:${LEGAL.supportEmail}` },
+      { label: LEGAL.grievanceEmail, href: `mailto:${LEGAL.grievanceEmail}` },
     ],
   },
 ];
@@ -49,7 +70,7 @@ const LINK_COLS: Array<{ heading: string; links: Array<{ label: string; href: st
 const FOOTER_LINK =
   "inline-block break-words py-1.5 text-[13px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-text-primary hover:underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
 
-export default function FooterCTA() {
+export default function FooterCTA({ methodologyVersion, methodologyHash }: FooterCTAProps) {
   // reducedMotion="user" is set per section: page.tsx is owned elsewhere, and a
   // section that animates has to honour the preference itself.
   return (
@@ -148,7 +169,7 @@ export default function FooterCTA() {
               </div>
 
               {/* Links */}
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
                 {LINK_COLS.map((col) => (
                   <div key={col.heading}>
                     <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-crux-text-muted">
@@ -157,9 +178,17 @@ export default function FooterCTA() {
                     <ul className="m-0 flex list-none flex-col p-0">
                       {col.links.map(({ label, href }) => (
                         <li key={label}>
-                          <a href={href} className={FOOTER_LINK}>
-                            {label}
-                          </a>
+                          {/* Route links go through next/link for client-side
+                              navigation; hash and mailto stay plain anchors. */}
+                          {href.startsWith("/") ? (
+                            <Link href={href} className={FOOTER_LINK}>
+                              {label}
+                            </Link>
+                          ) : (
+                            <a href={href} className={FOOTER_LINK}>
+                              {label}
+                            </a>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -199,6 +228,36 @@ export default function FooterCTA() {
                   developer or industry body, or any listing portal.
                 </p>
               </div>
+
+              {/* The short form, with the route that carries the long form. This is
+                  the line the brief requires in the footer; the same sentence also
+                  appears inline on every grade surface, because a reader looking at
+                  a C grade should not have to scroll to the bottom of a different
+                  page to learn what it is. */}
+              <p className="mt-5 max-w-3xl text-[12px] leading-relaxed text-crux-text-secondary">
+                CRUX grades are opinions formed from public records using a published
+                method. They are research, not investment advice, and carry no
+                warranty. Believe a grade is wrong?{" "}
+                <Link
+                  href="/dispute"
+                  className="font-medium text-crux-green-mid underline underline-offset-2 transition-colors hover:text-crux-green-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+                >
+                  Tell us
+                </Link>{" "}
+                — we review and correct.
+              </p>
+
+              {/* Method fingerprint. Rendered only when the endpoint supplied both
+                  halves: a version with no hash identifies nothing, and inventing
+                  either would undercut the one claim this line exists to support.
+                  The version string is printed bare — CGM_METHODOLOGY_VERSION is
+                  already "CGM-1.1", so the brief's literal "Method CGM-{version}"
+                  would have rendered "Method CGM-CGM-1.1". */}
+              {methodologyVersion && methodologyHash && (
+                <p className="mt-4 font-mono text-[11px] text-crux-text-muted">
+                  Method {methodologyVersion} · {methodologyHash}
+                </p>
+              )}
             </div>
           </div>
 
