@@ -13,7 +13,7 @@
     "landing:check": "node scripts/landing-acceptance.mjs"
   },
   "devDependencies": {
-    "turbo": "^2.10.8"
+    "turbo": "^2.11.4"
   },
   "packageManager": "pnpm@9.0.0"
 }
