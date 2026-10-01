@@ -74,11 +74,11 @@ export default function SevenChecks() {
           {MODULE_ORDER.map((code) => (
             <li
               key={code}
-              className="flex items-start gap-4 bg-white p-5 md:p-6 md:last:col-span-2"
+              className="crux-row flex items-start gap-4 bg-white p-5 transition-colors duration-300 hover:bg-crux-bg-primary motion-reduce:transition-none md:p-6 md:last:col-span-2"
             >
               <span
                 aria-hidden
-                className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-control)] bg-crux-green-tint font-mono text-[13px] font-semibold text-crux-green-dark ring-1 ring-crux-green/25"
+                className="crux-row-tile mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-control)] bg-crux-green-tint font-mono text-[13px] font-semibold text-crux-green-dark ring-1 ring-crux-green/25"
               >
                 {code}
               </span>

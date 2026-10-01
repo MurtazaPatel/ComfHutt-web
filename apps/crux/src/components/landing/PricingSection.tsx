@@ -6,6 +6,7 @@ import { Check } from "lucide-react";
 import { useSectionInView } from "@/hooks/useSectionInView";
 import { PLANS, formatRupees, type PlanDefinition } from "@/lib/pricing";
 import { LEGAL } from "@/config/legal";
+import { useSpotlight } from "@/hooks/useSpotlight";
 
 /**
  * Pricing.
@@ -51,11 +52,14 @@ function spanClass(index: number, total: number) {
 
 function PlanCard({ plan, index, total }: { plan: PlanDefinition; index: number; total: number }) {
   const actionable = isActionable(plan);
+  const spotlight = useSpotlight<HTMLDivElement>();
 
   return (
     <motion.div
+      {...spotlight}
       className={[
-        "relative flex flex-col overflow-hidden p-7 md:p-8",
+        "crux-spotlight relative flex flex-col overflow-hidden p-7 md:p-8",
+        actionable ? "" : "crux-spotlight--light",
         spanClass(index, total),
         // The one tier a visitor can act on is the one forest card, so the grid
         // has a single focal point instead of a tinted box among white ones.

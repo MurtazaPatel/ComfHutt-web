@@ -1,9 +1,12 @@
 "use client";
 
-import { motion, MotionConfig, type Variants } from "framer-motion";
+import { useRef, useSyncExternalStore } from "react";
+import { motion, MotionConfig, useInView, type Variants } from "framer-motion";
 import Link from "next/link";
 import ChatInput from "@/components/ChatInput";
 import ProofStrip from "@/components/landing/ProofStrip";
+import ScrollProgress from "@/components/motion/ScrollProgress";
+import SurveyCrosshair from "@/components/motion/SurveyCrosshair";
 import { MODULE_ORDER, MODULE_LABEL } from "@/lib/grade";
 
 /**
@@ -52,12 +55,28 @@ const mockupVariants: Variants = {
 const NAV_LINK =
   "text-[13px] text-crux-text-secondary hover:text-crux-text-primary transition-colors duration-200 motion-reduce:transition-none font-medium no-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
 
+const noopSubscribe = () => () => {};
+
 export default function HeroSection({ districtCount }: HeroSectionProps) {
+  // The card's "being read" sequence: a reading line, the verdicts filing in,
+  // the grade stamping down. It plays when the card scrolls into view rather
+  // than on load, because on most screens the card starts below the fold.
+  //
+  //   static — server render and no-JS: everything visible, nothing animates.
+  //   armed  — hydrated but not yet seen: the parts that will animate wait hidden.
+  //   play   — in view: the sequence runs once.
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cardSeen = useInView(cardRef, { once: true, amount: 0.45 });
+  const hydrated = useSyncExternalStore(noopSubscribe, () => true, () => false);
+  const phase = !hydrated ? "static" : cardSeen ? "play" : "armed";
+  const armed = phase === "armed" ? "opacity-0" : "";
+
   // reducedMotion="user" is set here, per section, rather than once around the
   // page: page.tsx is a server component owned elsewhere, and a landing section
   // that animates has to honour the preference on its own.
   return (
     <MotionConfig reducedMotion="user">
+      <ScrollProgress />
       <section
         id="hero"
         className="crux-frame crux-frame--bare relative w-full bg-background flex flex-col overflow-hidden"
@@ -74,6 +93,8 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
           />
           <div className="crux-plot" />
         </div>
+        {/* Listens on the section, so it tracks the cursor from behind the content. */}
+        <SurveyCrosshair />
 
         {/* Navbar */}
         <nav className="sticky top-0 z-50 w-full border-b border-crux-line bg-crux-bg-primary/75 backdrop-blur-xl">
@@ -147,19 +168,26 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
           </div>
 
           {/* Headline — the letter grade leads, never a 0–100 number. */}
+          {/* Each line rises on its own beat. Transform only — no fade — so the
+              text is painted from the first frame and stays the LCP element. */}
           <h1
-            className="anim-rise mt-8 text-center font-extrabold text-crux-text-primary text-balance"
+            className="mt-8 text-center font-extrabold text-crux-text-primary text-balance"
             style={{
               fontSize: "clamp(36px, 8vw, 88px)",
               lineHeight: 0.96,
               letterSpacing: "-0.045em",
             }}
           >
-            They check you.
+            <span className="anim-rise inline-block">They check you.</span>
             <br />
             {/* green-dark, not green: #10B981 on white measures 2.54:1, which fails
                 even the 3.0 large-text threshold. #047857 is 5.87:1. */}
-            <span className="text-crux-green-dark">Nobody checks them.</span>
+            <span
+              className="anim-rise inline-block text-crux-green-dark"
+              style={{ animationDelay: "0.09s" }}
+            >
+              Nobody checks them.
+            </span>
           </h1>
 
           <p
@@ -215,11 +243,27 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
               </span>
             </div>
 
-            <div className="bg-crux-bg-primary p-4 sm:p-7">
+            <div ref={cardRef} className="relative bg-crux-bg-primary p-4 sm:p-7">
+              {/* One pass of a reading line: the record being read before the
+                  grade lands. Decorative, and gone under reduced motion. */}
+              {phase === "play" && (
+                <div
+                  aria-hidden
+                  className="anim-scan pointer-events-none absolute inset-0 z-10 border-b border-crux-green"
+                  style={{
+                    animationDelay: "0.15s",
+                    background:
+                      "linear-gradient(to bottom, transparent 70%, rgba(16,185,129,0.14) 100%)",
+                  }}
+                />
+              )}
               <div className="grid gap-5 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-7">
                 {/* Letter first, composite second and smaller. */}
                 <div className="flex items-center gap-4 sm:flex-col sm:items-start">
-                  <div className="flex h-24 w-24 items-center justify-center rounded-[var(--radius-card)] border border-crux-green/30 bg-crux-green-tint shadow-[var(--shadow-premium-sm)]">
+                  <div
+                    className={`${phase === "play" ? "anim-stamp" : armed} flex h-24 w-24 items-center justify-center rounded-[var(--radius-card)] border border-crux-green/30 bg-crux-green-tint shadow-[var(--shadow-premium-sm)] motion-reduce:opacity-100`}
+                    style={{ animationDelay: "1.35s" }}
+                  >
                     <span className="text-[42px] font-extrabold leading-none tracking-[-0.04em] text-crux-green-dark">
                       B+
                     </span>
@@ -235,15 +279,15 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
 
                 {/* The seven modules, named from the engine's own table. */}
                 <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-crux-border bg-crux-border sm:grid-cols-2">
-                  {MODULE_ORDER.map((code) => (
+                  {MODULE_ORDER.map((code, i) => (
                     <li
                       key={code}
-                      className="flex items-center justify-between gap-3 bg-white px-3.5 py-2.5 sm:last:col-span-2"
+                      className="crux-row flex items-center justify-between gap-3 bg-white px-3.5 py-2.5 sm:last:col-span-2"
                     >
                       <span className="flex min-w-0 items-center gap-2">
                         <span
                           aria-hidden
-                          className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded bg-crux-green-tint font-mono text-[9px] font-semibold text-crux-green-dark"
+                          className="crux-row-tile flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded bg-crux-green-tint font-mono text-[9px] font-semibold text-crux-green-dark"
                         >
                           {code}
                         </span>
@@ -251,7 +295,11 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
                           {MODULE_LABEL[code]}
                         </span>
                       </span>
-                      <span className="shrink-0 text-[11px] font-medium text-crux-text-primary">
+                      {/* The verdicts file in behind the reading line. */}
+                      <span
+                        className={`${phase === "play" ? "anim" : armed} shrink-0 text-[11px] font-medium text-crux-text-primary motion-reduce:opacity-100`}
+                        style={{ animationDelay: `${0.4 + i * 0.12}s` }}
+                      >
                         {EXAMPLE_VERDICTS[code]}
                       </span>
                     </li>

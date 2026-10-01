@@ -88,3 +88,29 @@ glow except on hover of a primary action.
 - Every animation has a `prefers-reduced-motion` path that shows the final state:
   wrap a landing section in `<MotionConfig reducedMotion="user">`, and use
   `@/hooks/useReducedMotion` where the rendered content itself differs.
+
+### Motion graphics
+
+The page behaves like an instrument reading a record. Each piece below says
+something about the product; none is decoration for its own sake.
+
+| Piece | Where | What it shows |
+|---|---|---|
+| `SurveyCrosshair` | hero | Hairlines and a lit patch of grid follow the cursor — picking one parcel out of a sheet |
+| Reading sequence (`.anim-scan`, `.anim-stamp`) | hero example card | A line reads the card, verdicts file in, the grade stamps down. Plays when the card scrolls into view |
+| `DotMatrix` + `CountUp` | problem cards | The percentage as a hundred marks, filling while the figure counts |
+| Step line | how it works | Drawn by scroll; each step inks in as the line reaches it |
+| `useSpotlight` + `.crux-spotlight` | ink panels, plan cards | A soft light follows the pointer across a surface |
+| `.crux-row` / `.crux-row-tile` | registers | A row's code tile inks in on hover |
+| `ScrollProgress` | page | Reading progress along the top edge |
+| Frame draw | every `.crux-frame` | Boundary lines draw outward as a section arrives (scroll-driven CSS, progressive) |
+
+Rules for adding more:
+- `CountUp` is for below-the-fold figures only. Above the fold the reader would see the
+  final number, then a reset.
+- Anything that hides content before it animates must have a visible server-rendered
+  state (see the `static / armed / play` phases in `HeroSection`).
+- Pointer effects are for fine pointers only and must do nothing on touch.
+- Staggering many small elements: use CSS transitions with a delay, not one
+  framer-motion node each.
+

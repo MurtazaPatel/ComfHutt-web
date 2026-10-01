@@ -387,16 +387,141 @@
   display: none;
 }
 
+/* ── Motion graphics ── */
+
+/* Cursor light on a surface. The element supplies --mx / --my (useSpotlight). */
+.crux-spotlight {
+  position: relative;
+  --mx: 50%;
+  --my: 0%;
+  --spot: rgba(16, 185, 129, 0.2);
+}
+.crux-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx) var(--my), var(--spot), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-crux);
+}
+.crux-spotlight--light {
+  --spot: rgba(16, 185, 129, 0.1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .crux-spotlight:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Dot field: marks switch on in sequence once an ancestor is in view. */
+.crux-dot[data-marked] {
+  opacity: 0.18;
+  transform: scale(0.4);
+  transition: opacity 0.5s var(--ease-crux), transform 0.5s var(--ease-crux);
+}
+[data-inview="true"] .crux-dot[data-marked] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* A register row answers the pointer: its code tile inks in. */
+.crux-row-tile {
+  transition: background-color 0.25s var(--ease-crux), color 0.25s var(--ease-crux), transform 0.35s var(--ease-crux);
+}
+@media (hover: hover) and (pointer: fine) {
+  .crux-row:hover .crux-row-tile {
+    background-color: var(--color-crux-green);
+    color: var(--color-crux-ink);
+    transform: scale(1.08);
+  }
+}
+
+/* Primary action: one pass of light across the fill on hover. */
+.btn-crux:not(.btn-crux--outline) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-crux:not(.btn-crux--outline)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.5) 50%, transparent 65%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-crux:not(.btn-crux--outline):not(:disabled):hover::after {
+    transform: translateX(120%);
+    transition: transform 0.7s var(--ease-crux);
+  }
+}
+
+/* The grade stamp pressing onto the page. */
+@keyframes stampIn {
+  0%   { opacity: 0; transform: scale(1.45) rotate(-9deg); }
+  60%  { opacity: 1; transform: scale(0.96) rotate(1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+.anim-stamp {
+  animation: stampIn 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+
+/* One pass of a reading line down a card. */
+@keyframes scanDown {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+.anim-scan {
+  animation: scanDown 1.5s cubic-bezier(0.45, 0, 0.2, 1) both;
+}
+
+/* Section boundary lines draw outward from the centre as the section arrives.
+   Scroll-driven and progressive: without support the line is simply there. */
+@supports (animation-timeline: view()) {
+  @keyframes frameDraw {
+    from { clip-path: inset(0 50% 0 50%); }
+    to   { clip-path: inset(0 0 0 0); }
+  }
+  .crux-frame:not(.crux-frame--bare)::after {
+    animation: frameDraw linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
   .anim,
-  .anim-rise {
+  .anim-rise,
+  .anim-stamp {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+  .anim-scan {
+    display: none;
+  }
+  .crux-frame::after {
+    animation: none !important;
+  }
+  .crux-dot[data-marked] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .crux-row-tile,
+  .crux-spotlight::before,
+  .btn-crux::after {
+    transition: none !important;
   }
 }
 

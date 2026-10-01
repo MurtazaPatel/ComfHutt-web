@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { motion, MotionConfig } from "framer-motion";
+import { useRef } from "react";
+import { motion, MotionConfig, useScroll, useTransform } from "framer-motion";
 import { Lock, Link2, MapPin, type LucideIcon } from "lucide-react";
 import ChatInput from "@/components/ChatInput";
 import { LEGAL } from "@/config/legal";
+import { useSpotlight } from "@/hooks/useSpotlight";
 
 interface FooterCTAProps {
   /** From the CGM constants, via the stats endpoint. Null when unavailable. */
@@ -71,6 +73,12 @@ const FOOTER_LINK =
   "inline-flex min-h-11 items-center break-words py-1.5 text-[14px] text-crux-text-secondary no-underline decoration-1 underline-offset-4 transition-colors duration-200 motion-reduce:transition-none hover:text-crux-text-primary hover:underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 [@media(hover:hover)_and_(pointer:fine)]:min-h-8";
 
 export default function FooterCTA({ methodologyVersion, methodologyHash }: FooterCTAProps) {
+  const spotlight = useSpotlight<HTMLDivElement>();
+  // The sign-off rises into place as the reader reaches the end of the page.
+  const markRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: markRef, offset: ["start end", "end end"] });
+  const markY = useTransform(scrollYProgress, [0, 1], ["45%", "0%"]);
+
   // reducedMotion="user" is set per section: page.tsx is owned elsewhere, and a
   // section that animates has to honour the preference itself.
   return (
@@ -82,7 +90,8 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
               staggered fade-ups made it arrive in pieces. */}
           <div className="crux-container">
           <motion.div
-            className="surface-ink relative mx-auto max-w-[960px] overflow-hidden rounded-[var(--radius-panel)] px-6 py-14 text-center shadow-[var(--shadow-premium-lg)] sm:px-12 sm:py-20"
+            {...spotlight}
+            className="crux-spotlight surface-ink relative mx-auto max-w-[960px] overflow-hidden rounded-[var(--radius-panel)] px-6 py-14 text-center shadow-[var(--shadow-premium-lg)] sm:px-12 sm:py-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
@@ -247,10 +256,11 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
             aria-hidden="true"
             className="crux-container pointer-events-none mt-12 select-none"
           >
-            <div className="overflow-hidden [container-type:inline-size]">
-              <span
+            <div ref={markRef} className="overflow-hidden [container-type:inline-size]">
+              <motion.span
                 className="block whitespace-nowrap text-center font-black tracking-[-0.04em]"
                 style={{
+                  y: markY,
                   fontSize: "36cqw",
                   lineHeight: 0.74,
                   marginBottom: "-0.05em",
@@ -262,7 +272,7 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
                 }}
               >
                 CRUX
-              </span>
+              </motion.span>
             </div>
           </div>
         </div>
