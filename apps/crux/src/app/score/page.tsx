@@ -22,7 +22,7 @@ function MiniHeader() {
       <div className="crux-container flex h-16 items-center justify-between">
         <Link
           href="/"
-          className="rounded text-[18px] font-bold tracking-[-0.03em] text-crux-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 items-center rounded text-[18px] font-bold tracking-[-0.03em] text-crux-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
         >
           CRUX
         </Link>

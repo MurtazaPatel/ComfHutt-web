@@ -45,7 +45,7 @@ export default function ProofStrip() {
         ))}
       </dl>
 
-      <p className="mt-3 text-center text-[11px] leading-relaxed text-crux-text-muted">
+      <p className="mx-auto mt-3 max-w-[78ch] text-pretty text-center text-[11px] leading-relaxed text-crux-text-muted">
         Source: {CITED_CORPUS.source}, measured {CITED_CORPUS.asOfLabel}. These count
         what CRUX has crawled and read, not the projects graded so far — a much
         smaller number.

@@ -160,7 +160,7 @@ export default function AuthLayoutClient({ children, variant }: AuthLayoutClient
           >
             {FACTS.map(({ icon: Icon, value, label }) => (
               <div key={label} className="flex flex-col gap-2 px-4 py-5 first:pl-0">
-                <Icon className="h-4 w-4 text-[#6EE7B7]" aria-hidden />
+                <Icon className="h-4 w-4 text-crux-mint" aria-hidden />
                 <span className="text-[18px] leading-none font-semibold tracking-[-0.02em] text-crux-ink-text">
                   {value}
                 </span>

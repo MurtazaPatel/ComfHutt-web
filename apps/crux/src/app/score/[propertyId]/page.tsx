@@ -44,7 +44,7 @@ function MiniHeader() {
         <Link
           href="/signup"
           onClick={() => track("signup_from_anon_score_page")}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-crux-green px-4 py-2 text-sm font-semibold text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-crux-green px-4 py-2 text-sm font-semibold text-crux-ink transition-colors hover:bg-crux-green-bright focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
         >
           Sign up free
           <ArrowRight size={14} aria-hidden="true" />
@@ -129,7 +129,7 @@ export default function AnonymousScorePage() {
           <Link
             href="/signup"
             onClick={() => track("signup_after_quota")}
-            className="inline-flex items-center gap-2 rounded-full bg-crux-green px-6 py-3 text-sm font-semibold text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="inline-flex items-center gap-2 rounded-full bg-crux-green px-6 py-3 text-sm font-semibold text-crux-ink transition-colors hover:bg-crux-green-bright focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Create free account
             <ArrowRight size={16} aria-hidden="true" />
@@ -285,7 +285,7 @@ export default function AnonymousScorePage() {
                   {dataSources.map((source) => (
                     <span
                       key={source}
-                      className="inline-flex items-center rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-crux-text-secondary shadow-sm ring-1 ring-black/5"
+                      className="inline-flex items-center rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-crux-text-secondary shadow-[var(--shadow-premium-sm)] ring-1 ring-black/5"
                     >
                       {source}
                     </span>
@@ -310,7 +310,7 @@ export default function AnonymousScorePage() {
               <Link
                 href="/signup"
                 onClick={() => track("signup_from_anon_score_page")}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-crux-green px-4 py-2.5 text-sm font-semibold text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-crux-green px-4 py-2.5 text-sm font-semibold text-crux-ink transition-colors hover:bg-crux-green-bright focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
               >
                 Sign up free
                 <ArrowRight size={14} aria-hidden="true" />

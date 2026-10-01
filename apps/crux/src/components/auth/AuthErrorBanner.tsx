@@ -29,7 +29,7 @@ export default function AuthErrorBanner({
         className={cn(
           "flex items-start gap-2.5 px-4 py-3 rounded-[var(--radius-control)] border text-[13px] leading-[1.5]",
           variant === "error"
-            ? "bg-[#FEF2F2] border-[#FECACA] text-[#B91C1C]"
+            ? "bg-crux-danger-tint border-crux-danger-line text-crux-danger-dark"
             : "bg-[var(--color-crux-green-tint)] border-[color-mix(in_srgb,var(--color-crux-green)_28%,transparent)] text-[var(--color-crux-green-dark)]",
           className,
         )}

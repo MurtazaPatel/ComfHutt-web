@@ -115,7 +115,7 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
             <ul className="relative mt-7 flex list-none flex-wrap items-center justify-center gap-x-6 gap-y-2 p-0">
               {TRUST_SIGNALS.map(({ Icon, label }) => (
                 <li key={label} className="flex items-center gap-2 text-crux-ink-muted">
-                  <Icon size={14} strokeWidth={2} aria-hidden className="text-[#6EE7B7]" />
+                  <Icon size={14} strokeWidth={2} aria-hidden className="text-crux-mint" />
                   <span className="text-[13px]">{label}</span>
                 </li>
               ))}
@@ -194,7 +194,7 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
               <h2 className="text-[14px] font-semibold text-crux-text-primary">
                 What a CRUX Grade is, and is not
               </h2>
-              <div className="mt-4 max-w-3xl space-y-3 text-[13px] leading-relaxed text-crux-text-secondary">
+              <div className="mt-4 max-w-[75ch] space-y-3 text-[13px] leading-relaxed text-crux-text-secondary">
                 <p>
                   A CRUX Grade is CRUX&rsquo;s opinion about a project, formed from
                   the public records it was able to read at the time of grading. It
@@ -222,7 +222,7 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
                   appears inline on every grade surface, because a reader looking at
                   a C grade should not have to scroll to the bottom of a different
                   page to learn what it is. */}
-              <p className="mt-5 max-w-3xl text-[13px] leading-relaxed text-crux-text-secondary">
+              <p className="mt-5 max-w-[75ch] text-[13px] leading-relaxed text-crux-text-secondary">
                 CRUX grades are opinions formed from public records using a published
                 method. They are research, not investment advice, and carry no
                 warranty. Believe a grade is wrong?{" "}

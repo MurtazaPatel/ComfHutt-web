@@ -161,7 +161,9 @@ export default function ChatInput({
   );
 
   const inputStyles = cn(
-    "flex-1 outline-none bg-transparent font-medium",
+    // min-h-11 + min-w-0: the field itself is a full-height tap target, not a
+    // 24px line inside a padded box, and it can shrink on a 320px screen.
+    "flex-1 min-w-0 min-h-11 outline-none bg-transparent font-medium",
     "text-base",
     {
       "text-crux-text-primary placeholder-crux-text-muted": variant !== "dark",
@@ -206,7 +208,7 @@ export default function ChatInput({
               // Brand green from the token, not the .bg-gradient-green utility:
               // that utility is still built from the rejected #22C55E/#16A34A
               // pair in globals.css, which this file cannot edit.
-              ? "bg-crux-green text-crux-ink hover:bg-[#34D399] cursor-pointer"
+              ? "bg-crux-green text-crux-ink hover:bg-crux-green-bright cursor-pointer"
               : variant === "dark"
                 ? "bg-crux-border-dark text-crux-text-muted cursor-not-allowed"
                 : "bg-crux-bg-secondary text-crux-text-muted cursor-not-allowed"

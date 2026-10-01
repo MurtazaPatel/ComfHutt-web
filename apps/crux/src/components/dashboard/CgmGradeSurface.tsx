@@ -356,7 +356,7 @@ function ModuleChip({ m }: { m: CgmModuleScore }) {
   }
 
   return (
-    <div className="rounded-xl bg-white px-3 py-2 shadow-sm ring-1 ring-black/5">
+    <div className="rounded-xl bg-white px-3 py-2 shadow-[var(--shadow-premium-sm)] ring-1 ring-black/5">
       <div className="mb-1 flex items-center justify-between gap-2">
         <span className="text-[13px] font-medium text-crux-text-primary">{label}</span>
         <span className="text-[13px] font-semibold" style={{ color: scoreColor(m.score) }}>

@@ -14,6 +14,15 @@
   --color-crux-green-deep: #064E3B;
   --color-crux-green-darkest: #022C22;
   --color-crux-green-tint: #ECFDF5;
+  --color-crux-green-bright: #34D399; /* hover state of an emerald fill */
+  --color-crux-mint: #6EE7B7; /* green text and icons on forest ink */
+
+  /* Risk and error. Reserved for data states and form errors, never decoration. */
+  --color-crux-danger: #DC2626;
+  --color-crux-danger-dark: #B91C1C;
+  --color-crux-danger-tint: #FEF2F2;
+  --color-crux-danger-line: #FECACA;
+  --color-crux-warning: #B45309;
 
   --color-crux-bg-primary: #FAFAFA; /* Soft off-white for main background */
   --color-crux-bg-secondary: #F3F4F6; /* Slightly darker for distinct sections */
@@ -61,7 +70,7 @@
 }
 
 /* ── One green. The shared package ships #22C55E; CRUX is #10B981, and
-   forest-on-emerald (7.4:1) replaces white-on-emerald (2.5:1). ── */
+   forest-on-emerald (6.0:1) replaces white-on-emerald (2.5:1). ── */
 :root {
   --background: #FAFAFA;
   --foreground: #09090B;
@@ -297,7 +306,7 @@
   }
   @media (hover: hover) {
     .btn-crux:not(:disabled):hover {
-      background: #34D399;
+      background: var(--color-crux-green-bright);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), var(--shadow-premium-glow);
     }
   }
@@ -305,6 +314,12 @@
     min-height: 2.25rem;
     padding: 0 1rem;
     font-size: 0.8125rem;
+  }
+  /* The compact button is 36px for a mouse and a full 44px for a finger. */
+  @media (pointer: coarse) {
+    .btn-crux--sm {
+      min-height: 2.75rem;
+    }
   }
   .btn-crux--block {
     width: 100%;
@@ -338,7 +353,7 @@
   .surface-ink .crux-chip {
     background: rgba(16, 185, 129, 0.1);
     border-color: rgba(16, 185, 129, 0.3);
-    color: #6EE7B7;
+    color: var(--color-crux-mint);
   }
 
 }

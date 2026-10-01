@@ -101,7 +101,7 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
           <div className="crux-container flex items-center justify-between py-3">
             <Link
               href="/"
-              className="flex items-center gap-2.5 no-underline group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
+              className="flex min-h-11 items-center gap-2.5 no-underline group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
             >
               <span
                 className="font-bold text-crux-text-primary tracking-tight transition-colors motion-reduce:transition-none group-hover:text-crux-green-mid"
@@ -238,7 +238,7 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
               <div className="px-3 py-1 bg-white border border-crux-border rounded-md text-[10px] text-crux-text-muted font-mono truncate">
                 crux.comfhutt.com
               </div>
-              <span className="t-eyebrow shrink-0 rounded-full bg-crux-ink px-2.5 py-1.5 text-[9px] text-crux-ink-text">
+              <span className="t-eyebrow shrink-0 rounded-full bg-crux-ink px-2.5 py-1.5 text-[10px] text-crux-ink-text">
                 Example
               </span>
             </div>
@@ -278,11 +278,11 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
                 </div>
 
                 {/* The seven modules, named from the engine's own table. */}
-                <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-crux-border bg-crux-border sm:grid-cols-2">
+                <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-crux-border bg-crux-border md:grid-cols-2">
                   {MODULE_ORDER.map((code, i) => (
                     <li
                       key={code}
-                      className="crux-row flex items-center justify-between gap-3 bg-white px-3.5 py-2.5 sm:last:col-span-2"
+                      className="crux-row flex items-center justify-between gap-3 bg-white px-3.5 py-2.5 md:last:col-span-2"
                     >
                       <span className="flex min-w-0 items-center gap-2">
                         <span
@@ -291,7 +291,9 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
                         >
                           {code}
                         </span>
-                        <span className="truncate text-[11px] text-crux-text-secondary">
+                        {/* Wraps rather than truncates: a module name cut to "Develo…" on a
+                            320px screen tells the reader nothing. */}
+                        <span className="text-[11px] leading-tight text-crux-text-secondary">
                           {MODULE_LABEL[code]}
                         </span>
                       </span>

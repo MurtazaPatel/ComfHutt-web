@@ -97,7 +97,7 @@ export default function SevenChecks() {
         {/* Honesty panel. This is the section's most load-bearing paragraph: it is
             the difference between a rating and a guess dressed as one. */}
         <div className="border-t border-crux-border bg-crux-bg-accent p-5 md:p-6">
-          <p className="text-pretty text-[15px] leading-relaxed text-crux-green-deep">
+          <p className="max-w-[78ch] text-pretty text-[15px] leading-relaxed text-crux-green-deep">
             When the data is too thin for a responsible grade, CRUX says{" "}
             <strong className="font-semibold text-crux-ink">Not Rated</strong>{" "}
             instead of guessing. When our court search is incomplete, we say so rather

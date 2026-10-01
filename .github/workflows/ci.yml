@@ -77,6 +77,14 @@ jobs:
       - name: "Landing acceptance — crux app (hard gate: structural promises hold)"
         run: node scripts/landing-acceptance.mjs
 
+      # HARD GATE. apps/crux/DESIGN.md is the brand guideline; this is the part of
+      # it a machine can check. The rejected greens, white text on an emerald
+      # fill (2.5:1), literal font families and sub-9px text are at zero and must
+      # stay there. Raw hex, stock Tailwind greys and shadows, and transition-all
+      # are held to scripts/.design-baseline.json, which may only go down.
+      - name: "Design-system guard — crux app (hard gate: no off-system styling)"
+        run: node scripts/design-system-guard.mjs apps/crux
+
       - name: Build — crux app (advisory; needs Clerk env)
         working-directory: apps/crux
         continue-on-error: true

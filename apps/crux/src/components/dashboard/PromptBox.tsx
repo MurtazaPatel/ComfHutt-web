@@ -220,7 +220,7 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2",
               "disabled:opacity-50 disabled:cursor-not-allowed",
               canSubmit
-                ? "bg-crux-green text-crux-ink hover:bg-[#34D399] hover:shadow-[var(--shadow-premium-glow)] hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
+                ? "bg-crux-green text-crux-ink hover:bg-crux-green-bright hover:shadow-[var(--shadow-premium-glow)] hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
                 : "bg-crux-bg-secondary text-crux-text-secondary",
             )}
           >

@@ -181,7 +181,7 @@ export default function LegalDocument({
           </Link>
           <Link
             href="/score"
-            className={`inline-flex min-h-11 items-center rounded-full bg-crux-green px-4 text-[13px] font-semibold text-crux-ink no-underline shadow-[var(--shadow-premium-sm)] transition-colors duration-200 motion-reduce:transition-none hover:bg-[#34D399] ${FOCUS_RING}`}
+            className={`inline-flex min-h-11 items-center rounded-full bg-crux-green px-4 text-[13px] font-semibold text-crux-ink no-underline shadow-[var(--shadow-premium-sm)] transition-colors duration-200 motion-reduce:transition-none hover:bg-crux-green-bright ${FOCUS_RING}`}
           >
             Grade a project
           </Link>

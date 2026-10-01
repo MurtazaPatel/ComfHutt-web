@@ -36,7 +36,7 @@ export function ListEmptyState({
       {action && (
         <Link
           href={action.href}
-          className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+          className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-crux-ink transition-colors hover:bg-crux-green-bright focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
         >
           {action.label}
           <ArrowRight size={14} aria-hidden="true" />

@@ -177,7 +177,7 @@ export default function PropertyDetailPage() {
           <button
             type="button"
             onClick={() => recompute()}
-            className="rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-crux-ink transition-colors hover:bg-crux-green-bright focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Compute Score
           </button>
@@ -209,7 +209,7 @@ export default function PropertyDetailPage() {
           <button
             type="button"
             onClick={() => recompute()}
-            className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-medium text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-medium text-crux-ink transition-colors hover:bg-crux-green-bright focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             <RefreshCw size={14} aria-hidden="true" />
             Generate CRUX Grade
@@ -325,7 +325,7 @@ export default function PropertyDetailPage() {
                 {dataSources.map((source) => (
                   <span
                     key={source}
-                    className="inline-flex items-center rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-crux-text-secondary shadow-sm ring-1 ring-black/5"
+                    className="inline-flex items-center rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-crux-text-secondary shadow-[var(--shadow-premium-sm)] ring-1 ring-black/5"
                   >
                     {source}
                   </span>

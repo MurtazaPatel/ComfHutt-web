@@ -39,7 +39,7 @@ export default function FormInput({
           htmlFor={id}
           className={cn(
             "t-eyebrow",
-            error ? "text-[#DC2626]" : "text-[var(--color-crux-text-secondary)]",
+            error ? "text-crux-danger" : "text-[var(--color-crux-text-secondary)]",
           )}
         >
           {label}
@@ -57,7 +57,7 @@ export default function FormInput({
             "placeholder:text-[var(--color-crux-text-muted)]",
             "border",
             error
-              ? "border-[#DC2626] focus:shadow-[0_0_0_4px_rgba(220,38,38,0.14)]"
+              ? "border-crux-danger focus:shadow-[0_0_0_4px_rgba(220,38,38,0.14)]"
               : "border-[var(--color-crux-border)] hover:border-[var(--color-crux-text-muted)] focus:border-[var(--color-crux-green)] focus:shadow-[0_0_0_4px_rgba(16,185,129,0.16)]",
             icon === "none" ? "" : "pl-11",
             isPassword ? "pr-12" : "",
@@ -73,7 +73,7 @@ export default function FormInput({
             className={cn(
               "absolute left-4 w-4 h-4 pointer-events-none transition-colors duration-200",
               error
-                ? "text-[#DC2626]"
+                ? "text-crux-danger"
                 : "text-[var(--color-crux-text-muted)] peer-focus:text-[var(--color-crux-green-dark)]",
             )}
           />
@@ -98,7 +98,7 @@ export default function FormInput({
 
       {error && (
         <p
-          className="flex items-center gap-1.5 text-[12px] text-[#DC2626]"
+          className="flex items-center gap-1.5 text-[12px] text-crux-danger"
           role="alert"
         >
           <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
