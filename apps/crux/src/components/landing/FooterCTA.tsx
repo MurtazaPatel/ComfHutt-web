@@ -68,7 +68,7 @@ const LINK_COLS: Array<{ heading: string; links: Array<{ label: string; href: st
 ];
 
 const FOOTER_LINK =
-  "inline-block break-words py-1.5 text-[13px] text-crux-text-secondary no-underline transition-colors duration-200 motion-reduce:transition-none hover:text-crux-text-primary hover:underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2";
+  "inline-flex min-h-11 items-center break-words py-1.5 text-[14px] text-crux-text-secondary no-underline decoration-1 underline-offset-4 transition-colors duration-200 motion-reduce:transition-none hover:text-crux-text-primary hover:underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 [@media(hover:hover)_and_(pointer:fine)]:min-h-8";
 
 export default function FooterCTA({ methodologyVersion, methodologyHash }: FooterCTAProps) {
   // reducedMotion="user" is set per section: page.tsx is owned elsewhere, and a
@@ -77,83 +77,60 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
     <MotionConfig reducedMotion="user">
       <footer className="bg-white">
         {/* ── Closing CTA ── */}
-        <div className="px-4 py-16 sm:py-28">
+        <div className="crux-frame py-24 md:py-36">
+          {/* One reveal for the whole panel: it is a single statement, and five
+              staggered fade-ups made it arrive in pieces. */}
+          <div className="crux-container">
           <motion.div
-            className="mx-auto max-w-2xl rounded-3xl border border-crux-green/20 p-6 text-center sm:p-12"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--color-crux-green-tint) 0%, var(--color-crux-bg-primary) 50%, var(--color-crux-green-tint) 100%)",
-            }}
+            className="surface-ink relative mx-auto max-w-[960px] overflow-hidden rounded-[var(--radius-panel)] px-6 py-14 text-center shadow-[var(--shadow-premium-lg)] sm:px-12 sm:py-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <motion.h2
-              className="text-balance text-[24px] font-bold leading-tight tracking-[-0.5px] text-crux-text-primary sm:text-[32px]"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VP}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-            >
+            <div aria-hidden className="crux-plot" />
+            <h2 className="t-h2 relative mx-auto max-w-[18ch] text-crux-ink-text">
               Read the record before you pay the booking amount.
-            </motion.h2>
+            </h2>
 
-            <motion.p
-              className="mt-4 text-pretty text-[15px] text-crux-text-secondary sm:text-base"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VP}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            >
+            <p className="t-lead relative mx-auto mt-6 max-w-[52ch] text-crux-ink-muted">
               Name a RERA-registered project in Gujarat and CRUX will grade it from
               the filings and the court record. Free, and the first three need no
               account.
-            </motion.p>
+            </p>
 
-            <motion.div
-              className="mx-auto mt-8 max-w-lg sm:mt-10"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VP}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-            >
-              <ChatInput variant="default" size="large" />
-            </motion.div>
+            <div className="relative mx-auto mt-10 max-w-[580px]">
+              <ChatInput variant="white" size="large" />
+            </div>
 
-            <motion.ul
-              className="mt-6 flex list-none flex-wrap items-center justify-center gap-x-6 gap-y-2 p-0"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VP}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-            >
+            <ul className="relative mt-7 flex list-none flex-wrap items-center justify-center gap-x-6 gap-y-2 p-0">
               {TRUST_SIGNALS.map(({ Icon, label }) => (
-                <li key={label} className="flex items-center gap-1.5 text-crux-text-muted">
-                  <Icon size={13} strokeWidth={2} aria-hidden />
-                  <span className="text-xs">{label}</span>
+                <li key={label} className="flex items-center gap-2 text-crux-ink-muted">
+                  <Icon size={14} strokeWidth={2} aria-hidden className="text-[#6EE7B7]" />
+                  <span className="text-[13px]">{label}</span>
                 </li>
               ))}
-            </motion.ul>
+            </ul>
           </motion.div>
+          </div>
         </div>
 
         {/* ── Footer ── */}
-        <div className="relative overflow-hidden border-t border-crux-border bg-crux-bg-primary pt-16">
-          <div className="mx-auto max-w-[1100px] px-6 sm:px-8">
-            <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
+        <div className="relative overflow-hidden border-t border-crux-line bg-crux-bg-primary pt-16 md:pt-20">
+          <div className="crux-container">
+            <div className="grid gap-12 md:grid-cols-12 md:gap-8">
               {/* Identity */}
-              <div className="flex flex-col gap-4">
-                <span className="text-[18px] font-bold tracking-[-0.03em] text-crux-text-primary">
+              <div className="flex flex-col gap-4 md:col-span-4">
+                <span className="text-[22px] font-bold tracking-[-0.03em] text-crux-text-primary">
                   CRUX
                 </span>
 
-                <p className="max-w-[240px] text-[12px] leading-relaxed text-crux-text-secondary">
+                <p className="max-w-[260px] text-[13px] leading-relaxed text-crux-text-secondary">
                   © 2026 ComfHutt Technologies Pvt. Ltd.
                 </p>
 
                 <div className="mt-1.5 flex items-center gap-1.5">
-                  <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-crux-text-muted">
+                  <span className="t-eyebrow text-[10px] text-crux-text-muted">
                     A
                   </span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -162,17 +139,19 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
                     alt="ComfHutt"
                     className="inline-block h-3.5 w-auto align-middle opacity-45"
                   />
-                  <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-crux-text-muted">
+                  <span className="t-eyebrow text-[10px] text-crux-text-muted">
                     product
                   </span>
                 </div>
               </div>
 
               {/* Links */}
-              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 md:col-span-8">
                 {LINK_COLS.map((col) => (
-                  <div key={col.heading}>
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-crux-text-muted">
+                  // The last column holds two email addresses; on a phone it takes
+                  // the full row so neither has to break mid-word.
+                  <div key={col.heading} className="min-w-0 last:col-span-2 sm:last:col-span-1">
+                    <p className="t-eyebrow mb-3 text-crux-text-muted">
                       {col.heading}
                     </p>
                     <ul className="m-0 flex list-none flex-col p-0">
@@ -200,13 +179,13 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
             {/* ── What a grade is, and is not ── */}
             <div
               id="disclaimer"
-              className="mt-12 border-t border-crux-border pt-8"
+              className="mt-14 border-t border-crux-line pt-10"
               style={{ scrollMarginTop: 80 }}
             >
-              <h2 className="text-[13px] font-semibold text-crux-text-primary">
+              <h2 className="text-[14px] font-semibold text-crux-text-primary">
                 What a CRUX Grade is, and is not
               </h2>
-              <div className="mt-3 max-w-3xl space-y-2.5 text-[12px] leading-relaxed text-crux-text-secondary">
+              <div className="mt-4 max-w-3xl space-y-3 text-[13px] leading-relaxed text-crux-text-secondary">
                 <p>
                   A CRUX Grade is CRUX&rsquo;s opinion about a project, formed from
                   the public records it was able to read at the time of grading. It
@@ -234,7 +213,7 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
                   appears inline on every grade surface, because a reader looking at
                   a C grade should not have to scroll to the bottom of a different
                   page to learn what it is. */}
-              <p className="mt-5 max-w-3xl text-[12px] leading-relaxed text-crux-text-secondary">
+              <p className="mt-5 max-w-3xl text-[13px] leading-relaxed text-crux-text-secondary">
                 CRUX grades are opinions formed from public records using a published
                 method. They are research, not investment advice, and carry no
                 warranty. Believe a grade is wrong?{" "}
@@ -262,24 +241,29 @@ export default function FooterCTA({ methodologyVersion, methodologyHash }: Foote
           </div>
 
           {/* Oversized wordmark */}
+          {/* The sign-off. Sized in container units so it spans the content width
+              at every viewport and can never push the page sideways. */}
           <div
             aria-hidden="true"
-            className="mt-6 block select-none text-center leading-[0.85]"
-            style={{ pointerEvents: "none" }}
+            className="crux-container pointer-events-none mt-12 select-none"
           >
-            <span
-              className="block whitespace-nowrap font-black tracking-[-0.04em]"
-              style={{
-                fontSize: "clamp(6rem, 20vw, 18rem)",
-                background:
-                  "linear-gradient(to right, rgba(9,9,11,0.12) 0%, rgba(9,9,11,0.06) 40%, rgba(9,9,11,0.02) 70%, transparent 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              CRUX
-            </span>
+            <div className="overflow-hidden [container-type:inline-size]">
+              <span
+                className="block whitespace-nowrap text-center font-black tracking-[-0.04em]"
+                style={{
+                  fontSize: "36cqw",
+                  lineHeight: 0.74,
+                  marginBottom: "-0.05em",
+                  background:
+                    "linear-gradient(to bottom, rgba(9,9,11,0.11) 0%, rgba(9,9,11,0.04) 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                CRUX
+              </span>
+            </div>
           </div>
         </div>
       </footer>

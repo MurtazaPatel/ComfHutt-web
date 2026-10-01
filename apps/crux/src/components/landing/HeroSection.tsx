@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, MotionConfig, Variants } from "framer-motion";
+import { motion, MotionConfig, type Variants } from "framer-motion";
 import Link from "next/link";
 import ChatInput from "@/components/ChatInput";
 import ProofStrip from "@/components/landing/ProofStrip";
@@ -40,25 +40,12 @@ const EXAMPLE_VERDICTS: Record<string, string> = {
   P: "Not assessed",
 };
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
-};
-
 const mockupVariants: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 80, damping: 20, delay: 0.4 },
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.35 },
   },
 };
 
@@ -73,18 +60,24 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
     <MotionConfig reducedMotion="user">
       <section
         id="hero"
-        className="relative w-full bg-background flex flex-col overflow-hidden"
+        className="crux-frame crux-frame--bare relative w-full bg-background flex flex-col overflow-hidden"
         style={{ minHeight: "100svh" }}
       >
-        {/* Background gradient mesh */}
-        <div className="absolute inset-0 pointer-events-none opacity-40">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-crux-green-tint blur-[120px]" />
-          <div className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-crux-bg-secondary blur-[100px]" />
+        {/* Plot grid — the parcel lattice of a survey sheet, lit from above. */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute inset-x-0 top-0 h-[70%]"
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 55% at 50% 0%, var(--color-crux-green-tint) 0%, transparent 70%)",
+            }}
+          />
+          <div className="crux-plot" />
         </div>
 
         {/* Navbar */}
-        <nav className="sticky top-0 z-50 w-full border-b border-crux-border bg-white/60 backdrop-blur-xl">
-          <div className="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 py-3.5">
+        <nav className="sticky top-0 z-50 w-full border-b border-crux-line bg-crux-bg-primary/75 backdrop-blur-xl">
+          <div className="crux-container flex items-center justify-between py-3">
             <Link
               href="/"
               className="flex items-center gap-2.5 no-underline group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
@@ -124,7 +117,7 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
             {/* Anonymous grading entry point — no signup for the first three. */}
             <Link
               href="/score"
-              className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full bg-crux-green text-white text-[12px] font-semibold shadow-[var(--shadow-premium-md)] hover:shadow-[var(--shadow-premium-glow)] transition-[box-shadow,background-color] duration-300 motion-reduce:transition-none no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2"
+              className="btn-crux btn-crux--sm"
             >
               Grade a project
             </Link>
@@ -132,17 +125,17 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
         </nav>
 
         {/* Hero content */}
-        <motion.div
-          className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 pt-14 pb-12"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        {/* The entrance runs in CSS so the headline — the LCP element — paints
+            with the first frame instead of waiting on hydration. */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 pt-14 pb-12">
           {/* Coverage badge — states the area plainly instead of claiming a first. */}
-          <motion.div variants={itemVariants}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-crux-border bg-white shadow-[var(--shadow-premium-sm)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-crux-green motion-safe:animate-pulse" />
-              <span className="text-[12px] sm:text-[13px] text-crux-text-secondary font-medium uppercase tracking-[0.12em]">
+          <div className="anim">
+            <div className="inline-flex items-center gap-2.5 pl-3 pr-4 py-1.5 rounded-full border border-crux-border bg-white shadow-[var(--shadow-premium-sm)]">
+              <span aria-hidden className="relative flex w-1.5 h-1.5">
+                <span className="absolute inset-0 rounded-full bg-crux-green opacity-60 motion-safe:animate-ping" />
+                <span className="relative w-1.5 h-1.5 rounded-full bg-crux-green-mid" />
+              </span>
+              <span className="t-eyebrow text-crux-text-secondary">
                 {/* Counted server-side. On a failed query the count is dropped
                     entirely rather than rendered as 0 — "Gujarat · 0 districts"
                     would be a worse claim than naming no number at all. */}
@@ -151,16 +144,15 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
                   : `Gujarat · ${districtCount} ${districtCount === 1 ? "district" : "districts"}`}
               </span>
             </div>
-          </motion.div>
+          </div>
 
           {/* Headline — the letter grade leads, never a 0–100 number. */}
-          <motion.h1
-            variants={itemVariants}
-            className="mt-8 text-center font-extrabold text-crux-text-primary text-balance"
+          <h1
+            className="anim-rise mt-8 text-center font-extrabold text-crux-text-primary text-balance"
             style={{
-              fontSize: "clamp(36px, 8vw, 84px)",
-              lineHeight: 0.98,
-              letterSpacing: "-0.03em",
+              fontSize: "clamp(36px, 8vw, 88px)",
+              lineHeight: 0.96,
+              letterSpacing: "-0.045em",
             }}
           >
             They check you.
@@ -168,65 +160,67 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
             {/* green-dark, not green: #10B981 on white measures 2.54:1, which fails
                 even the 3.0 large-text threshold. #047857 is 5.87:1. */}
             <span className="text-crux-green-dark">Nobody checks them.</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            variants={itemVariants}
-            className="mt-5 text-center text-crux-text-secondary max-w-[560px] mx-auto leading-relaxed text-pretty"
-            style={{ fontSize: "clamp(14px, 1.6vw, 17px)" }}
+          <p
+            className="anim t-lead mt-6 text-center text-crux-text-secondary max-w-[600px] mx-auto"
+            style={{ animationDelay: "0.08s" }}
           >
             CRUX grades every RERA-registered project in Gujarat from A+ to D — using
             the builder&rsquo;s own certified filings and the court record. Free for
             every buyer.
-          </motion.p>
+          </p>
 
-          <motion.div variants={itemVariants} className="mt-8 w-full max-w-[580px] mx-auto">
+          <div
+            className="anim mt-9 w-full max-w-[580px] mx-auto"
+            style={{ animationDelay: "0.16s" }}
+          >
             <ChatInput size="large" />
-          </motion.div>
+          </div>
 
-          <motion.p
-            variants={itemVariants}
-            className="mt-3 text-[12px] sm:text-[13px] text-crux-text-muted text-center"
+          <p
+            className="anim mt-4 text-[12px] sm:text-[13px] text-crux-text-muted text-center"
+            style={{ animationDelay: "0.22s" }}
           >
             {/* The district names that used to end this line were a five-district
                 claim nothing in the database supported. The count in the eyebrow is
                 queried; a hardcoded list of names was not. */}
             No signup for your first 3 grades
-            <span className="mx-1.5 text-crux-green">·</span> Method published
-            <span className="mx-1.5 text-crux-green">·</span> Gujarat-first
-          </motion.p>
+            <span aria-hidden className="mx-1.5 text-crux-green-mid">·</span> Method published
+            <span aria-hidden className="mx-1.5 text-crux-green-mid">·</span> Gujarat-first
+          </p>
 
           {/* Proof strip — four corpus counters, replacing the source marquee. */}
-          <motion.div variants={itemVariants} className="mt-12 w-full">
+          <div className="anim mt-14 w-full" style={{ animationDelay: "0.3s" }}>
             <ProofStrip />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Illustration of the grade surface */}
         <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6">
           <motion.div
-            className="relative rounded-t-2xl border border-b-0 border-crux-border shadow-[var(--shadow-premium-lg)] overflow-hidden bg-white"
+            className="relative rounded-t-[20px] border border-b-0 border-crux-border shadow-[var(--shadow-premium-lg)] overflow-hidden bg-white"
             variants={mockupVariants}
             initial="hidden"
             animate="visible"
           >
             {/* Frame chrome. The EXAMPLE badge sits in the chrome so it travels with
                 any screenshot of this section. */}
-            <div className="w-full h-10 bg-crux-bg-secondary border-b border-crux-border flex items-center justify-between px-4 gap-3">
+            <div className="w-full h-11 bg-crux-bg-secondary border-b border-crux-border flex items-center justify-between px-4 gap-3">
               <div className="px-3 py-1 bg-white border border-crux-border rounded-md text-[10px] text-crux-text-muted font-mono truncate">
                 crux.comfhutt.com
               </div>
-              <span className="shrink-0 rounded-full bg-crux-text-primary px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white">
+              <span className="t-eyebrow shrink-0 rounded-full bg-crux-ink px-2.5 py-1.5 text-[9px] text-crux-ink-text">
                 Example
               </span>
             </div>
 
-            <div className="bg-crux-bg-primary p-4 sm:p-6">
-              <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:items-start">
+            <div className="bg-crux-bg-primary p-4 sm:p-7">
+              <div className="grid gap-5 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-7">
                 {/* Letter first, composite second and smaller. */}
                 <div className="flex items-center gap-4 sm:flex-col sm:items-start">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-crux-green/30 bg-crux-green-tint">
-                    <span className="text-[34px] font-extrabold leading-none text-crux-green-dark">
+                  <div className="flex h-24 w-24 items-center justify-center rounded-[var(--radius-card)] border border-crux-green/30 bg-crux-green-tint shadow-[var(--shadow-premium-sm)]">
+                    <span className="text-[42px] font-extrabold leading-none tracking-[-0.04em] text-crux-green-dark">
                       B+
                     </span>
                   </div>
@@ -240,16 +234,16 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
                 </div>
 
                 {/* The seven modules, named from the engine's own table. */}
-                <ul className="grid gap-1.5 sm:grid-cols-2">
+                <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-crux-border bg-crux-border sm:grid-cols-2">
                   {MODULE_ORDER.map((code) => (
                     <li
                       key={code}
-                      className="flex items-center justify-between gap-3 rounded-lg border border-crux-border bg-white px-3 py-2"
+                      className="flex items-center justify-between gap-3 bg-white px-3.5 py-2.5 sm:last:col-span-2"
                     >
                       <span className="flex min-w-0 items-center gap-2">
                         <span
                           aria-hidden
-                          className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-crux-green-tint text-[9px] font-bold text-crux-green-dark"
+                          className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded bg-crux-green-tint font-mono text-[9px] font-semibold text-crux-green-dark"
                         >
                           {code}
                         </span>

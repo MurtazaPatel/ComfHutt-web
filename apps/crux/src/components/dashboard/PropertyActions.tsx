@@ -249,7 +249,7 @@ export function PropertyActions({
                     <button
                       type="button"
                       onClick={confirmWatch}
-                      className="rounded-lg bg-crux-green px-3 py-1.5 text-[12px] font-medium text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+                      className="rounded-lg bg-crux-green px-3 py-1.5 text-[12px] font-medium text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
                     >
                       Use 1 credit
                     </button>
@@ -460,7 +460,7 @@ function ShareModal({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-crux-green px-3 py-1.5 text-[12px] font-medium text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-crux-green px-3 py-1.5 text-[12px] font-medium text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
               >
                 {copyState === "copied" && <Check size={12} aria-hidden="true" />}
                 {copyState === "copied" ? "Copied" : "Copy"}

@@ -117,7 +117,7 @@ export function PromptInputBar({ onSend, onStop, isLoading, error }: PromptInput
                 "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-150",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none",
                 text.trim()
-                  ? "cursor-pointer bg-crux-green text-white hover:bg-crux-green-mid"
+                  ? "cursor-pointer bg-crux-green text-crux-ink hover:bg-[#34D399]"
                   : "cursor-not-allowed bg-crux-bg-secondary text-crux-text-muted",
               )}
               aria-label="Send message"

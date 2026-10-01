@@ -42,10 +42,10 @@ export default function SocialAuth() {
       type="button"
       disabled={loadingProvider !== null}
       onClick={() => signInWith("oauth_google")}
-      className="w-full h-11 rounded-full border border-crux-border bg-white flex items-center justify-center gap-3 font-medium text-[14px] text-crux-text-primary hover:bg-crux-bg-secondary hover:border-crux-border active:scale-[0.98] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+      className="btn-crux btn-crux--outline btn-crux--block min-h-12 gap-3 text-[15px] text-[var(--color-crux-text-primary)]"
     >
       {loadingProvider === "oauth_google" ? (
-        <Loader2 className="w-4 h-4 animate-spin text-crux-text-muted" />
+        <Loader2 className="w-4 h-4 animate-spin text-[var(--color-crux-text-muted)]" />
       ) : (
         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
           <path

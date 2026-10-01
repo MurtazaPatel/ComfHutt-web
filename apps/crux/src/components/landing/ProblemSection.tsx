@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 import {
   BUILDERS_WITH_CASE_PCT,
   CITED_CORPUS,
@@ -46,42 +46,53 @@ const CARDS: Array<{ value: string; body: string; emphasis: boolean }> = [
 
 export default function ProblemSection() {
   return (
-    <section id="the-problem" className="bg-crux-bg-secondary px-4 py-20 md:py-28">
-      <div className="mx-auto max-w-[1100px]">
+    <MotionConfig reducedMotion="user">
+    {/* Forest ink: the one dark section on the page, spent on the one thing a
+        reader has to leave with. */}
+    <section id="the-problem" className="crux-frame surface-ink relative overflow-x-clip py-24 md:py-36">
+      <div aria-hidden className="crux-plot opacity-60" />
+      <div className="crux-container relative">
         <motion.h2
-          className="mx-auto max-w-[24ch] text-balance text-center text-[28px] font-bold leading-tight tracking-[-0.02em] text-crux-text-primary md:text-[40px]"
+          className="t-h2 mx-auto max-w-[20ch] text-center text-crux-ink-text"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           Before you pay ₹50 lakh, there is no way to check the builder.
         </motion.h2>
 
-        <div className="mx-auto mt-12 grid max-w-3xl gap-4 md:grid-cols-2">
+        <div className="mx-auto mt-14 grid max-w-4xl gap-4 md:mt-16 md:grid-cols-2 md:gap-5">
           {CARDS.map(({ value, body, emphasis }, i) => (
             <motion.div
               key={value}
               className={[
-                "flex flex-col rounded-2xl p-6",
+                "flex flex-col rounded-[var(--radius-panel)] p-7 md:p-9",
+                // The emphasis card is the only light surface in the section, so
+                // the eye lands on it first without it needing to be larger.
                 emphasis
-                  ? "border-2 border-crux-green bg-crux-bg-accent"
-                  : "border border-crux-border bg-white",
+                  ? "bg-crux-bg-accent shadow-[var(--shadow-premium-lg)] ring-1 ring-crux-green"
+                  : "border border-crux-ink-line bg-crux-ink-raised",
               ].join(" ")}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VP}
-              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: i * 0.08 }}
             >
               <p
                 className={[
-                  "text-[44px] font-extrabold leading-none tracking-tight md:text-[56px]",
-                  emphasis ? "text-crux-green-dark" : "text-crux-text-primary",
+                  "text-[56px] font-extrabold leading-none tracking-[-0.045em] md:text-[84px]",
+                  emphasis ? "text-crux-green-dark" : "text-crux-ink-text",
                 ].join(" ")}
               >
                 {value}
               </p>
-              <p className="mt-3 text-pretty text-[14px] leading-relaxed text-crux-text-secondary">
+              <p
+                className={[
+                  "mt-5 text-pretty text-[15px] leading-relaxed md:text-[16px]",
+                  emphasis ? "text-crux-green-deep" : "text-crux-ink-muted",
+                ].join(" ")}
+              >
                 {body}
               </p>
             </motion.div>
@@ -89,24 +100,24 @@ export default function ProblemSection() {
         </div>
 
         <motion.p
-          className="mx-auto mt-10 max-w-[58ch] text-pretty text-center text-[16px] leading-[1.7] text-crux-text-secondary md:text-[17px]"
+          className="t-voice mx-auto mt-14 max-w-[40ch] text-balance text-center text-[24px] leading-[1.3] text-crux-ink-text md:mt-16 md:text-[32px]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
         >
           RERA tells you a project is registered. It does not tell you it is safe. The
           filings that hold the answer are a dozen PDFs nobody reads.
         </motion.p>
 
-        {/* text-secondary, not text-muted: this caption sits on bg-secondary,
-            where #6B7280 measures 4.39:1 — just under AA. */}
-        <p className="mt-5 text-center text-[11px] leading-relaxed text-crux-text-secondary">
+        {/* ink-muted on forest ink measures about 6.7:1. */}
+        <p className="mx-auto mt-8 max-w-[70ch] text-center font-mono text-[11px] leading-relaxed text-crux-ink-muted">
           {CITED_CORPUS.source}: {formatCount(CITED_CORPUS.buildersProfiled)} Ahmedabad
           builders and {formatCount(CITED_CORPUS.casesPulled)} court records, measured{" "}
           {CITED_CORPUS.asOfLabel}.
         </p>
       </div>
     </section>
+    </MotionConfig>
   );
 }

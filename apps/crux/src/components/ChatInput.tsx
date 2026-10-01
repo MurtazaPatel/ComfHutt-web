@@ -152,7 +152,7 @@ export default function ChatInput({
     "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-crux-green has-[:focus-visible]:ring-offset-2",
     size === "large" ? "px-6 py-4 sm:py-5" : "px-5 py-3.5",
     {
-      "bg-white border border-crux-border shadow-lg": variant === "default",
+      "bg-white border border-crux-border shadow-[var(--shadow-premium-md)]": variant === "default",
       "bg-white border border-crux-border": variant === "white",
       "bg-crux-surface-dark-card border border-crux-border-dark": variant === "dark",
     },
@@ -206,7 +206,7 @@ export default function ChatInput({
               // Brand green from the token, not the .bg-gradient-green utility:
               // that utility is still built from the rejected #22C55E/#16A34A
               // pair in globals.css, which this file cannot edit.
-              ? "bg-crux-green text-white hover:bg-crux-green-mid cursor-pointer"
+              ? "bg-crux-green text-crux-ink hover:bg-[#34D399] cursor-pointer"
               : variant === "dark"
                 ? "bg-crux-border-dark text-crux-text-muted cursor-not-allowed"
                 : "bg-crux-bg-secondary text-crux-text-muted cursor-not-allowed"

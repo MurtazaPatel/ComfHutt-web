@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { MODULE_ORDER, MODULE_LABEL, MODULE_BLURB } from "@/lib/grade";
 
@@ -43,80 +43,81 @@ const SOURCES = [
 
 export default function SevenChecks() {
   return (
-    <section id="features" className="bg-crux-bg-secondary px-4 py-20 md:py-28">
-      <div className="mx-auto max-w-[1100px]">
+    <MotionConfig reducedMotion="user">
+    <section id="features" className="crux-frame bg-crux-bg-primary py-24 md:py-36">
+      <div className="crux-container">
         <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h2 className="text-balance text-[28px] font-bold leading-tight tracking-[-0.02em] text-crux-text-primary md:text-[40px]">
+          <h2 className="t-h2 text-crux-text-primary">
             Seven checks. One grade.
           </h2>
-          <p className="mx-auto mt-4 max-w-[46ch] text-pretty text-[16px] leading-[1.7] text-crux-text-secondary md:text-[17px]">
+          <p className="t-voice mx-auto mt-5 max-w-[46ch] text-[22px] leading-[1.3] text-crux-green-dark md:text-[26px]">
             Same filings, same grade, every time.
           </p>
         </motion.div>
 
-        <ul className="mx-auto mt-12 grid max-w-5xl gap-3 md:grid-cols-2">
-          {MODULE_ORDER.map((code, i) => (
-            <motion.li
+        {/* A register, not a card grid: one bordered block, hairline-divided, with
+            the honesty panel closing it as the last row. */}
+        <motion.div
+          className="mx-auto mt-14 max-w-5xl overflow-hidden rounded-[var(--radius-panel)] border border-crux-border bg-white shadow-[var(--shadow-premium-md)] md:mt-16"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VP}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+        >
+        <ul className="grid gap-px bg-crux-border md:grid-cols-2">
+          {MODULE_ORDER.map((code) => (
+            <li
               key={code}
-              className="flex items-start gap-3.5 rounded-xl border border-crux-border bg-white p-4"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VP}
-              transition={{ duration: 0.45, ease: "easeOut", delay: Math.min(i, 5) * 0.05 }}
+              className="flex items-start gap-4 bg-white p-5 md:p-6 md:last:col-span-2"
             >
               <span
                 aria-hidden
-                className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-crux-green-tint text-[12px] font-bold text-crux-green-dark"
+                className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-control)] bg-crux-green-tint font-mono text-[13px] font-semibold text-crux-green-dark ring-1 ring-crux-green/25"
               >
                 {code}
               </span>
               <div className="min-w-0">
-                <h3 className="text-[14px] font-bold tracking-tight text-crux-text-primary">
+                <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-crux-text-primary">
                   {MODULE_LABEL[code]}
                 </h3>
-                <p className="mt-1 text-pretty text-[13px] leading-snug text-crux-text-secondary">
+                <p className="mt-1.5 text-pretty text-[14px] leading-relaxed text-crux-text-secondary">
                   {MODULE_BLURB[code]}
                 </p>
               </div>
-            </motion.li>
+            </li>
           ))}
         </ul>
 
         {/* Honesty panel. This is the section's most load-bearing paragraph: it is
             the difference between a rating and a guess dressed as one. */}
-        <motion.div
-          className="mx-auto mt-6 max-w-5xl rounded-xl border border-crux-border bg-crux-bg-primary p-5"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VP}
-          transition={{ duration: 0.45, ease: "easeOut" }}
-        >
-          <p className="text-pretty text-[14px] leading-relaxed text-crux-text-secondary">
+        <div className="border-t border-crux-border bg-crux-bg-accent p-5 md:p-6">
+          <p className="text-pretty text-[15px] leading-relaxed text-crux-green-deep">
             When the data is too thin for a responsible grade, CRUX says{" "}
-            <strong className="font-semibold text-crux-text-primary">Not Rated</strong>{" "}
+            <strong className="font-semibold text-crux-ink">Not Rated</strong>{" "}
             instead of guessing. When our court search is incomplete, we say so rather
             than calling a project clean.
           </p>
+        </div>
         </motion.div>
 
         {/* Agents research, rules rate. */}
         <motion.div
-          className="mx-auto mt-14 max-w-[62ch] text-center"
+          className="mx-auto mt-20 max-w-[62ch] text-center md:mt-28"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h3 className="text-balance text-[22px] font-bold tracking-[-0.01em] text-crux-text-primary md:text-[28px]">
+          <h3 className="text-balance text-[26px] font-bold leading-[1.1] tracking-[-0.03em] text-crux-text-primary md:text-[40px]">
             Agents do the research. Rules do the rating.
           </h3>
-          <p className="mt-4 text-pretty text-[15px] leading-[1.7] text-crux-text-secondary md:text-[16px]">
+          <p className="mt-5 text-pretty text-[16px] leading-[1.7] text-crux-text-secondary md:text-[17px]">
             Our AI plans the searches, reads the documents and answers your questions.
             It never decides the grade. The grade comes from published rules, so the
             same filings always produce the same result — and every grade carries a
@@ -124,25 +125,29 @@ export default function SevenChecks() {
           </p>
           <Link
             href="/methodology"
-            className="mt-5 inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-[14px] font-semibold text-crux-green-dark no-underline transition-colors hover:text-crux-green-deeper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="btn-crux btn-crux--outline group mt-7"
           >
             Read the method
-            <ArrowRight size={15} aria-hidden />
+            <ArrowRight
+              size={15}
+              aria-hidden
+              className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
+            />
           </Link>
         </motion.div>
 
         {/* What CRUX reads. Moved here from the hero. */}
-        <div className="mx-auto mt-14 max-w-3xl">
-          <h3 className="text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-crux-text-secondary">
+        <div className="mx-auto mt-16 max-w-3xl border-t border-crux-line pt-10 md:mt-20">
+          <h3 className="t-eyebrow text-center text-crux-text-secondary">
             What CRUX reads
           </h3>
-          <ul className="mt-3 flex flex-wrap items-center justify-center gap-2">
+          <ul className="mt-5 flex flex-wrap items-center justify-center gap-2">
             {SOURCES.map((source) => (
               <li
                 key={source}
-                className="inline-flex items-center gap-1.5 rounded-full border border-crux-border bg-white px-3 py-1.5 text-[11px] font-medium text-crux-text-secondary sm:text-[12px]"
+                className="inline-flex items-center gap-2 rounded-full border border-crux-border bg-white px-3.5 py-1.5 font-mono text-[11px] tracking-[0.02em] text-crux-text-primary sm:text-[12px]"
               >
-                <span aria-hidden className="h-1 w-1 rounded-full bg-crux-green" />
+                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-crux-green" />
                 {source}
               </li>
             ))}
@@ -150,5 +155,6 @@ export default function SevenChecks() {
         </div>
       </div>
     </section>
+    </MotionConfig>
   );
 }

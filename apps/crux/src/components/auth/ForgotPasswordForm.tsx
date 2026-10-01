@@ -4,6 +4,7 @@ import { useSignIn } from "@clerk/nextjs/legacy";
 import { useAuth } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Loader2, ArrowLeft } from "lucide-react";
 import FormInput from "@/components/auth/FormInput";
 import AuthErrorBanner from "@/components/auth/AuthErrorBanner";
@@ -14,6 +15,7 @@ type Screen = "request" | "reset";
 export default function ForgotPasswordForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useAuth();
+  const reduceMotion = useReducedMotion();
 
   const [screen, setScreen] = useState<Screen>("request");
   const [email, setEmail] = useState("");
@@ -34,7 +36,7 @@ export default function ForgotPasswordForm() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-crux-green" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--color-crux-green)]" />
       </div>
     );
   }
@@ -131,9 +133,9 @@ export default function ForgotPasswordForm() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+      transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
       className="w-full max-w-[400px] mx-auto"
     >
       {screen === "reset" && (
@@ -143,7 +145,7 @@ export default function ForgotPasswordForm() {
             setScreen("request");
             setBanner(null);
           }}
-          className="flex items-center gap-1 text-[13px] text-crux-text-secondary hover:text-crux-text-primary transition-colors mb-6"
+          className="flex items-center gap-1.5 min-h-11 -ml-1 px-1 text-[14px] text-[var(--color-crux-text-secondary)] hover:text-[var(--color-crux-text-primary)] transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -151,10 +153,10 @@ export default function ForgotPasswordForm() {
       )}
 
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-crux-text-primary tracking-tight">
+        <h1 className="text-[28px] md:text-[32px] font-bold leading-[1.1] tracking-[-0.03em] text-[var(--color-crux-text-primary)]">
           {screen === "request" ? "Reset your password" : "Enter your new password"}
         </h1>
-        <p className="text-[14px] text-crux-text-secondary mt-1.5">
+        <p className="text-[15px] leading-[1.55] text-[var(--color-crux-text-secondary)] mt-2.5 break-words">
           {screen === "request"
             ? "We'll email you a 6-digit code to reset it."
             : `Code sent to ${email}`}
@@ -183,7 +185,7 @@ export default function ForgotPasswordForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 rounded-full bg-crux-green text-white font-semibold text-[15px] hover:bg-crux-green-mid active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="btn-crux btn-crux--block min-h-12 text-[15px]"
           >
             {isSubmitting ? (
               <>
@@ -228,7 +230,7 @@ export default function ForgotPasswordForm() {
           <button
             type="submit"
             disabled={isSubmitting || code.length < 6}
-            className="w-full h-12 rounded-full bg-crux-green text-white font-semibold text-[15px] hover:bg-crux-green-mid active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="btn-crux btn-crux--block min-h-12 text-[15px]"
           >
             {isSubmitting ? (
               <>
@@ -242,11 +244,11 @@ export default function ForgotPasswordForm() {
         </form>
       )}
 
-      <p className="text-center text-[13px] text-crux-text-secondary mt-6">
+      <p className="text-center text-[14px] text-[var(--color-crux-text-secondary)] mt-6">
         Remembered it?{" "}
         <Link
           href="/signin"
-          className="text-crux-green hover:underline font-medium"
+          className="text-[var(--color-crux-green-dark)] font-medium underline-offset-4 hover:underline"
         >
           Back to sign in
         </Link>

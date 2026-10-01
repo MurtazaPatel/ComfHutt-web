@@ -56,7 +56,7 @@ function Shell({ children }: { children: React.ReactNode }) {
           </Link>
           <Link
             href="/signup"
-            className="inline-flex items-center gap-1.5 rounded-full bg-crux-green px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-crux-green-mid focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+            className="inline-flex items-center gap-1.5 rounded-full bg-crux-green px-4 py-2 text-sm font-semibold text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           >
             Grade a property free
             <ArrowRight size={14} aria-hidden />
@@ -89,7 +89,7 @@ function Message({ title, body }: { title: string; body: string }) {
         <p className="mx-auto mb-6 max-w-[42ch] text-sm text-crux-text-secondary">{body}</p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-crux-green-mid focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-semibold text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
         >
           Grade a property yourself
           <ArrowRight size={16} aria-hidden />
@@ -258,7 +258,7 @@ function Verdict({ card, expired }: { card: ShareCard; expired: boolean }) {
         </p>
         <Link
           href="/signup"
-          className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-crux-green-mid focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-5 py-2.5 text-sm font-semibold text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
         >
           Get started free
           <ArrowRight size={16} aria-hidden />

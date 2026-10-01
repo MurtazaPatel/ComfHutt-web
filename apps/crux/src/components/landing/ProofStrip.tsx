@@ -30,12 +30,12 @@ const COUNTERS: Array<{ value: number; label: string }> = [
 export default function ProofStrip() {
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-crux-border bg-crux-border shadow-[var(--shadow-premium-sm)] sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-card)] border border-crux-border bg-crux-border shadow-[var(--shadow-premium-md)] sm:grid-cols-4">
         {COUNTERS.map(({ value, label }) => (
-          <div key={label} className="flex flex-col gap-1 bg-white px-4 py-5 text-center">
+          <div key={label} className="flex flex-col gap-1.5 bg-white px-4 py-6 text-center">
             {/* Proportional figures, not tabular: these are four standalone display
                 numbers, not a column of values a reader compares digit by digit. */}
-            <dt className="text-[24px] font-extrabold leading-none tracking-tight text-crux-text-primary sm:text-[28px]">
+            <dt className="text-[26px] font-extrabold leading-none tracking-[-0.03em] text-crux-text-primary sm:text-[32px]">
               {formatCount(value)}
             </dt>
             <dd className="text-pretty text-[11px] leading-snug text-crux-text-secondary sm:text-[12px]">

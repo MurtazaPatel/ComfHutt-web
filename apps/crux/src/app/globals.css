@@ -36,11 +36,58 @@
   --font-heading: var(--font-inter);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
 
-  --shadow-premium-sm: 0 2px 8px -2px rgba(9, 9, 11, 0.05), 0 1px 2px -1px rgba(9, 9, 11, 0.02);
-  --shadow-premium-md: 0 4px 16px -4px rgba(9, 9, 11, 0.05), 0 2px 4px -2px rgba(9, 9, 11, 0.02);
-  --shadow-premium-lg: 0 12px 32px -4px rgba(9, 9, 11, 0.06), 0 4px 8px -2px rgba(9, 9, 11, 0.03);
-  --shadow-premium-glow: 0 0 0 1px rgba(16, 185, 129, 0.1), 0 4px 24px -4px rgba(16, 185, 129, 0.15);
+  /* Forest ink — the dark surface. Brand-owned, never neutral black. */
+  --color-crux-ink: #022C22;
+  --color-crux-ink-raised: #06392D;
+  --color-crux-ink-line: rgba(236, 253, 245, 0.12);
+  --color-crux-ink-text: #ECFDF5;
+  --color-crux-ink-muted: rgba(236, 253, 245, 0.64);
+  --color-crux-line: rgba(9, 9, 11, 0.08); /* survey hairline */
+
+  /* Radius hierarchy: control < card < panel */
+  --radius-control: 10px;
+  --radius-card: 14px;
+  --radius-panel: 20px;
+
+  --ease-crux: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Forest-tinted, layered: a contact shadow plus an ambient one. */
+  --shadow-premium-sm: 0 1px 1px rgba(2, 44, 34, 0.04), 0 2px 6px -2px rgba(2, 44, 34, 0.06);
+  --shadow-premium-md: 0 1px 1px rgba(2, 44, 34, 0.04), 0 8px 20px -8px rgba(2, 44, 34, 0.10);
+  --shadow-premium-lg: 0 1px 2px rgba(2, 44, 34, 0.05), 0 24px 48px -16px rgba(2, 44, 34, 0.16);
+  --shadow-premium-glow: 0 0 0 1px rgba(16, 185, 129, 0.28), 0 8px 28px -8px rgba(16, 185, 129, 0.35);
+}
+
+/* ── One green. The shared package ships #22C55E; CRUX is #10B981, and
+   forest-on-emerald (7.4:1) replaces white-on-emerald (2.5:1). ── */
+:root {
+  --background: #FAFAFA;
+  --foreground: #09090B;
+  --card-foreground: #09090B;
+  --popover-foreground: #09090B;
+  --primary: #10B981;
+  --primary-foreground: #022C22;
+  --secondary: #F4F4F5;
+  --secondary-foreground: #09090B;
+  --muted: #F4F4F5;
+  --muted-foreground: #52525B;
+  --accent: #ECFDF5;
+  --accent-foreground: #022C22;
+  --border: #E4E4E7;
+  --input: #E4E4E7;
+  --ring: #10B981;
+  --chart-1: #10B981;
+  --chart-2: #059669;
+  --chart-3: #047857;
+  --chart-4: #065F46;
+  --chart-5: #064E3B;
+  --sidebar-primary: #10B981;
+  --sidebar-primary-foreground: #022C22;
+  --sidebar-accent: #ECFDF5;
+  --sidebar-ring: #10B981;
+  --sidebar-border: #E4E4E7;
 }
 
 /* ── Base ── */
@@ -58,6 +105,242 @@
   a, button, input, [role="button"] {
     -webkit-tap-highlight-color: transparent;
   }
+  :where(a, button, [role="button"], summary):focus-visible {
+    outline: 2px solid var(--color-crux-green-mid);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--color-crux-green);
+    color: var(--color-crux-ink);
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ── CRUX system: type roles, surfaces, the survey frame ── */
+@layer components {
+  /* Type roles. Size and rhythm only — colour stays with the caller. */
+  .t-display {
+    font-size: clamp(2.75rem, 7.2vw, 5.5rem);
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+    font-weight: 700;
+  }
+  .t-h2 {
+    font-size: clamp(2rem, 4.4vw, 3.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+  }
+  .t-h3 {
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .t-lead {
+    font-size: clamp(1rem, 1.35vw, 1.1875rem);
+    line-height: 1.55;
+    text-wrap: balance;
+  }
+  .t-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  /* The brand's spoken voice — taglines, the founder quote. */
+  .t-voice {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .t-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .crux-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  /* Survey frame: two plot rails down the page gutter, a boundary line
+     across the top of the section, and a crosshair where they meet —
+     the way a cadastral sheet marks a parcel corner. */
+  .crux-frame {
+    position: relative;
+    isolation: isolate;
+    --frame-line: var(--color-crux-line);
+    --frame-mark: var(--color-crux-green-mid);
+  }
+  .crux-frame::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    width: min(1200px, 100% - 2rem);
+    transform: translateX(-50%);
+    border-inline: 1px solid var(--frame-line);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .crux-frame::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    /* 11px wider than the rails so each crosshair centres on its rail. */
+    width: calc(min(1200px, 100% - 2rem) + 11px);
+    height: 11px;
+    transform: translate(-50%, -5px);
+    pointer-events: none;
+    z-index: 1;
+    background:
+      linear-gradient(var(--frame-mark), var(--frame-mark)) left 0 top 5px / 11px 1px no-repeat,
+      linear-gradient(var(--frame-mark), var(--frame-mark)) left 5px top 0 / 1px 11px no-repeat,
+      linear-gradient(var(--frame-mark), var(--frame-mark)) right 0 top 5px / 11px 1px no-repeat,
+      linear-gradient(var(--frame-mark), var(--frame-mark)) right 5px top 0 / 1px 11px no-repeat,
+      linear-gradient(var(--frame-line), var(--frame-line)) left 0 top 5px / 100% 1px no-repeat;
+  }
+  .crux-frame--bare::after {
+    display: none;
+  }
+
+  /* Plot grid: a faint parcel lattice, faded out toward the edges. */
+  .crux-plot {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--color-crux-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-crux-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    background-position: center top;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 78%);
+  }
+
+  /* Surfaces */
+  .surface-card {
+    background: #fff;
+    border: 1px solid var(--color-crux-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-premium-sm);
+  }
+  .surface-panel {
+    background: #fff;
+    border: 1px solid var(--color-crux-border);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-premium-md);
+  }
+  .surface-lift {
+    transition: transform 0.35s var(--ease-crux), box-shadow 0.35s var(--ease-crux), border-color 0.35s var(--ease-crux);
+  }
+  @media (hover: hover) {
+    .surface-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-premium-md);
+      border-color: color-mix(in srgb, var(--color-crux-green) 40%, var(--color-crux-border));
+    }
+  }
+  /* Forest ink section: re-points the semantic colours so children
+     written against the tokens invert without per-element overrides. */
+  .surface-ink {
+    background: var(--color-crux-ink);
+    color: var(--color-crux-ink-text);
+    --foreground: var(--color-crux-ink-text);
+    --muted-foreground: var(--color-crux-ink-muted);
+    --border: var(--color-crux-ink-line);
+    --frame-line: var(--color-crux-ink-line);
+    --frame-mark: var(--color-crux-green);
+    --color-crux-line: var(--color-crux-ink-line);
+  }
+
+  /* Actions */
+  .btn-crux {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    border-radius: 999px;
+    background: var(--color-crux-green);
+    color: var(--color-crux-ink);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 2px rgba(2, 44, 34, 0.18);
+    transition: background-color 0.2s var(--ease-crux), box-shadow 0.3s var(--ease-crux), transform 0.2s var(--ease-crux);
+  }
+  .btn-crux:active {
+    transform: translateY(1px);
+  }
+  .btn-crux:disabled,
+  .btn-crux[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  @media (hover: hover) {
+    .btn-crux:not(:disabled):hover {
+      background: #34D399;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), var(--shadow-premium-glow);
+    }
+  }
+  .btn-crux--sm {
+    min-height: 2.25rem;
+    padding: 0 1rem;
+    font-size: 0.8125rem;
+  }
+  .btn-crux--block {
+    width: 100%;
+    border-radius: var(--radius-control);
+  }
+  .btn-crux--outline {
+    background: #fff;
+    color: var(--color-crux-green-dark);
+    box-shadow: inset 0 0 0 1px var(--color-crux-border), 0 1px 2px rgba(2, 44, 34, 0.05);
+  }
+  @media (hover: hover) {
+    .btn-crux--outline:not(:disabled):hover {
+      background: var(--color-crux-green-tint);
+      box-shadow: inset 0 0 0 1px var(--color-crux-green), 0 1px 2px rgba(2, 44, 34, 0.05);
+    }
+  }
+
+  .crux-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--color-crux-green) 28%, transparent);
+    background: var(--color-crux-green-tint);
+    color: var(--color-crux-green-dark);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .surface-ink .crux-chip {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #6EE7B7;
+  }
+
 }
 
 /* ── Section spacing ── */
@@ -88,6 +371,17 @@
   animation: fadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Rise without a fade: the element is painted from the first frame, so it
+   can be the LCP element without waiting for the animation. */
+@keyframes rise {
+  from { transform: translateY(18px); }
+  to   { transform: translateY(0); }
+}
+
+.anim-rise {
+  animation: rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* ── Bottom data strip scrollbar hide ── */
 .strip::-webkit-scrollbar {
   display: none;
@@ -95,7 +389,11 @@
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .anim {
+  html {
+    scroll-behavior: auto;
+  }
+  .anim,
+  .anim-rise {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

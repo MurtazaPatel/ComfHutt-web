@@ -56,7 +56,7 @@ export default function LensIndexPage() {
           </p>
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="inline-flex items-center gap-2 rounded-xl bg-crux-green px-4 py-2 text-sm font-medium text-crux-ink transition-colors hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Go to Dashboard
             <ArrowRight size={14} />

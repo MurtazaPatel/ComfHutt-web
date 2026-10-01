@@ -303,7 +303,7 @@ export default function DisputeForm() {
 
         <button
           type="submit"
-          className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-crux-green px-6 text-[15px] font-semibold text-white shadow-[var(--shadow-premium-md)] transition-colors duration-200 motion-reduce:transition-none hover:bg-crux-green-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 sm:w-auto sm:self-start"
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-crux-green px-6 text-[15px] font-semibold text-crux-ink shadow-[var(--shadow-premium-md)] transition-colors duration-200 motion-reduce:transition-none hover:bg-[#34D399] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 sm:w-auto sm:self-start"
         >
           Open this in an email
         </button>

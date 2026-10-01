@@ -4,6 +4,7 @@ import { useSignUp } from "@clerk/nextjs/legacy";
 import { useAuth } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Loader2, ArrowLeft } from "lucide-react";
 import FormInput from "@/components/auth/FormInput";
 import SocialAuth from "@/components/auth/SocialAuth";
@@ -16,6 +17,7 @@ type Screen = "form" | "verify-email";
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const { isSignedIn } = useAuth();
+  const reduceMotion = useReducedMotion();
 
   const [screen, setScreen] = useState<Screen>("form");
   const [name, setName] = useState("");
@@ -100,7 +102,7 @@ export default function SignUpForm() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-crux-green" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--color-crux-green)]" />
       </div>
     );
   }
@@ -221,27 +223,27 @@ export default function SignUpForm() {
   if (screen === "verify-email") {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-[400px] mx-auto"
       >
         <button
           type="button"
           onClick={() => setScreen("form")}
-          className="flex items-center gap-1 text-[13px] text-crux-text-secondary hover:text-crux-text-primary transition-colors mb-6"
+          className="flex items-center gap-1.5 min-h-11 -ml-1 px-1 text-[14px] text-[var(--color-crux-text-secondary)] hover:text-[var(--color-crux-text-primary)] transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
         </button>
 
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-crux-text-primary tracking-tight">
+          <h1 className="text-[28px] md:text-[32px] font-bold leading-[1.1] tracking-[-0.03em] text-[var(--color-crux-text-primary)]">
             Check your email
           </h1>
-          <p className="text-[14px] text-crux-text-secondary mt-1.5">
+          <p className="text-[15px] leading-[1.55] text-[var(--color-crux-text-secondary)] mt-2.5 break-words">
             We sent a 6-digit verification code to{" "}
-            <span className="font-medium text-crux-text-primary">{email}</span>
+            <span className="font-medium text-[var(--color-crux-text-primary)]">{email}</span>
           </p>
         </div>
 
@@ -270,7 +272,7 @@ export default function SignUpForm() {
           <button
             type="submit"
             disabled={isSubmitting || code.length < 6}
-            className="w-full h-12 rounded-full bg-crux-green text-white font-semibold text-[15px] hover:bg-crux-green-mid active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="btn-crux btn-crux--block min-h-12 text-[15px]"
           >
             {isSubmitting ? (
               <>
@@ -286,7 +288,7 @@ export default function SignUpForm() {
         <button
           type="button"
           onClick={handleResendCode}
-          className="w-full mt-4 text-[13px] text-crux-text-secondary hover:text-crux-green transition-colors text-center"
+          className="w-full mt-3 min-h-11 text-[14px] text-[var(--color-crux-text-secondary)] hover:text-[var(--color-crux-green-dark)] transition-colors text-center"
         >
           Didn&apos;t receive a code? Resend
         </button>
@@ -296,16 +298,16 @@ export default function SignUpForm() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+      transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
       className="w-full max-w-[400px] mx-auto"
     >
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-crux-text-primary tracking-tight">
+        <h1 className="text-[28px] md:text-[32px] font-bold leading-[1.1] tracking-[-0.03em] text-[var(--color-crux-text-primary)]">
           Create your account
         </h1>
-        <p className="text-[14px] text-crux-text-secondary mt-1.5">
+        <p className="text-[15px] leading-[1.55] text-[var(--color-crux-text-secondary)] mt-2.5 break-words">
           Unlimited grades, free — no card, no builder pays for a rating
         </p>
       </div>
@@ -357,7 +359,7 @@ export default function SignUpForm() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="flex-1 h-[2px] rounded-full transition-colors duration-200"
+                  className="flex-1 h-[3px] rounded-full transition-colors duration-200"
                   style={{
                     background:
                       i <= passwordStrength ? "var(--color-crux-green)" : "var(--color-crux-border)",
@@ -375,7 +377,7 @@ export default function SignUpForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 rounded-full bg-crux-green text-white font-semibold text-[15px] hover:bg-crux-green-mid active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="btn-crux btn-crux--block min-h-12 text-[15px]"
         >
           {isSubmitting ? (
             <>
@@ -392,11 +394,11 @@ export default function SignUpForm() {
 
       <SocialAuth />
 
-      <p className="text-center text-[13px] text-crux-text-secondary mt-6">
+      <p className="text-center text-[14px] text-[var(--color-crux-text-secondary)] mt-6">
         Already have an account?{" "}
         <Link
           href="/signin"
-          className="text-crux-green hover:underline font-medium"
+          className="text-[var(--color-crux-green-dark)] font-medium underline-offset-4 hover:underline"
         >
           Sign in
         </Link>

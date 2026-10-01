@@ -33,15 +33,13 @@ export default function FormInput({
   const isPassword = type === "password";
 
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-2">
       {label && (
         <label
           htmlFor={id}
           className={cn(
-            "text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors duration-200",
-            error
-              ? "text-red-500"
-              : "text-crux-text-secondary peer-focus:text-crux-green",
+            "t-eyebrow",
+            error ? "text-[#DC2626]" : "text-[var(--color-crux-text-secondary)]",
           )}
         >
           {label}
@@ -54,12 +52,13 @@ export default function FormInput({
           type={isPassword && showPassword ? "text" : type}
           disabled={disabled}
           className={cn(
-            "peer h-12 w-full rounded-xl bg-crux-bg-secondary px-4 text-[15px] text-crux-text-primary outline-none transition-all duration-200",
-            "placeholder:text-crux-text-muted",
+            "peer min-h-12 w-full rounded-[var(--radius-control)] bg-white px-4 text-base text-[var(--color-crux-text-primary)] outline-none",
+            "transition-[border-color,box-shadow] duration-200 ease-[var(--ease-crux)]",
+            "placeholder:text-[var(--color-crux-text-muted)]",
             "border",
             error
-              ? "border-red-300 ring-1 ring-red-200"
-              : "border-crux-border hover:border-crux-text-muted focus:border-crux-green focus:ring-1 focus:ring-crux-green/20",
+              ? "border-[#DC2626] focus:shadow-[0_0_0_4px_rgba(220,38,38,0.14)]"
+              : "border-[var(--color-crux-border)] hover:border-[var(--color-crux-text-muted)] focus:border-[var(--color-crux-green)] focus:shadow-[0_0_0_4px_rgba(16,185,129,0.16)]",
             icon === "none" ? "" : "pl-11",
             isPassword ? "pr-12" : "",
             disabled && "cursor-not-allowed opacity-50",
@@ -73,7 +72,9 @@ export default function FormInput({
           <Icon
             className={cn(
               "absolute left-4 w-4 h-4 pointer-events-none transition-colors duration-200",
-              error ? "text-red-400" : "text-crux-text-muted",
+              error
+                ? "text-[#DC2626]"
+                : "text-[var(--color-crux-text-muted)] peer-focus:text-[var(--color-crux-green-dark)]",
             )}
           />
         )}
@@ -83,7 +84,7 @@ export default function FormInput({
             type="button"
             tabIndex={-1}
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 text-crux-text-muted hover:text-crux-text-primary transition-colors"
+            className="absolute right-0.5 flex h-11 w-11 items-center justify-center text-[var(--color-crux-text-muted)] hover:text-[var(--color-crux-text-primary)] transition-colors"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
@@ -97,10 +98,10 @@ export default function FormInput({
 
       {error && (
         <p
-          className="flex items-center gap-1 text-[11px] text-red-500 mt-1"
+          className="flex items-center gap-1.5 text-[12px] text-[#DC2626]"
           role="alert"
         >
-          <AlertCircle className="w-3 h-3 flex-shrink-0" />
+          <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
           {error}
         </p>
       )}

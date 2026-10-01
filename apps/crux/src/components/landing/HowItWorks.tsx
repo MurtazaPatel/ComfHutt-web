@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 
 /**
  * Three steps, down from four.
@@ -29,46 +29,49 @@ const STEPS: Array<{ title: string; body: string }> = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-white px-4 py-20 md:py-28">
-      <div className="mx-auto max-w-[1100px]">
+    <MotionConfig reducedMotion="user">
+    <section id="how-it-works" className="crux-frame bg-white py-24 md:py-36">
+      <div className="crux-container">
         <motion.h2
-          className="text-balance text-center text-[28px] font-bold leading-tight tracking-[-0.02em] text-crux-text-primary md:text-[40px]"
+          className="t-h2 text-center text-crux-text-primary"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           How it works
         </motion.h2>
 
-        <ol className="mx-auto mt-12 grid max-w-5xl gap-4 md:grid-cols-3">
+        {/* One bordered block split by hairlines, not three floating cards: the
+            steps are a single process and should read as one object. */}
+        <motion.ol
+          className="mx-auto mt-14 grid max-w-5xl gap-px overflow-hidden rounded-[var(--radius-panel)] border border-crux-border bg-crux-border shadow-[var(--shadow-premium-md)] md:mt-16 md:grid-cols-3"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VP}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+        >
           {STEPS.map(({ title, body }, i) => (
-            <motion.li
-              key={title}
-              className="flex flex-col rounded-2xl border border-crux-border bg-crux-bg-primary p-6"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VP}
-              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 }}
-            >
+            <li key={title} className="flex flex-col bg-white p-7 md:p-9">
               {/* The number is decorative: the <ol> already conveys the order to a
                   screen reader, so repeating it aloud would just be noise. */}
               <span
                 aria-hidden
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-crux-green-tint text-[14px] font-bold text-crux-green-dark"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-crux-green-tint font-mono text-[14px] font-semibold text-crux-green-dark ring-1 ring-crux-green/25"
               >
                 {i + 1}
               </span>
-              <h3 className="mt-4 text-pretty text-[17px] font-bold tracking-tight text-crux-text-primary">
+              <h3 className="t-h3 mt-6 text-pretty text-crux-text-primary">
                 {title}
               </h3>
-              <p className="mt-2 text-pretty text-[14px] leading-relaxed text-crux-text-secondary">
+              <p className="mt-3 text-pretty text-[15px] leading-relaxed text-crux-text-secondary">
                 {body}
               </p>
-            </motion.li>
+            </li>
           ))}
-        </ol>
+        </motion.ol>
       </div>
     </section>
+    </MotionConfig>
   );
 }
