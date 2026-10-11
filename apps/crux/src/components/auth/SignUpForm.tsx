@@ -9,6 +9,7 @@ import { Loader2, ArrowLeft } from "lucide-react";
 import FormInput from "@/components/auth/FormInput";
 import SocialAuth from "@/components/auth/SocialAuth";
 import AuthDivider from "@/components/auth/AuthDivider";
+import { GOOGLE_SIGN_IN_ENABLED } from "@/config/auth";
 import AuthErrorBanner from "@/components/auth/AuthErrorBanner";
 import Link from "next/link";
 
@@ -91,10 +92,10 @@ export default function SignUpForm() {
       message: pending.length
         ? `Almost there — your account still needs: ${pending.join(
             ", "
-          )}. Try “Continue with Google”, or contact support.`
+          )}. ${GOOGLE_SIGN_IN_ENABLED ? "Try “Continue with Google”, or contact support." : "Please contact support."}`
         : `We couldn't finish creating your account (status: ${
             current.status ?? "unknown"
-          }). Please try again or use “Continue with Google”.`,
+          }). Please try again${GOOGLE_SIGN_IN_ENABLED ? " or use “Continue with Google”" : ""}.`,
       variant: "error",
     });
   };
@@ -390,9 +391,13 @@ export default function SignUpForm() {
         </button>
       </form>
 
-      <AuthDivider />
-
-      <SocialAuth />
+      {/* Google sign-in is off by default — see config/auth.ts (D7). */}
+      {GOOGLE_SIGN_IN_ENABLED && (
+        <>
+          <AuthDivider />
+          <SocialAuth />
+        </>
+      )}
 
       <p className="text-center text-[14px] text-[var(--color-crux-text-secondary)] mt-6">
         Already have an account?{" "}
