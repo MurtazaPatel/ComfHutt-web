@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Share2, Loader2, RefreshCw, AlertCircle, AlertTriangle, Check } from "lucide-react";
 import { usePropertyScore } from "@/hooks/usePropertyScore";
 import { useApiFetch } from "@/lib/api";
-import { formatDateLong, formatRelative } from "@/lib/format";
+import { formatRelative, gradeDateLine } from "@/lib/format";
 import { isUngraded } from "@/lib/grade";
 import { ScoreGauge } from "@/components/dashboard/ScoreGauge";
 import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
@@ -253,7 +253,7 @@ export default function PropertyDetailPage() {
             {locationLine && <span className="block">{locationLine}</span>}
             <span className="block">
               {score?.created_at
-                ? `Scored ${formatDateLong(score.created_at)} · Intent: ${score.intent_profile || "Balanced"}`
+                ? `${gradeDateLine(score.created_at, score.freshness)} · Intent: ${score.intent_profile || "Balanced"}`
                 : "Score pending"}
             </span>
             {/* A cached grade was computed earlier, not just now. Say which. */}

@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import FormInput from "@/components/auth/FormInput";
 import SocialAuth from "@/components/auth/SocialAuth";
 import AuthDivider from "@/components/auth/AuthDivider";
+import { GOOGLE_SIGN_IN_ENABLED } from "@/config/auth";
 import AuthErrorBanner from "@/components/auth/AuthErrorBanner";
 import Link from "next/link";
 
@@ -66,7 +67,9 @@ export default function SignInForm() {
       } else {
         setBanner({
           message:
-            "This account may need email verification. Check your inbox or use Google sign-in.",
+            GOOGLE_SIGN_IN_ENABLED
+              ? "This account may need email verification. Check your inbox or use Google sign-in."
+              : "This account may need email verification. Check your inbox.",
           variant: "error",
         });
       }
@@ -159,9 +162,14 @@ export default function SignInForm() {
         </button>
       </form>
 
-      <AuthDivider />
-
-      <SocialAuth />
+      {/* Google sign-in is off by default — see config/auth.ts (D7). The divider goes
+          with it: an "or" with nothing under it reads as a broken page. */}
+      {GOOGLE_SIGN_IN_ENABLED && (
+        <>
+          <AuthDivider />
+          <SocialAuth />
+        </>
+      )}
 
       <p className="text-center text-[14px] text-[var(--color-crux-text-secondary)] mt-6">
         Don&apos;t have an account?{" "}

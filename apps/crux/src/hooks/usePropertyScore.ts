@@ -128,6 +128,10 @@ export interface CruxScore {
   fromCache?: boolean;
   cachedAt?: string | null;
   shareToken?: string | null;
+
+  /** Set by the backend on every served grade. "stale" = past its 24h TTL and
+   *  refreshing in the background; rendered via lib/format.gradeDateLine. */
+  freshness?: "fresh" | "stale";
 }
 
 
