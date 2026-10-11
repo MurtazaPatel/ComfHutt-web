@@ -8,7 +8,7 @@ import { track } from "@vercel/analytics";
 import { useAuth } from "@clerk/nextjs";
 import { usePropertyScore } from "@/hooks/usePropertyScore";
 import { apiFetch } from "@/lib/api";
-import { formatDateLong } from "@/lib/format";
+import { gradeDateLine } from "@/lib/format";
 import { ScoreGauge } from "@/components/dashboard/ScoreGauge";
 import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
 import { CgmGradeSurface } from "@/components/dashboard/CgmGradeSurface";
@@ -249,7 +249,7 @@ export default function AnonymousScorePage() {
           </h1>
           {locationLine && <p className="mb-1 text-[13px] text-crux-text-muted">{locationLine}</p>}
           <p className="text-[13px] text-crux-text-secondary">
-            {score.created_at ? `Scored ${formatDateLong(score.created_at)}` : "Score pending"}
+            {gradeDateLine(score.created_at, score.freshness)}
           </p>
         </Surface>
 
