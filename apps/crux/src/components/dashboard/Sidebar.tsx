@@ -73,7 +73,7 @@ export function Sidebar() {
           */}
           <Link
             href="/dashboard"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-crux-green-mid to-crux-green-dark text-white shadow-sm transition-shadow duration-150 hover:shadow-[var(--shadow-premium-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-crux-green-mid to-crux-green-dark text-white shadow-[var(--shadow-premium-sm)] transition-shadow duration-150 hover:shadow-[var(--shadow-premium-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crux-green focus-visible:ring-offset-2 motion-reduce:transition-none"
             aria-label="CRUX dashboard home"
           >
             <ComfHuttMark className="w-[19px]" />

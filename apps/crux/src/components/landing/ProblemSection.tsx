@@ -1,6 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, MotionConfig } from "framer-motion";
+import CountUp from "@/components/motion/CountUp";
+import DotMatrix from "@/components/motion/DotMatrix";
+import { useSpotlight } from "@/hooks/useSpotlight";
 import {
   BUILDERS_WITH_CASE_PCT,
   CITED_CORPUS,
@@ -31,82 +35,122 @@ import {
 
 const VP = { once: true, margin: "-100px" } as const;
 
-const CARDS: Array<{ value: string; body: string; emphasis: boolean }> = [
+const CARDS: Array<{ value: string; pct: number; body: string; emphasis: boolean }> = [
   {
     value: `${BUILDERS_WITH_CASE_PCT}%`,
+    pct: BUILDERS_WITH_CASE_PCT,
     body: "of the Ahmedabad builders in our corpus have at least one court case matched to them.",
     emphasis: false,
   },
   {
     value: `${UNATTRIBUTED_CASE_PCT}%`,
+    pct: UNATTRIBUTED_CASE_PCT,
     body: "of court records carrying a builder's name cannot be tied to that builder confidently enough to count. We list them as possible and keep them out of the grade.",
     emphasis: true,
   },
 ];
 
 export default function ProblemSection() {
+  // Flips once, when the cards arrive: it starts the dot fields.
+  const [seen, setSeen] = useState(false);
+  const spotlight = useSpotlight<HTMLDivElement>();
+
   return (
-    <section id="the-problem" className="bg-crux-bg-secondary px-4 py-20 md:py-28">
-      <div className="mx-auto max-w-[1100px]">
+    <MotionConfig reducedMotion="user">
+    {/* Forest ink: the one dark section on the page, spent on the one thing a
+        reader has to leave with. */}
+    <section id="the-problem" className="crux-frame surface-ink relative overflow-x-clip py-24 md:py-36">
+      <div aria-hidden className="crux-plot opacity-60" />
+      <div className="crux-container relative">
         <motion.h2
-          className="mx-auto max-w-[24ch] text-balance text-center text-[28px] font-bold leading-tight tracking-[-0.02em] text-crux-text-primary md:text-[40px]"
+          className="t-h2 mx-auto max-w-[20ch] text-center text-crux-ink-text"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           Before you pay ₹50 lakh, there is no way to check the builder.
         </motion.h2>
 
-        <div className="mx-auto mt-12 grid max-w-3xl gap-4 md:grid-cols-2">
-          {CARDS.map(({ value, body, emphasis }, i) => (
+        <motion.div
+          className="mx-auto mt-14 grid max-w-4xl gap-4 md:mt-16 md:grid-cols-2 md:gap-5"
+          data-inview={seen}
+          onViewportEnter={() => setSeen(true)}
+          viewport={{ once: true, margin: "-120px" }}
+        >
+          {CARDS.map(({ value, pct, body, emphasis }, i) => (
             <motion.div
               key={value}
+              {...spotlight}
               className={[
-                "flex flex-col rounded-2xl p-6",
+                "crux-spotlight flex flex-col overflow-hidden rounded-[var(--radius-panel)] p-7 md:p-9",
+                emphasis ? "crux-spotlight--light" : "",
+                // The emphasis card is the only light surface in the section, so
+                // the eye lands on it first without it needing to be larger.
                 emphasis
-                  ? "border-2 border-crux-green bg-crux-bg-accent"
-                  : "border border-crux-border bg-white",
+                  ? "bg-crux-bg-accent shadow-[var(--shadow-premium-lg)] ring-1 ring-crux-green"
+                  : "border border-crux-ink-line bg-crux-ink-raised",
               ].join(" ")}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VP}
-              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: i * 0.08 }}
             >
               <p
                 className={[
-                  "text-[44px] font-extrabold leading-none tracking-tight md:text-[56px]",
-                  emphasis ? "text-crux-green-dark" : "text-crux-text-primary",
+                  "text-[56px] font-extrabold leading-none tracking-[-0.045em] md:text-[84px]",
+                  emphasis ? "text-crux-green-dark" : "text-crux-ink-text",
                 ].join(" ")}
               >
-                {value}
+                {/* Same figure as `value`; it counts up once on arrival. */}
+                <CountUp value={pct} suffix="%" />
               </p>
-              <p className="mt-3 text-pretty text-[14px] leading-relaxed text-crux-text-secondary">
+              {/* The percentage as a picture: a hundred marks, `pct` of them
+                  different. On the emphasis card the marked ones are hollow —
+                  records that carry the name but cannot be counted. */}
+              <div className="mt-6">
+                <DotMatrix
+                  count={pct}
+                  mode={emphasis ? "void" : "fill"}
+                  markedClass={
+                    emphasis
+                      ? "border-[1.5px] border-crux-green-dark/70"
+                      : "bg-crux-green"
+                  }
+                  restClass={emphasis ? "bg-crux-green-dark" : "bg-crux-ink-text/15"}
+                />
+              </div>
+              <p
+                className={[
+                  "mt-6 text-pretty text-[15px] leading-relaxed md:text-[16px]",
+                  emphasis ? "text-crux-green-deep" : "text-crux-ink-muted",
+                ].join(" ")}
+              >
                 {body}
               </p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <motion.p
-          className="mx-auto mt-10 max-w-[58ch] text-pretty text-center text-[16px] leading-[1.7] text-crux-text-secondary md:text-[17px]"
+          className="t-voice mx-auto mt-14 max-w-[40ch] text-balance text-center text-[24px] leading-[1.3] text-crux-ink-text md:mt-16 md:text-[32px]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
         >
           RERA tells you a project is registered. It does not tell you it is safe. The
           filings that hold the answer are a dozen PDFs nobody reads.
         </motion.p>
 
-        {/* text-secondary, not text-muted: this caption sits on bg-secondary,
-            where #6B7280 measures 4.39:1 — just under AA. */}
-        <p className="mt-5 text-center text-[11px] leading-relaxed text-crux-text-secondary">
+        {/* ink-muted on forest ink measures about 6.7:1. */}
+        <p className="mx-auto mt-8 max-w-[70ch] text-center font-mono text-[11px] leading-relaxed text-crux-ink-muted">
           {CITED_CORPUS.source}: {formatCount(CITED_CORPUS.buildersProfiled)} Ahmedabad
           builders and {formatCount(CITED_CORPUS.casesPulled)} court records, measured{" "}
           {CITED_CORPUS.asOfLabel}.
         </p>
       </div>
     </section>
+    </MotionConfig>
   );
 }

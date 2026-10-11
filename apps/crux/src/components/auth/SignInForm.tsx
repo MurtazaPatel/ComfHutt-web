@@ -4,6 +4,7 @@ import { useSignIn } from "@clerk/nextjs/legacy";
 import { useAuth } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Loader2 } from "lucide-react";
 import FormInput from "@/components/auth/FormInput";
 import SocialAuth from "@/components/auth/SocialAuth";
@@ -14,6 +15,7 @@ import Link from "next/link";
 export default function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useAuth();
+  const reduceMotion = useReducedMotion();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +34,7 @@ export default function SignInForm() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-crux-green" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--color-crux-green)]" />
       </div>
     );
   }
@@ -81,16 +83,16 @@ export default function SignInForm() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+      transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
       className="w-full max-w-[400px] mx-auto"
     >
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-crux-text-primary tracking-tight">
+        <h1 className="text-[28px] md:text-[32px] font-bold leading-[1.1] tracking-[-0.03em] text-[var(--color-crux-text-primary)]">
           Welcome back
         </h1>
-        <p className="text-[14px] text-crux-text-secondary mt-1.5">
+        <p className="text-[15px] leading-[1.55] text-[var(--color-crux-text-secondary)] mt-2.5 break-words">
           Sign in to your CRUX account
         </p>
       </div>
@@ -109,17 +111,17 @@ export default function SignInForm() {
           autoFocus
         />
 
-        <div className="space-y-1.5">
+        <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <label
               htmlFor="password"
-              className="text-[11px] font-semibold uppercase tracking-[0.12em] text-crux-text-secondary"
+              className="t-eyebrow text-[var(--color-crux-text-secondary)]"
             >
               Password
             </label>
             <Link
               href="/forgot-password"
-              className="text-[11px] text-crux-text-muted hover:text-crux-text-primary transition-colors"
+              className="-my-3 py-3 text-[12px] font-medium text-[var(--color-crux-green-dark)] underline-offset-4 hover:underline"
             >
               Forgot?
             </Link>
@@ -144,7 +146,7 @@ export default function SignInForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 rounded-full bg-crux-green text-white font-semibold text-[15px] hover:bg-crux-green-mid active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="btn-crux btn-crux--block min-h-12 text-[15px]"
         >
           {isSubmitting ? (
             <>
@@ -161,11 +163,11 @@ export default function SignInForm() {
 
       <SocialAuth />
 
-      <p className="text-center text-[13px] text-crux-text-secondary mt-6">
+      <p className="text-center text-[14px] text-[var(--color-crux-text-secondary)] mt-6">
         Don&apos;t have an account?{" "}
         <Link
           href="/signup"
-          className="text-crux-green hover:underline font-medium"
+          className="text-[var(--color-crux-green-dark)] font-medium underline-offset-4 hover:underline"
         >
           Sign up
         </Link>

@@ -1,0 +1,9 @@
+{
+  "_comment": "Known design-system debt in apps/crux, counted by scripts/design-system-guard.mjs. A count may be lowered, in the same commit that removes the debt. It may never be raised.",
+  "ratchet": {
+    "raw-hex": 0,
+    "tailwind-palette": 0,
+    "transition-all": 0,
+    "default-shadow": 0
+  }
+}
