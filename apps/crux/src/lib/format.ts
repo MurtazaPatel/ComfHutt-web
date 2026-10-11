@@ -44,6 +44,24 @@ export function formatRelative(value: string | number | Date): string {
   return formatDate(d);
 }
 
+/**
+ * The date line under a grade.
+ *
+ * A grade can be served after its 24-hour freshness window while the backend
+ * refreshes it behind the reader (`freshness: "stale"` on the score). Since the
+ * Google Cloud suspension that refresh can stay pending for weeks, so a stale
+ * grade must say both when it was graded and that it is not current — never
+ * read as if it had just been computed. Fresh grades keep the existing wording.
+ */
+export function gradeDateLine(
+  createdAt: string | null | undefined,
+  freshness?: "fresh" | "stale",
+): string {
+  if (!createdAt) return "Score pending";
+  if (freshness === "stale") return `Graded on ${formatDateLong(createdAt)} · refresh pending`;
+  return `Scored ${formatDateLong(createdAt)}`;
+}
+
 function toDate(value: string | number | Date): Date | null {
   const d = value instanceof Date ? value : new Date(value);
   return Number.isNaN(d.getTime()) ? null : d;
