@@ -25,3 +25,17 @@ Context: GCP project `comfhutt-backend` suspended 2026-09-21; see `GCP_DEPENDENC
 - **D7 — Clerk Google sign-in: REMOVE the "Continue with Google" button now** (`SocialAuth.tsx`), behind a flag defaulting to off; email-code sign-in only. The OAuth client was in the suspended project and is dead. Revisit after the appeal.
 - **D8 — Do NOT show the 13 older-methodology grades.** The methodology-hash rule in `cachePolicy.ts` stays as is.
 - **D9 — "≤ 1 req/s" means COMBINED across all target sites** (GujRERA + RERA Tribunal + IBBI + anything else the crawler touches), across live and batch.
+
+---
+
+## Founder decisions — 2026-10-12
+
+**Decided by:** Murtaza (founder). **Recorded by:** Claude Opus 5.5 (`claude-opus-5-5`). Binding until superseded.
+
+- **D10 — Overpass User-Agent exception APPROVED.** Overpass (mod_security returns 406 on any UA containing "(") uses exactly `CRUX-DataMiner/1.0 https://crux.comfhutt.com murtaza@comfhutt.com` — no parentheses — and stays under the combined limiter.
+- **D11 — Firecrawl is our crawler.** Self-hosted VM only: the cloud Firecrawl tier-2 path is disabled/removed. The self-hosted instance sends the honest UA `CRUXBot/1.0 (+https://comfhutt.com; murtaza@comfhutt.com)`, respects robots.txt, and fetches at **≤ 1 req/s PER DOMAIN** with its own budget. **Amends D9:** the combined 1.0 req/s cap covers government/public-records sites (GujRERA, RERA Tribunal, IBBI, eCourts, Overpass); private websites get the per-domain budget instead.
+- **D12 — D2 freeze lifted for TWO safety fixes only:** remove the `ECOURTS_AUTOMATED_CAPTCHA_ENABLED` env override (hard-off in code), and replace the eCourts session Chrome UA with the CRUXBot UA. No other legal changes; D2 otherwise stands.
+- **D13 — `api.crux.comfhutt.com`:** ask first, then fix the managed-certificate binding and verify HTTPS. Do not switch the frontend to it yet; report readiness.
+- **D14 — Azurite via `npx azurite` approved** — temporary, not a project dependency — for the M3 Blob integration test.
+- **D15 — Push every `migration/azure` branch to origin** (never `main`).
+- **Monitoring:** add an Azure Monitor alert, emailing murtaza@comfhutt.com, when the `firecrawl-vm` start runbook fails or the VM is not running by 09:30 IST.
