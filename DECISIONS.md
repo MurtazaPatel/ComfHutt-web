@@ -39,3 +39,18 @@ Context: GCP project `comfhutt-backend` suspended 2026-09-21; see `GCP_DEPENDENC
 - **D14 — Azurite via `npx azurite` approved** — temporary, not a project dependency — for the M3 Blob integration test.
 - **D15 — Push every `migration/azure` branch to origin** (never `main`).
 - **Monitoring:** add an Azure Monitor alert, emailing murtaza@comfhutt.com, when the `firecrawl-vm` start runbook fails or the VM is not running by 09:30 IST.
+
+---
+
+## Founder decisions — 2026-10-13
+
+**Decided by:** Murtaza (founder). **Recorded by:** Claude Opus 5.5 (`claude-opus-5-5`). Binding until superseded.
+
+- **D16 — VM security, before any deploy.** `firecrawl-vm` NSG admits only crux-env's outbound IP(s) and the founder's current public IP; everything else denied; SSH only from the founder's IP. SearXNG and every other VM service bind to localhost/internal — only the Firecrawl API port is reachable, and only from crux-env. Firecrawl's default UA = the CRUXBot string. Verify blocked from outside and working from crux-env; report before/after rules.
+- **D17 — Deploy miner + agents: GO.** Do every step possible without the founder (prereqs Bicep, Key Vault keys, federated credentials, GitHub secrets via `gh` if available); ask only for steps that need the founder's hands. Miner and agents stay INTERNAL ingress. After both pass `/health` from inside crux-env, ask, then point crux-backend's `CRUX_AGENTS_API_URL` / `CRUX_DATA_MINER_URL` at their internal URLs. Service-to-service calls never use the public domain.
+- **D18 — Bake-off: APPROVED** the 16 GujRERA metadata requests (8 projects × 2), off-peak 22:00–07:00 IST, ≤ 1 req/s, CRUXBot UA, no other sites. APPROVED: create the Azure resources the D22 candidates need (Document Intelligence, Mistral OCR, Azure OpenAI/Foundry deployments), Central India if available else nearest region (report which). APPROVED dependency: `pypdfium2` (not PyMuPDF/AGPL). Then ask with the 30-document list before fetching PDFs.
+- **D19 — `api.comfhutt.com` is the canonical PUBLIC API domain** (replaces `api.crux.comfhutt.com`): check CAA; give the Cloudflare records and ask; bind with a managed cert and verify HTTPS + `/health` + CORS from crux.comfhutt.com; ask, then switch the Vercel env vars in use to `https://api.comfhutt.com`, redeploy, verify sign-in, stale grade, 503 path; ask, then update the Clerk webhook (API if possible); remove the old `api.crux.comfhutt.com` binding + cert and give the Cloudflare records to delete. The raw `*.azurecontainerapps.io` address keeps working as a fallback.
+- **D20 — Remove `sqlalchemy`, `psycopg2-binary`, `pydantic-settings` from crux-agents: APPROVED.**
+- **D21 — Wire the Kimi disposal reader into the eCourts runner behind a flag, default ON: APPROVED** (restores existing behaviour; D2 otherwise unchanged). If D22 picks a different model for this task, use that.
+- **D22 — Best Azure model PER TASK.** Survey what is deployable in our subscription/region; criteria in order: accuracy > reliability (structured output, tool calling) > latency > cost. Must be Azure-billed and consume startup credits (no Marketplace-billed models unless credits are confirmed to cover them); prefer Entra auth; pin model + version per deployment and store it with every output; temperature 0 where possible. (a) PDF/image transcription — bake-off decides, flagship vision models included. (b) disposal word, (c) `generate()` primary, (d) `generate()` reasoning, (e) report narrative, (f) Lens tool calling + streaming — comparison table and ask before switching any live chain. Kimi/DeepSeek stay as fallbacks where useful. Estimate daily/monthly spend per service against §3a and the $5K balance.
+- **D23 — No test in any repo may load a real `.env`.**
