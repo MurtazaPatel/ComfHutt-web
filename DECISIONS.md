@@ -67,3 +67,10 @@ Context: GCP project `comfhutt-backend` suspended 2026-09-21; see `GCP_DEPENDENC
 - **D27 — Azure Maps account (Gen2, managed-identity auth, no shared keys): APPROVED.** Wire M5 as the INTERIM provider: geocode (backend TS) and nearby/distance (agents, Module X). Run the plan's 20-address check against Azure Maps only (≤ ~100 calls); report accuracy vs GujRERA coordinates. Mappls/Ola bake-off deferred to after launch.
 - **D28 — After D24–D27: M10 backend cutover** (remove run.app fallbacks, fail closed on unset URLs, Gemini out of `llm.ts`, report → `generate()`, Lens endpoint returns an honest 503 "Lens is being rebuilt"); deploy via PR to main with a rollback note. **[ASK] before merging to main.**
 - **Target:** M12 end-to-end (a NEW Ahmedabad property gets a real grade) by **2026-10-20**.
+
+## Founder decisions — 2026-10-17
+
+**Decided by:** Murtaza (founder). **Recorded by:** Claude Opus 5.5 (`claude-opus-5-5`). Binding until superseded.
+
+- **D29 — Vision bake-off: GO, lean run.** Fetch the 30 listed GujRERA documents (12 financial incl. 3 JPEG-scanned statements of GJ_3536, 10 legal, 8 Forms 1/2/8; `bakeoff/fetch_list.json`) off-peak 22:00–07:00 IST, ≤ 1 req/s, CRUXBot UA, stored locally only. Each reader (Document Intelligence, Mistral Document AI 2512, `gpt-6.1-sol`, `gpt-6-luna`) runs once on all 30, plus 3 runs on 10 documents for determinism; EST ~$5–7. Ground truth: values hand-keyed from the page images, 5 spot-checked by the founder.
+- **D30 — `projectdoc` gap: fix AFTER the bake-off.** The miner reads only `findoc`, so title, encumbrance, commencement, NOC, ITR and director-report documents were never processed. One-line change in `orchestrator.py` + a test on `migration/azure`, deployed together with the winning document reader.
