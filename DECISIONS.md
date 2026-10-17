@@ -74,3 +74,16 @@ Context: GCP project `comfhutt-backend` suspended 2026-09-21; see `GCP_DEPENDENC
 
 - **D29 — Vision bake-off: GO, lean run.** Fetch the 30 listed GujRERA documents (12 financial incl. 3 JPEG-scanned statements of GJ_3536, 10 legal, 8 Forms 1/2/8; `bakeoff/fetch_list.json`) off-peak 22:00–07:00 IST, ≤ 1 req/s, CRUXBot UA, stored locally only. Each reader (Document Intelligence, Mistral Document AI 2512, `gpt-6.1-sol`, `gpt-6-luna`) runs once on all 30, plus 3 runs on 10 documents for determinism; EST ~$5–7. Ground truth: values hand-keyed from the page images, 5 spot-checked by the founder.
 - **D30 — `projectdoc` gap: fix AFTER the bake-off.** The miner reads only `findoc`, so title, encumbrance, commencement, NOC, ITR and director-report documents were never processed. One-line change in `orchestrator.py` + a test on `migration/azure`, deployed together with the winning document reader.
+
+## Founder decisions — 2026-10-18 (Finish Phase 1)
+
+**Decided by:** Murtaza (founder). **Recorded by:** Claude Opus 5.5 (`claude-opus-5-5`). Binding until superseded.
+
+- **D31 — Merge backend PR #47: GO.** Then one revision with the chain `gpt-6.1-sol → Kimi → DeepSeek-V4-Pro`, the DeepSeek model and the Maps env vars; verify a real Ahmedabad geocode, the report narrative logging model + version, Lens 503, the stale grade page, and a foreign origin rejected. Failure → reactivate the previous revision, fix, retry.
+- **D32 — Ground truth:** key values from the page images; the founder spot-checks 10 (every escrow/bank balance, amount collected and cost incurred from ≥ 3 Form 3s, plus 3 random), each with a page number or crop. Wait only if one is wrong.
+- **D33 — Wire the bake-off winner: PRE-APPROVED** (including a routed cheap-first / escalate-hard-pages setup) if it reaches **≥ 95 % numeric exact-match on scanned Form 3 and 0 invented numbers**; otherwise [ASK] with the table. Then apply the D30 `projectdoc` fix.
+- **D34 — M12 on dev Supabase:** a never-graded Ahmedabad RERA project, live scrape under live limits (0.4 req/s, CRUXBot UA); fix and retry on failure; [ASK] only for crawler-conduct or legal-code changes.
+- **D35 — M12 on PROD: PRE-APPROVED once dev passes**, same acceptance; then 2 more new Ahmedabad projects → 3 live demo grades, each reported with module status + confidence, wall-clock (flag > 3 min), and LLM + vision cost.
+- **D36 — Side items while blocked:** miner `/health/deps` with Postgres + an Azure Monitor alert (failing ≥ 5 min); Phase 3 plan entry for a VNet-integrated environment + Postgres private access; methodology changelog (POI counts, geocoder, vision reader); DRAFT privacy text for Azure Maps (EU) — founder sign-off, not published; design + estimate for project-first geocoding.
+- **Phase 1 done when:** 3 new prod grades, stale label works, no run.app / Gemini / Google Maps calls in live paths (grep + runtime logs), all three apps healthy with alerts, everything merged to main; then `PHASE1_DONE.md`.
+- **Noted 2026-10-18:** the D29 fetch set has no Form 3 (it needs the `form_ids` → `form_three` → download chain, 3 requests per project), so D33's Form 3 gate is evaluated on the closest scanned proxies until the founder approves a Form 3 fetch.
