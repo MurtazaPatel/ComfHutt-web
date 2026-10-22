@@ -1,7 +1,7 @@
-# DRAFT — legal and site text for the Azure Maps switch (NOT PUBLISHED)
+# Legal and site text for the Azure Maps switch — APPROVED and PUBLISHED
 
-**Status:** draft for founder sign-off (D36d). Nothing in the live site has changed. Once
-approved, these edits go into the files named below in one PR.
+**Status:** approved by the founder 2026-10-22 (D36d) and applied to the files named below;
+legal effective date moved to 22 October 2026.
 
 **Why:** since 2026-10-18 the backend geocodes new addresses with **Azure Maps** (Microsoft;
 account `crux-maps`, data region **North Europe**), and crux-agents uses it for the location

@@ -62,6 +62,13 @@ export const privacyDoc: LegalDoc = {
               rich("Your consent"),
             ],
             [
+              rich("The address or project name you type to add a property"),
+              rich(
+                "To find its location on a map (geocoding) so the grade can assess the area around it",
+              ),
+              rich("Your consent / performance of the service you asked for"),
+            ],
+            [
               rich("Payment details"),
               rich(
                 "Processed ",
@@ -126,6 +133,9 @@ export const privacyDoc: LegalDoc = {
           rich(
             "AI model providers, for the specific purpose of generating the explanation or answer you requested.",
           ),
+          rich(
+            "a mapping provider (Microsoft Azure Maps), which receives the address or project name you enter, and the map coordinates of graded projects, to place them on a map and measure distances to transit and amenities. It does not receive your name, email or account details.",
+          ),
         ),
         para(
           "We may disclose data where required by law, a court, or a regulator, or to establish or defend legal claims.",
@@ -138,6 +148,9 @@ export const privacyDoc: LegalDoc = {
       blocks: [
         para(
           "We store personal data on servers located in India wherever the service supports it, and otherwise with reputable providers subject to contractual protections. Some processing may occur outside India; we will not transfer personal data to any territory restricted by the Central Government.",
+        ),
+        para(
+          "Address lookups and location measurements are processed by Microsoft Azure Maps in the European Union (North Europe region), because the service is not offered from India. They contain the address you typed, not your identity. Results are cached by us in India wherever the service supports it.",
         ),
         para("We keep personal data only as long as the purpose requires:"),
         bullets(

@@ -38,7 +38,7 @@ const SOURCES = [
   "Gujarat High Court",
   "Supreme Court",
   "IBBI",
-  "Google Maps",
+  "Azure Maps",
 ];
 
 export default function SevenChecks() {

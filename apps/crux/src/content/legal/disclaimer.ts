@@ -76,7 +76,7 @@ export const disclaimerDoc: LegalDoc = {
           rich(
             "Complaint and order records of the Gujarat real estate regulatory authority and its appellate tribunal;",
           ),
-          rich("Location and connectivity data from Google Maps Platform."),
+          rich("Location and connectivity data from Microsoft Azure Maps."),
         ),
         para(
           "We do not control any of these sources. They may be incomplete, out of date, mis-indexed or wrong. Records may be added or removed without notice. ",
