@@ -51,8 +51,8 @@ export const LEGAL: LegalFacts = {
   // Live — already used by the main ComfHutt site.
   supportEmail: "support@comfhutt.com",
 
-  effectiveDate: "2026-09-28",
-  effectiveDateLabel: "28 September 2026",
+  effectiveDate: "2026-10-22",
+  effectiveDateLabel: "22 October 2026",
 
   jurisdiction: "Rajkot, Gujarat",
 };

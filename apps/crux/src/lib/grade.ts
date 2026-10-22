@@ -159,7 +159,7 @@ export const MODULE_LABEL: Record<string, string> = {
  *
  * The allowed source families are fixed: GujRERA filings, the GujRERA authority
  * and appellate tribunal, eCourts / Gujarat High Court / Supreme Court / IBBI,
- * and Google Maps. Nothing else may be named on a grade-path claim — company
+ * and Azure Maps. Nothing else may be named on a grade-path claim — company
  * filings (MCA21), registry (IGR), price indices, air quality and satellite data
  * are all off the list, so a line that would have leaned on one describes the
  * question the module answers instead.

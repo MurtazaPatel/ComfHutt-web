@@ -169,9 +169,9 @@ export const SOURCE_FAMILIES: readonly SourceFamily[] = [
     halfLife: "90 days",
   },
   {
-    name: "Google Maps",
+    name: "Azure Maps",
     records:
-      "Distances and places around the project, turned into transit, amenity, employment-proximity and negative-externality sub-scores, then cached.",
+      "Distances and places around the project, turned into transit, amenity, employment-proximity and negative-externality sub-scores, then cached. Counts of places within each radius are capped at 100 per search.",
     modules: ["X"],
     tier: "T2",
     halfLife: "180 days",
@@ -185,7 +185,7 @@ export const MODULE_SOURCE: Record<string, string> = {
   T: "GujRERA promoter profile",
   F: "GujRERA Form 3 and escrow filings",
   C: "GujRERA permanent documents and filing history",
-  X: "Google Maps",
+  X: "Azure Maps",
   P: "GujRERA declared unit rates, and comparable projects in the corpus",
 };
 
