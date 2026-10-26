@@ -425,7 +425,12 @@ export function CgmGradeSurface({ score }: { score: CruxScore }) {
               <span className="text-[13px] text-crux-text-muted">· {Math.round(composite)}/100</span>
             </div>
             <p className="mt-0.5 text-[13px] text-crux-text-secondary">{cohortLine(score)}</p>
-            {score.provisional && (
+            {score.final_pending && (
+              <span className="mt-2 inline-block rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700 ring-1 ring-amber-200">
+                Provisional: final grade in progress
+              </span>
+            )}
+            {score.provisional && !score.final_pending && (
               <span className="mt-2 inline-block rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700 ring-1 ring-amber-200">
                 Provisional — limited data, grade may firm up
               </span>
