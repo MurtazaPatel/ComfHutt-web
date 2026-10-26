@@ -118,6 +118,8 @@ export interface CruxScore {
   price_assessed?: boolean;
   not_rated_reason?: string | null;
   provisional?: boolean;
+  /** D44: allow-listed filings still being read — the final grade replaces this one. */
+  final_pending?: boolean;
   /** Published-claim vs record contradictions. Top-level, not per-module. */
   evidence_flags?: CgmEvidenceFlag[] | null;
 
