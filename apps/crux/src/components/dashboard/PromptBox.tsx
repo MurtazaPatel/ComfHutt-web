@@ -8,6 +8,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useApiFetch } from "@/lib/api";
 import { useRecentProperties } from "@/hooks/useRecentProperties";
 import { ExampleSearches } from "./ExampleSearches";
+import { useProjectSuggestions } from "@/hooks/useProjectSuggestions";
+import { ProjectSuggestionList } from "@/components/ProjectSuggestionList";
 
 interface PropertyResponse {
   success: boolean;
@@ -48,6 +50,13 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const suggest = useProjectSuggestions(address);
+
+  const pickSuggestion = (name: string) => {
+    suggest.markPicked(name);
+    setAddress(name);
+    void submitQuery(name);
+  };
 
   useEffect(() => {
     // Focus after the entrance animation so the caret doesn't ride the transform.
@@ -134,6 +143,7 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (suggest.handleKeyDown(e, (s) => pickSuggestion(s.project_name))) return;
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       submitQuery(address);
@@ -164,7 +174,7 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
         )}
       >
         {/* Main input area */}
-        <div className="px-4 pt-4 pb-3 sm:px-5">
+        <div className="relative px-4 pt-4 pb-3 sm:px-5">
           <div className="flex items-start gap-3">
             <MapPin
               size={16}
@@ -178,7 +188,11 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
               onChange={handleInput}
               onKeyDown={handleKeyDown}
               onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onBlur={() => {
+                suggest.close();
+                setIsFocused(false);
+              }}
+              {...suggest.comboboxProps}
               aria-label={
                 actionType === "lens"
                   ? "Project name or address to open in Lens"
@@ -195,6 +209,17 @@ export function PromptBox({ actionType = "score" }: { actionType?: "score" | "le
               )}
             />
           </div>
+          {suggest.open && (
+            <ProjectSuggestionList
+              id={suggest.listId}
+              items={suggest.items}
+              activeIndex={suggest.activeIndex}
+              optionId={suggest.optionId}
+              onHover={suggest.setActiveIndex}
+              onPick={(s) => pickSuggestion(s.project_name)}
+              className="left-4 right-4 sm:left-5 sm:right-5 top-[calc(100%-0.5rem)]"
+            />
+          )}
           <p className="mt-1 ml-[28px] text-[13px] text-crux-text-secondary">
             {actionType === "lens"
               ? "Name the project or address first — then ask your questions in the chat."
