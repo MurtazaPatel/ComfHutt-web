@@ -7,6 +7,8 @@ import { useAuth } from "@clerk/nextjs";
 import { track } from "@vercel/analytics";
 import { cn } from "@/lib/utils";
 import { useApiFetch } from "@/lib/api";
+import { useProjectSuggestions } from "@/hooks/useProjectSuggestions";
+import { ProjectSuggestionList } from "./ProjectSuggestionList";
 
 /**
  * Placeholders name the area CRUX actually covers.
@@ -59,6 +61,7 @@ export default function ChatInput({
   const apiFetch = useApiFetch();
   // ChatInput can render more than once on a page (hero + footer) — ids must be unique.
   const inputId = useId();
+  const suggest = useProjectSuggestions(query);
 
   useEffect(() => {
     const currentPlaceholder = placeholder || PLACEHOLDERS[placeholderIndex];
@@ -93,9 +96,19 @@ export default function ChatInput({
     return () => clearTimeout(typingTimeout);
   }, [isTyping, placeholderIndex, query, placeholder]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = query.trim();
+    return submitQuery(query);
+  };
+
+  const pickSuggestion = (name: string) => {
+    suggest.markPicked(name);
+    setQuery(name);
+    void submitQuery(name);
+  };
+
+  const submitQuery = async (raw: string) => {
+    const trimmed = raw.trim();
     if (!trimmed || isSubmitting) return;
 
     if (onSubmit) {
@@ -172,7 +185,7 @@ export default function ChatInput({
   );
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
+    <form onSubmit={handleSubmit} className="relative w-full">
       <div className={containerStyles}>
         <input
           ref={inputRef}
@@ -190,7 +203,12 @@ export default function ChatInput({
             setIsFocused(true);
             setIsTyping(false);
           }}
+          onKeyDown={(e) => {
+            suggest.handleKeyDown(e, (s) => pickSuggestion(s.project_name));
+          }}
+          {...suggest.comboboxProps}
           onBlur={() => {
+            suggest.close();
             setIsFocused(false);
             if (!query) setIsTyping(true);
           }}
@@ -218,6 +236,16 @@ export default function ChatInput({
           {isSubmitting ? <Loader2 size={18} className="animate-spin motion-reduce:animate-none" /> : <ArrowRight size={18} />}
         </button>
       </div>
+      {suggest.open && (
+        <ProjectSuggestionList
+          id={suggest.listId}
+          items={suggest.items}
+          activeIndex={suggest.activeIndex}
+          optionId={suggest.optionId}
+          onHover={suggest.setActiveIndex}
+          onPick={(s) => pickSuggestion(s.project_name)}
+        />
+      )}
       {error && (
         <p className="mt-2 text-xs text-red-600 text-center" role="status">{error}</p>
       )}
