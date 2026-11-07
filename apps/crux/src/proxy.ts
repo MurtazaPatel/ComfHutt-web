@@ -36,6 +36,9 @@ const isPublicRoute = createRouteMatcher([
   // A published method behind a sign-in wall is not published, and the link
   // would have bounced an anonymous reader to /signin.
   "/methodology",
+  // D59 fact-sheet pages: public reading, but the backend 404s unless the feature flag is on
+  // or a founder preview token is supplied, so listing the route here exposes nothing by itself.
+  "/projects/(.*)/facts",
 ]);
 
 export default clerkMiddleware(
