@@ -268,7 +268,7 @@ function Citations({ report }: { report: CruxReportRow }) {
 }
 
 export function ReportViewer({ propertyId, address }: ReportViewerProps) {
-  const { score, isLoading, isComputing, error, quotaExceeded, progressMessages } =
+  const { score, isLoading, isComputing, error, quotaExceeded, progressMessages, isAsyncJob } =
     usePropertyScore(propertyId);
   // The narrative half of the report. Loads in parallel — a slow or refused report
   // must not hide the grade, and a missing grade must not hide the narrative.
@@ -296,6 +296,11 @@ export function ReportViewer({ propertyId, address }: ReportViewerProps) {
           {/* The engine's own progress line, when it sent one — not a guess at a stage. */}
           <span>{latest ?? "Reading the record…"}</span>
         </div>
+        {isAsyncJob && (
+          <p className="mt-3 text-[13px] text-crux-text-secondary">
+            Reading GujRERA filings… usually 1–3 minutes. You can keep this page open or come back to it — your grade is saved here when it is ready.
+          </p>
+        )}
       </Surface>
     );
   }

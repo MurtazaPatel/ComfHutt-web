@@ -150,6 +150,9 @@ export function usePropertyScore(propertyId: string, intent?: string) {
   const [isComputing, setIsComputing] = useState(false);
   const [progressMessages, setProgressMessages] = useState<string[]>([]);
   const [quotaExceeded, setQuotaExceeded] = useState<AnonQuotaExceeded | null>(null);
+  // True once the backend says this grade runs as a background job (ASYNC_GRADES_ENABLED):
+  // the wait can be minutes, survives this tab, and is never reported as a timeout.
+  const [isAsyncJob, setIsAsyncJob] = useState(false);
   const { isLoaded, getToken } = useAuth();
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -168,6 +171,7 @@ export function usePropertyScore(propertyId: string, intent?: string) {
     setProgressMessages([]);
     setScore(null);
     setIsComputing(false);
+    setIsAsyncJob(false);
 
     try {
       const token = await getToken().catch(() => null);
@@ -229,10 +233,85 @@ export function usePropertyScore(propertyId: string, intent?: string) {
       if (!reader) throw new Error("No reader");
 
       let buffer = "";
+      let sawJob = false;
+      let terminal = false;
+      const apiBase = apiUrl;
+      const pollHeaders: Record<string, string> = {};
+      if (token) pollHeaders["Authorization"] = `Bearer ${token}`;
+      // The stream is cut by whatever sits between us and the backend (proxy/edge idle
+      // limits) long before a cold grade finishes. When the backend told us it is an
+      // async job, a cut is NOT a failure: the job keeps running server-side, so we
+      // poll the same URL until it reaches a terminal state.
+      const pollJob = async () => {
+        let failures = 0;
+        const began = Date.now();
+        while (!abortController.signal.aborted && Date.now() - began < 15 * 60_000) {
+          let wait = 3000;
+          try {
+            const r = await fetch(`${apiBase}/crux/score/${propertyId}?${qs}`, {
+              headers: pollHeaders, credentials: "include", signal: abortController.signal,
+            });
+            const body = await r.json().catch(() => null);
+            if (r.status === 202) {
+              failures = 0;
+              const m = body?.data?.last_progress;
+              if (typeof m === "string") {
+                setProgressMessages(prev => (prev.includes(m) ? prev : [...prev, m]));
+              }
+              wait = Math.min(Math.max(Number(body?.data?.retry_after_ms) || 3000, 2000), 10000);
+            } else if (r.ok && body?.data) {
+              setScore(body.data);
+              setIsComputing(false);
+              setIsLoading(false);
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("crux-search-sync", { detail: { action: "refresh" } }));
+              }
+              return;
+            } else if (r.status === 402) {
+              setQuotaExceeded({
+                reportCount: body?.data?.reportCount ?? 3,
+                maxReports: body?.data?.maxReports ?? 3,
+              });
+              setIsComputing(false);
+              setIsLoading(false);
+              return;
+            } else if (body?.data?.status === "failed" || r.status === 404) {
+              // Terminal answer from the job itself — a real result, not a timeout.
+              setError(body?.message || "We could not grade this project. Please try again.");
+              setIsComputing(false);
+              setIsLoading(false);
+              return;
+            } else {
+              failures += 1; // edge/5xx blip: the job is still running, keep asking
+            }
+          } catch (e) {
+            if ((e as Error).name === "AbortError") return;
+            failures += 1;
+          }
+          if (failures >= 20) break;
+          await new Promise(res => setTimeout(res, wait));
+        }
+        if (abortController.signal.aborted) return;
+        setError("We lost the connection while your grade was being prepared. Reload this page to pick it up where it left off.");
+        setIsComputing(false);
+        setIsLoading(false);
+      };
+      const finishOrPoll = async () => {
+        if (!terminal && sawJob && !abortController.signal.aborted) await pollJob();
+      };
+
       while (true) {
-        const { value, done } = await reader.read();
+        let chunk: ReadableStreamReadResult<Uint8Array>;
+        try {
+          chunk = await reader.read();
+        } catch (readErr) {
+          if ((readErr as Error).name === "AbortError" || !sawJob) throw readErr;
+          await finishOrPoll();
+          return;
+        }
+        const { value, done } = chunk;
         if (done) break;
-        
+
         buffer += decoder.decode(value, { stream: true });
         
         const lines = buffer.split("\n\n");
@@ -243,12 +322,16 @@ export function usePropertyScore(propertyId: string, intent?: string) {
             const dataStr = line.replace("data: ", "");
             try {
               const event = JSON.parse(dataStr);
-              if (event.type === "progress") {
+              if (event.type === "job") {
+                sawJob = true;
+                setIsAsyncJob(true);
+              } else if (event.type === "progress") {
                 setProgressMessages(prev => {
                   if (prev.includes(event.data.message)) return prev;
                   return [...prev, event.data.message];
                 });
               } else if (event.type === "done") {
+                terminal = true;
                 setScore(event.data);
                 setIsComputing(false);
                 if (typeof window !== "undefined") {
@@ -257,6 +340,7 @@ export function usePropertyScore(propertyId: string, intent?: string) {
                   );
                 }
               } else if (event.type === "error") {
+                terminal = true;
                 setError(event.data);
                 setIsComputing(false);
               }
@@ -265,6 +349,10 @@ export function usePropertyScore(propertyId: string, intent?: string) {
             }
           }
         }
+      }
+      if (!terminal && sawJob) {
+        await finishOrPoll();
+        return;
       }
       setIsLoading(false);
     } catch (err) {
@@ -305,5 +393,5 @@ export function usePropertyScore(propertyId: string, intent?: string) {
     fetchScoreStream(newIntent, false);
   }, [fetchScoreStream]);
 
-  return { score, isLoading, error, isComputing, progressMessages, quotaExceeded, recompute, setIntent: setIntentFn };
+  return { score, isLoading, error, isComputing, progressMessages, quotaExceeded, isAsyncJob, recompute, setIntent: setIntentFn };
 }
