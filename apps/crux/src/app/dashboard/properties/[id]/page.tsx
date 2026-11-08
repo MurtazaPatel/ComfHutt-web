@@ -36,7 +36,7 @@ export default function PropertyDetailPage() {
   const propertyId = params.id as string;
   const apiFetch = useApiFetch();
 
-  const { score, isLoading, error, isComputing, progressMessages, recompute } = usePropertyScore(propertyId);
+  const { score, isLoading, error, isComputing, progressMessages, recompute, isAsyncJob } = usePropertyScore(propertyId);
 
   // Stamped with the id it belongs to, so a late reply for the previous property
   // can never label this one. Deriving `property` and `propertyLoading` from that
@@ -107,6 +107,11 @@ export default function PropertyDetailPage() {
             <ThinkingOrb state={ORB_STATE.grading} size={64} />
           </div>
           <h2 className="mb-6 text-[18px] font-semibold text-crux-text-primary">Reading the public record…</h2>
+          {isAsyncJob && (
+              <p className="-mt-3 mb-6 max-w-[420px] text-[13px] text-crux-text-secondary">
+                Reading GujRERA filings… usually 1–3 minutes. You can keep this page open or come back to it — your grade is saved here when it is ready.
+              </p>
+            )}
 
           <ol className="flex w-full max-w-[420px] flex-col gap-3 text-left" aria-live="polite">
             {progressMessages.map((msg, idx) => {
