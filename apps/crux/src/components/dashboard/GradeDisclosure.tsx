@@ -50,22 +50,20 @@ export function GradeDisclosure({ confidence, asOf }: { confidence: number; asOf
       .then((b) => {
         if (cancelled || !b?.success || !Array.isArray(b.checks) || !Array.isArray(b.notChecked)) return;
         setData({ checks: b.checks, notChecked: b.notChecked, sourceTemplate: String(b.sourceTemplate ?? "") });
+        // Open by default the first time this visitor sees a grade (decided here, in the async
+        // callback, rather than in a second effect that would set state synchronously).
+        try {
+          if (!window.localStorage.getItem(SEEN_KEY)) {
+            setOpen(true);
+            window.localStorage.setItem(SEEN_KEY, "1");
+          }
+        } catch {
+          /* storage unavailable: stay collapsed */
+        }
       })
       .catch(() => {});
     return () => { cancelled = true; };
   }, []);
-
-  useEffect(() => {
-    if (!data) return;
-    try {
-      if (!window.localStorage.getItem(SEEN_KEY)) {
-        setOpen(true); // first grade this visitor sees
-        window.localStorage.setItem(SEEN_KEY, "1");
-      }
-    } catch {
-      /* storage unavailable: stay collapsed */
-    }
-  }, [data]);
 
   if (!data) return null;
 
