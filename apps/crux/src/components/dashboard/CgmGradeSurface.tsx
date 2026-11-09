@@ -19,6 +19,7 @@ import type {
 import { gradeBand, scoreColor } from "@/lib/grade";
 import { formatDate } from "@/lib/format";
 import { Surface, SurfaceTitle } from "@/components/dashboard/ui/Surface";
+import { GradeDisclosure } from "@/components/dashboard/GradeDisclosure";
 
 // Every module score is "higher = better" (100 = excellent). Labels must read
 // positively so a high score isn't misread as a negative — e.g. D:100 is EXCELLENT
@@ -478,6 +479,8 @@ export function CgmGradeSurface({ score }: { score: CruxScore }) {
       {score.legal_summary && <LegalRecord summary={score.legal_summary} />}
 
       <CrossChecks flags={flags} />
+
+      <GradeDisclosure confidence={score.confidence_score ?? 0} asOf={score.created_at} />
 
       <GradeDisclaimer />
 
