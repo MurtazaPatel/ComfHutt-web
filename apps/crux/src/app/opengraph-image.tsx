@@ -1,8 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt =
-  "CRUX — the credibility grade for Gujarat's RERA projects, A+ to D";
+export const alt = "CRUX — The CRUX of any property, in minutes. Grades A+ to D.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -78,7 +77,7 @@ export default function OpengraphImage() {
             color: INK,
           }}
         >
-          The credibility grade for Gujarat&rsquo;s RERA projects
+          The CRUX of any property, in minutes
         </div>
         <div
           style={{

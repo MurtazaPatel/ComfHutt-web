@@ -32,7 +32,9 @@ const SITE_URL = "https://crux.comfhutt.com";
 // projects in Gujarat. The previous copy promised any property in the country and
 // a live signal count nothing in the code supports — neither is true, and both
 // were the first thing a search result showed.
-const SITE_TITLE = "CRUX — the credibility grade for Gujarat's RERA projects";
+// Title is the hero line (founder-approved 2026-11-09); the description keeps the
+// specific coverage statement.
+const SITE_TITLE = "The CRUX of any property, in minutes";
 const SITE_DESCRIPTION =
   "CRUX grades every RERA-registered project in Gujarat from A+ to D, using certified filings and court records. Free for buyers. Published method.";
 

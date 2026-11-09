@@ -167,9 +167,10 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
             </div>
           </div>
 
-          {/* Headline — the letter grade leads, never a 0–100 number. */}
-          {/* Each line rises on its own beat. Transform only — no fade — so the
-              text is painted from the first frame and stays the LCP element. */}
+          {/* Headline — founder-approved line (2026-11-09). "CRUX" carries the
+              wordmark treatment so the brand reads inside the sentence. */}
+          {/* Transform only — no fade — so the text is painted from the first
+              frame and stays the LCP element. */}
           <h1
             className="mt-8 text-center font-extrabold text-crux-text-primary text-balance"
             style={{
@@ -178,15 +179,14 @@ export default function HeroSection({ districtCount }: HeroSectionProps) {
               letterSpacing: "-0.045em",
             }}
           >
-            <span className="anim-rise inline-block">They check you.</span>
-            <br />
-            {/* green-dark, not green: #10B981 on white measures 2.54:1, which fails
-                even the 3.0 large-text threshold. #047857 is 5.87:1. */}
-            <span
-              className="anim-rise inline-block text-crux-green-dark"
-              style={{ animationDelay: "0.09s" }}
-            >
-              Nobody checks them.
+            <span className="anim-rise inline-block">
+              The{" "}
+              {/* green-dark, not green: #10B981 on white measures 2.54:1, which fails
+                  even the 3.0 large-text threshold. #047857 is 5.87:1. */}
+              <span className="text-crux-green-dark" style={{ letterSpacing: "-0.06em" }}>
+                CRUX
+              </span>{" "}
+              of any property, in minutes
             </span>
           </h1>
 
